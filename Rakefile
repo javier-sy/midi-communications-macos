@@ -27,6 +27,16 @@ Spec::Rake::SpecTask.new do |t|
   t.spec_opts = ["--colour"]
 end
 
+namespace :spec do
+  ### Run the specifications and generate coverage information
+  Spec::Rake::SpecTask.new( :coverage ) do |r|
+    r.rcov      = true
+    r.rcov_dir  = 'coverage'
+    r.rcov_opts = %w( -x Library\/Ruby,^spec,rvm )
+    r.libs      << 'lib'
+  end
+end
+
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'docs/rdoc'
@@ -35,7 +45,7 @@ Rake::RDocTask.new do |rdoc|
   rdoc.options += [
     '-w', '4',
     '-SHNa',
-    '-i', BASE_DIR.to_s,
+    '-i', 'lib',
     '-m', 'README',
     '-W', 'http://projects.bleything.net/repositories/changes/midiator/',
     ]
