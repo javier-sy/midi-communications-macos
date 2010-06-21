@@ -13,29 +13,35 @@
 # This code released under the terms of the MIT license.
 #
 
-require 'pathname'
 require 'rubygems'
-require 'rake'
+require 'spec/rake/spectask'
 
-# Pathname constants
-BASE_DIR      = Pathname.new( __FILE__ ).expand_path.dirname.relative_path_from( Pathname.getwd )
-LIB_DIR       = BASE_DIR + 'lib'
-EXAMPLE_DIR   = BASE_DIR + 'examples'
-MISC_DIR      = BASE_DIR + 'misc'
-SPEC_DIR      = BASE_DIR + 'spec'
-RAKE_TASK_DIR = MISC_DIR + 'rake'
 
-# File glob constants
-SPEC_FILES    = Pathname.glob( SPEC_DIR    + '**/*_spec.rb' )
-LIB_FILES     = Pathname.glob( LIB_DIR     + '**/*.rb'      )
-EXAMPLE_FILES = Pathname.glob( EXAMPLE_DIR + '**/*.rb'      )
-MISC_FILES    = Pathname.glob( MISC_DIR    + '**/*.rb'      )
-RELEASE_FILES = SPEC_FILES + LIB_FILES + EXAMPLE_FILES + MISC_FILES
+task :default => :spec
 
-$LOAD_PATH.unshift( LIB_DIR )
+Spec::Rake::SpecTask.new do |t|
+  t.ruby_opts = ["-rubygems"]
+  t.libs << 'lib'
+  t.warning = false
+  t.rcov = false
+  t.spec_opts = ["--colour"]
+end
 
-require RAKE_TASK_DIR + 'testing.rb'
-require RAKE_TASK_DIR + 'rdoc.rb'
-require RAKE_TASK_DIR + 'packaging.rb'
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rdoc|
+  rdoc.rdoc_dir = 'docs/rdoc'
+  rdoc.title    = "MIDIator - a nice Ruby interface to your system's MIDI services."
 
-task :default => [ :spec ]
+  rdoc.options += [
+    '-w', '4',
+    '-SHNa',
+    '-i', BASE_DIR.to_s,
+    '-m', 'README',
+    '-W', 'http://projects.bleything.net/repositories/changes/midiator/',
+    ]
+
+  rdoc.rdoc_files.include 'README'
+  rdoc.rdoc_files.include 'LICENSE'
+  rdoc.rdoc_files.include 'LICENSE.prp'
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
