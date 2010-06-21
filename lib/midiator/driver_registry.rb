@@ -50,4 +50,8 @@ class MIDIator::DriverRegistry
     return @drivers[ name ]
   end
 
+  def drivers
+    @drivers
+  end
+
 end
