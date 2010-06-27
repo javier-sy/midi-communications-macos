@@ -39,12 +39,11 @@ if input = ARGV[0]
   end
 end
 
-require 'rubygems'
 
 ########################################################################
 ### M I D I A T O R   S E T U P
 ########################################################################
-
+$:.unshift File.join( File.dirname( __FILE__ ), '..', 'lib')
 require 'midiator'
 include MIDIator::Notes
 

@@ -14,7 +14,6 @@
 #
 
 require 'singleton'
-require 'midiator'
 
 class MIDIator::DriverRegistry
   include Singleton

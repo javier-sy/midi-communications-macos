@@ -19,8 +19,6 @@
 # This code released under the terms of the MIT license.
 #
 
-require 'midiator'
-
 class MIDIator::Interface
   attr_reader :driver
 
@@ -40,7 +38,7 @@ class MIDIator::Interface
         raise "No driver is available."
       end
     end
-    
+
     self.use(driver)
   end
 
@@ -91,7 +89,7 @@ class MIDIator::Interface
     sleep duration
     [note].flatten.each do |n|
       @driver.note_off( n, channel, velocity )
-    end 
+    end
   end
 
 

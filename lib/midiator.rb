@@ -14,19 +14,18 @@
 #
 
 module MIDIator
-  VERSION = "0.3.2"
+  VERSION = File.read( File.join( File.dirname( __FILE__ ), "..", "VERSION"))
 end
 
 #####################################################################
 ###  E X T E R N A L   D E P E N D E N C I E S
 #####################################################################
-require 'rubygems'
 require 'platform'
 
 #####################################################################
 ###  C O R E   L I B R A R Y   E X T E N S I O N S
 #####################################################################
-require 'string_extensions'
+require 'midiator/core_ext/string'
 
 #####################################################################
 ###  M I D I A T O R   C O R E

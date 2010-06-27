@@ -17,9 +17,6 @@
 # This code released under the terms of the MIT license.
 #
 
-require 'midiator'
-require 'midiator/driver_registry'
-
 class MIDIator::Driver
 
   ##########################################################################

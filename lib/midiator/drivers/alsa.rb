@@ -19,10 +19,6 @@
 
 require 'dl/import'
 
-require 'midiator'
-require 'midiator/driver'
-require 'midiator/driver_registry'
-
 class MIDIator::Driver::ALSA < MIDIator::Driver # :nodoc:
   # tell the user they need to connect to their output
   def instruct_user!

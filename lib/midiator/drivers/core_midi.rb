@@ -17,10 +17,6 @@
 
 require 'ffi'
 
-require 'midiator'
-require 'midiator/driver'
-require 'midiator/driver_registry'
-
 class MIDIator::Driver::CoreMIDI < MIDIator::Driver # :nodoc:
   SnowLeopard = `uname -r` =~ /10\.\d\.\d/
 

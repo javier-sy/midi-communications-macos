@@ -14,7 +14,7 @@
 # This code released under the terms of the MIT license.
 #
 
-require 'rubygems'
+$:.unshift File.join( File.dirname( __FILE__ ), '..', 'lib')
 require 'midiator'
 
 midi = MIDIator::Interface.new
