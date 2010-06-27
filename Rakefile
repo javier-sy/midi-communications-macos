@@ -76,7 +76,7 @@ gemspec = Gem::Specification.new do |gem|
 
   gem.has_rdoc = true
 
-  gem.files        = FileList['Rakefile', 'README.rdoc', 'examples/**/*', 'lib/**/*'].to_a
+  gem.files        = FileList['Rakefile', 'README.rdoc', 'VERSION', 'examples/**/*', 'lib/**/*'].to_a
   gem.test_files   = FileList['spec/**/*.rb']
 
   gem.add_dependency 'Platform', [">= 0.4.0"]
