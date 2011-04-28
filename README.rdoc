@@ -22,7 +22,7 @@ Realtime MIDI IO with Ruby for OSX
 
 == Credits
 
-This library began with coremidi binding code by
+This library began with some coremidi/ffi binding code for MIDI output by
 
 * Colin Harris -- http://github.com/aberant
 
