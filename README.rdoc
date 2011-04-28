@@ -1,4 +1,4 @@
-current status (4/27/2011): NOT YET WORKING!
+current status (4/27/2011): no examples working
 
 = coreMIDI
 
