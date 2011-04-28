@@ -6,13 +6,7 @@
 #
 # contained in {his fork of MIDIator}[http://github.com/aberant/midiator] and a {blog post}[http://aberant.tumblr.com/post/694878119/sending-midi-sysex-with-core-midi-and-ruby-ffi]
 #
-# {MIDIator}[http://github.com/bleything/midiator] was originally authored by
-#
-# * Ben Bleything -- ben@bleything.net
-# * Topher Cyll -- http://www.cyll.org
-#
-# in 2008 and released under the MIT license (see LICENSE.midiator and LICENSE.prp)
-#
+# {MIDIator}[http://github.com/bleything/midiator] is (c)2008 by Ben Bleything and Topher Cyll and released under the MIT license (see LICENSE.midiator and LICENSE.prp)
 #
 require 'ffi'
 
