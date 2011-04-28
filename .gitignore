@@ -1,3 +1,6 @@
 coverage
 docs
 pkg
+.loadpath
+.project
+coremidi.gemspec

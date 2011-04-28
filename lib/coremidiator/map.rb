@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# The MIDIator driver to interact with OSX's CoreMIDI.  Taken more or less
+# The MIDIator driver to interact with OSX's Map.  Taken more or less
 # directly from Practical Ruby Projects.
 #
 # == Authors
@@ -17,7 +17,7 @@
 
 require 'ffi'
 
-class MIDIator::Driver::CoreMIDI < MIDIator::Driver # :nodoc:
+class MIDIator::Driver::Map < MIDIator::Driver # :nodoc:
   SnowLeopard = `uname -r` =~ /10\.\d\.\d/
 
   ##########################################################################
@@ -25,7 +25,7 @@ class MIDIator::Driver::CoreMIDI < MIDIator::Driver # :nodoc:
   ##########################################################################
   module C
     extend FFI::Library
-    ffi_lib '/System/Library/Frameworks/CoreMIDI.framework/Versions/Current/CoreMIDI'
+    ffi_lib '/System/Library/Frameworks/Map.framework/Versions/Current/Map'
     attach_function :MIDIClientCreate, [:pointer, :pointer, :pointer, :pointer], :int
     attach_function :MIDIClientDispose, [:pointer], :int
     attach_function :MIDIGetNumberOfDestinations, [], :int
