@@ -1,25 +1,17 @@
 #!/usr/bin/env ruby
 #
-# Realtime MIDI IO with Ruby for OSX using the coreMIDI framework.
+# This library began with coremidi binding code by
 #
-# == Author
+# * Colin Harris -- http://github.com/aberant
 #
-# * {Ari Russo}[http://github.com/arirusso] <ari.russo at gmail.com>
+# contained in {his fork of MIDIator}[http://github.com/aberant/midiator]
 #
-# == Credits
-#
-# This library began as a fork of the {MIDIator}[http://github.com/bleything/midiator] library
-#
-# The {fork}[http://github.com/aberant/midiator] that this library stemmed from, and a some code in this library was by
-#
-# * Colin Harris -- https://github.com/aberant
-#
-# and MIDIator itself was authored by
+# {MIDIator}[http://github.com/bleything/midiator] was originally authored by
 #
 # * Ben Bleything -- ben@bleything.net
 # * Topher Cyll -- http://www.cyll.org
 #
-# released under the MIT license (see LICENSE.midiator and LICENSE.prp)
+# in 2008 and released under the MIT license (see LICENSE.midiator and LICENSE.prp)
 #
 #
 require 'ffi'
