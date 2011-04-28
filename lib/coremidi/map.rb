@@ -7,7 +7,7 @@ module CoreMIDI
   module Map
 
     extend FFI::Library
-    ffi_lib '/System/Library/Frameworks/Map.framework/Versions/Current/Map'
+    ffi_lib '/System/Library/Frameworks/CoreMIDI.framework/Versions/Current/CoreMIDI'
 
     SnowLeopard = `uname -r` =~ /10\.\d\.\d/
 

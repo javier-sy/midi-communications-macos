@@ -10,7 +10,7 @@
 #
 # This library began as a fork of the {MIDIator}[http://github.com/bleything/midiator] library
 #
-# The {fork}[http://github.com/aberant/midiator] that this library stemmed from, and a substantial amount code in this library was by
+# The {fork}[http://github.com/aberant/midiator] that this library stemmed from, and a some code in this library was by
 #
 # * Colin Harris -- https://github.com/aberant
 #
