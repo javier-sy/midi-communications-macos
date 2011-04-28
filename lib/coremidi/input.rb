@@ -3,11 +3,11 @@
 module CoreMIDI
 
   #
-  # Input device class
+  # Input entity class
   #
   class Input
 
-    include Device
+    include Entity
 
     #
     # returns an array of MIDI event hashes as such:

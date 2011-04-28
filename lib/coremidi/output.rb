@@ -3,11 +3,11 @@
 module CoreMIDI
 
   #
-  # Output device class
+  # Output entity class
   #
   class Output
 
-    include Device
+    include Entity
 
     # close this output
     def close
@@ -28,7 +28,7 @@ module CoreMIDI
       packet_list = FFI::MemoryPointer.new(256)
       packet_ptr = Map.MIDIPacketListInit(packet_list)
 
-      if SnowLeopard
+      if Map::SnowLeopard
         packet_ptr = Map.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, args.size, bytes)
       else
         # Pass in two 32-bit 0s for the 64 bit time
@@ -53,7 +53,7 @@ module CoreMIDI
       client_name = Map::CF.CFStringCreateWithCString( nil, "MIDIator", 0 )
 
       client_ptr = FFI::MemoryPointer.new :pointer
-      Map.MIDIClientCreate client_name, nil, nil, client_ptr
+      Map.MIDIClientCreate(client_name, nil, nil, client_ptr)
       @client = client_ptr.read_pointer
 
       port_name = Map::CF.CFStringCreateWithCString nil, "Output", 0

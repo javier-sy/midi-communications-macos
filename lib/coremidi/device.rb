@@ -2,49 +2,31 @@
 
 module CoreMIDI
 
-  #
-  # Module containing methods used by both input and output devices
-  #
-  module Device
+  class Device
 
-                # has the device been initialized?
-    attr_reader :enabled,
-                # unique Numeric id of the device
+    attr_reader :entities,
+                # unique Numeric id
                 :id,
-                :name,
-                # :input or :output
-                :type
+                # device name from coremidi
+                :name
 
-    alias_method :enabled?, :enabled
-
-    def initialize(id, options = {}, &block)
-      @name = options[:name]
+    def initialize(id, device_pointer)
       @id = id
+      prop = Map::CF.CFStringCreateWithCString( nil, "name", 0 )
+      name = Map::CF.CFStringCreateWithCString( nil, id.to_s, 0 )
+      Map::MIDIObjectGetStringProperty(device_pointer, prop, name)
 
-      # cache the type name so that inspecting the class isn't necessary each time
-      @type = self.class.name.split('::').last.downcase.to_sym
-
-      @enabled = false
+      @name = Map::CF.CFStringGetCStringPtr(name.read_pointer, 0).read_string
     end
 
-    # select the first device of type <em>type</em>
-    def self.first(type)
-      all_by_type[type].first
-    end
-
-    # select the last device of type <em>type</em>
-    def self.last(type)
-      all_by_type[type].last
-    end
-
-    # a Hash of :input and :output devices
-    def self.all_by_type
-      available_devices = { :input => [], :output => [] }
-      available_devices
-    end
-
-    # all devices of both types
     def self.all
+      devices = []
+      i = 0
+      while !(device_pointer = Map.MIDIGetDevice(i)).null?
+        devices << new(i, device_pointer)
+        i+=1
+      end
+      devices
     end
 
   end

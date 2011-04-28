@@ -25,6 +25,7 @@
 require 'ffi'
 
 require 'coremidi/device'
+require 'coremidi/entity'
 require 'coremidi/input'
 require 'coremidi/map'
 require 'coremidi/output'
