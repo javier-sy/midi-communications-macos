@@ -1,6 +1,9 @@
 coverage
 docs
 pkg
+.idea
+.idea/*
+.idea/*/**
 .loadpath
 .project
 coremidi.gemspec
