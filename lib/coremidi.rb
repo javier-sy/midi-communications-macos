@@ -19,6 +19,8 @@
 # * Ben Bleything -- ben@bleything.net
 # * Topher Cyll -- http://www.cyll.org
 #
+# released under the MIT license (see LICENSE.midiator and LICENSE.prp)
+#
 #
 module CoreMIDI
   VERSION = "0.0.1"
