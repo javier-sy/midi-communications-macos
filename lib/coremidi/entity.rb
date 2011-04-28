@@ -8,18 +8,24 @@ module CoreMIDI
     attr_reader :enabled,
                 # unique Numeric id of the device
                 :id,
+                :manufacturer,
+                :model,
                 :name,
                 # :input or :output
                 :type
 
     alias_method :enabled?, :enabled
 
-    def initialize(id, options = {}, &block)
-      @name = options[:name]
+    def initialize(id, entity_pointer, options = {}, &block)
+      @entity_pointer = entity_pointer
       @id = id
 
       # cache the type name so that inspecting the class isn't necessary each time
       @type = self.class.name.split('::').last.downcase.to_sym
+
+      @manufacturer = get_property(:manufacturer)
+      @model = get_property(:model)
+      @name = "#{@manufacturer} #{@model}"
 
       @enabled = false
     end
@@ -42,6 +48,15 @@ module CoreMIDI
 
     # all devices of both types
     def self.all
+    end
+
+    private
+
+    def get_property(name)
+      prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
+      val = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 ) # placeholder
+      Map::MIDIObjectGetStringProperty(@entity_pointer, prop, val)
+      Map::CF.CFStringGetCStringPtr(val.read_pointer, 0).read_string
     end
 
   end

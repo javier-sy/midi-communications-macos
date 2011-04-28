@@ -10,4 +10,4 @@ include CoreMIDI
 
 #work here
 
-pp Device::all
+pp Device::all.map { |d| d.entities }

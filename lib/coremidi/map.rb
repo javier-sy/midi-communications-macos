@@ -14,6 +14,9 @@ module CoreMIDI
     module TypeAliases
       CFStringRef = :pointer
       ItemCount = :int
+      MIDIDeviceRef = :pointer
+      MIDIEndpointRef = :pointer
+      MIDIEntityRef = :pointer
       MIDIObjectRef = :pointer
       OSStatus = :int
     end
@@ -27,11 +30,26 @@ module CoreMIDI
 
     attach_function :MIDIClientDispose, [:pointer], :int
 
+    # MIDIEntityRef MIDIDeviceGetEntity (MIDIDeviceRef  device, ItemCount entityIndex0);
+    attach_function :MIDIDeviceGetEntity, [TypeAliases::MIDIDeviceRef, TypeAliases::ItemCount], TypeAliases::MIDIEntityRef
+
     attach_function :MIDIGetNumberOfDestinations, [], TypeAliases::ItemCount
 
     attach_function :MIDIGetNumberOfDevices, [], TypeAliases::ItemCount
 
     attach_function :MIDIGetDestination, [:int], :pointer
+
+    # MIDIEndpointRef MIDIEntityGetDestination( MIDIEntityRef entity, ItemCount destIndex0 );
+    attach_function :MIDIEntityGetDestination, [:pointer, :int], TypeAliases::MIDIEndpointRef
+
+    # ItemCount MIDIEntityGetNumberOfDestinations (MIDIEntityRef  entity);
+    attach_function :MIDIEntityGetNumberOfDestinations, [TypeAliases::MIDIEntityRef], TypeAliases::ItemCount
+
+    # ItemCount MIDIEntityGetNumberOfSources (MIDIEntityRef  entity);
+    attach_function :MIDIEntityGetNumberOfSources, [:pointer], TypeAliases::ItemCount
+
+    # MIDIEndpointRef MIDIEntityGetSource (MIDIEntityRef  entity, ItemCount sourceIndex0);
+    attach_function :MIDIEntityGetSource, [TypeAliases::MIDIEntityRef, TypeAliases::ItemCount], TypeAliases::MIDIEndpointRef
 
     attach_function :MIDIGetDevice, [TypeAliases::ItemCount], MIDIDeviceRef
 
