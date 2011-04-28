@@ -4,6 +4,8 @@
 
 Realtime MIDI IO with Ruby for OSX
 
+current status: NOT YET WORKING!
+
 == Features
 
 * Input and output on multiple devices concurrently
