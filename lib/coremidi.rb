@@ -24,6 +24,11 @@
 #
 require 'ffi'
 
+require 'coremidi/device'
+require 'coremidi/input'
+require 'coremidi/map'
+require 'coremidi/output'
+
 module CoreMIDI
   VERSION = "0.0.1"
 end
