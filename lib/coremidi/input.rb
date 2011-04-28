@@ -30,6 +30,7 @@ module CoreMIDI
 
     # enable this the input for use; can be passed a block
     def enable(options = {}, &block)
+
       @enabled = true
       @start_time = Time.now.to_f
       spawn_listener

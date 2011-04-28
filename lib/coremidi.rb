@@ -22,6 +22,8 @@
 # released under the MIT license (see LICENSE.midiator and LICENSE.prp)
 #
 #
+require 'ffi'
+
 module CoreMIDI
   VERSION = "0.0.1"
 end
