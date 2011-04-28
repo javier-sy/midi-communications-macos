@@ -42,12 +42,15 @@ module CoreMIDI
 
     # a Hash of :input and :output devices
     def self.all_by_type
-      available_devices = { :input => [], :output => [] }
-      available_devices
+      {
+        :input => Device.all.map { |d| d.entities[:input] }.flatten,
+        :output => Device.all.map { |d| d.entities[:output] }.flatten
+      }
     end
 
     # all devices of both types
     def self.all
+      Device.all.map { |d| d.entities }.flatten
     end
 
     private
