@@ -1,10 +1,10 @@
+current status (4/27/2011): NOT YET WORKING!
+
 = coreMIDI
 
 == Summary
 
 Realtime MIDI IO with Ruby for OSX
-
-current status: NOT YET WORKING!
 
 == Features
 
