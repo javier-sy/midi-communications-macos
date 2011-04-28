@@ -1,6 +1,7 @@
 coverage
 docs
 pkg
+examples/sandbox.rb
 .idea
 .idea/*
 .idea/*/**
