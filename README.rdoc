@@ -31,6 +31,8 @@ and MIDIator itself was authored by
 * Ben Bleything -- ben@bleything.net
 * Topher Cyll -- http://www.cyll.org
 
+released under the MIT license (see LICENSE.midiator and LICENSE.prp)
+
 == License
 
 Apache 2.0, See the file LICENSE
