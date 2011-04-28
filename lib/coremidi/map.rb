@@ -2,7 +2,7 @@
 module CoreMIDI
 
   #
-  # CoreMIDI struct, enum and function bindings
+  # coremidi struct, enum and function bindings
   #
   module Map
 
