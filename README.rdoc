@@ -8,6 +8,7 @@ Realtime MIDI IO with Ruby for OSX
 
 == Features
 
+* Simplified API
 * Input and output on multiple devices concurrently
 * Agnostically handle different MIDI Message types (including SysEx)
 * Timestamped input events
