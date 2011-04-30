@@ -5,8 +5,6 @@ module CoreMIDI
   #
   # coremidi struct, enum and function bindings
   #
-  # Some comments from from "Mac OS X Developer Library", Apple Computer, Inc.
-  # https://developer.apple.com
   #
   module Map
 
@@ -27,21 +25,14 @@ module CoreMIDI
 
     callback :sysex_output_callback, [:pointer], :void
 
-    # This represents a request to send a single system-exclusive MIDI event to a MIDI destination asynchronously.
     class MIDISysexSendRequest < FFI::Struct
 
-             # The endpoint to which the event is to be sent.
       layout :destination,         TypeAliases::MIDIEndpointRef,
-             # Initially, a pointer to the sys-ex event to be sent.  MIDISendSysex will advance this pointer as bytes are sent.
              :data,                :pointer,
-             # Initially, the number of bytes to be sent. MIDISendSysex will decrement this counter as bytes are sent.
              :bytes_to_send,       :uint32,
-             # The client may set this to true at any time to abort transmission. The implementation sets this to true when all bytes have been sent.
              :complete,            :int,
              :reserved,            [:char, 3],
-             # Called when all bytes have been sent, or after the client has set complete to true.
              :completion_proc,     :sysex_output_callback,
-             # Passed as a refCon to completionProc.
              :completion_ref_con,  :pointer
     end
 
