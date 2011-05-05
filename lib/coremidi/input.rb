@@ -21,6 +21,11 @@ module CoreMIDI
     # the timestamp is the number of millis since this input was enabled
     #
     def gets
+      @listener.join
+      msgs = @buffer.dup
+      @buffer.clear
+      spawn_listener
+      msgs
     end
     alias_method :read, :gets
 
@@ -36,20 +41,26 @@ module CoreMIDI
     end
     alias_method :gets_bytestr, :gets_s
 
+    def connect_endpoint
+      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
+      endpoint_ptr = FFI::MemoryPointer.new(:pointer)
+      @callback = get_event_callback
+      Map.MIDIInputPortCreate(@client, port_name, @callback, nil, endpoint_ptr)
+      @endpoint = endpoint_ptr.read_pointer
+    end
+
     # enable this the input for use; can be passed a block
     def enable(options = {}, &block)
       enable_entity
-
-      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
-      endpoint_ptr = FFI::MemoryPointer.new(:pointer)
-      Map.MIDIInputPortCreate(@client, port_name, nil, nil, endpoint_ptr)
-      @endpoint = endpoint_ptr.read_pointer
+      connect_endpoint
 
       @source = Map.MIDIPortConnectSource( @client, @endpoint, nil )
 
-      @enabled = true
+      @buffer = []
       @start_time = Time.now.to_f
+      @enabled = true
       spawn_listener
+
       unless block.nil?
         begin
           block.call(self)
@@ -65,6 +76,7 @@ module CoreMIDI
 
     # close this input
     def close
+      Map.MIDIPortDisconnectSource( @client, @endpoint )
       Thread.kill(@listener)
       @enabled = false
     end
@@ -83,9 +95,18 @@ module CoreMIDI
 
     private
 
+    def get_event_callback
+      Proc.new do | newPackets_ptr, refCon_ptr, connRefCon_ptr |
+        p 'hi'
+      end
+    end
+
     # launch a background thread that collects messages
     def spawn_listener
       @listener = Thread.fork do
+        while @buffer.empty? do
+          sleep(0.1)
+        end
       end
     end
 

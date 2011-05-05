@@ -25,6 +25,7 @@ module CoreMIDI
 
       @manufacturer = get_property(:manufacturer)
       @model = get_property(:model)
+      #@subname = get_property(:Name, @endpoint)
       @name = "#{@manufacturer} #{@model}"
 
       @enabled = false
@@ -63,10 +64,10 @@ module CoreMIDI
 
     private
 
-    def get_property(name)
+    def get_property(name, from = @entity_pointer)
       prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
       val = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 ) # placeholder
-      Map::MIDIObjectGetStringProperty(@entity_pointer, prop, val)
+      Map::MIDIObjectGetStringProperty(from, prop, val)
       Map::CF.CFStringGetCStringPtr(val.read_pointer, 0).read_string
     end
 

@@ -13,7 +13,9 @@ num_messages = 10
 # AlsaRawMIDI::Device.all.to_s will list your midi devices
 # or amidi -l from the command line
 
-CoreMIDI::Input.first.open do |input|
+CoreMIDI::Input.all[1].open do |input|
+
+  $>.puts "using input: #{input.id}, #{input.name}"
 
   $>.puts "send some MIDI to your input now..."
 
