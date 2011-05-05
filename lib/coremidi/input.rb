@@ -40,7 +40,7 @@ module CoreMIDI
     def gets_s
     end
     alias_method :gets_bytestr, :gets_s
-      require 'pp'
+
     def connect_endpoint
       port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
       endpoint_ptr = FFI::MemoryPointer.new(:pointer)
