@@ -7,4 +7,4 @@ examples/sandbox.rb
 .idea/*/**
 .loadpath
 .project
-coremidi.gemspec
+ffi-coremidi.gemspec

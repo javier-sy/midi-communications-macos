@@ -32,11 +32,20 @@ module CoreMIDI
     # ]
     #
     #
-    def gets_bytestr
+    def gets_s
     end
+    alias_method :gets_bytestr, :gets_s
 
     # enable this the input for use; can be passed a block
     def enable(options = {}, &block)
+      enable_entity
+
+      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
+      endpoint_ptr = FFI::MemoryPointer.new(:pointer)
+      Map.MIDIInputPortCreate(@client, port_name, nil, nil, endpoint_ptr)
+      @endpoint = endpoint_ptr.read_pointer
+
+      @source = Map.MIDIPortConnectSource( @client, @endpoint, nil )
 
       @enabled = true
       @start_time = Time.now.to_f
@@ -61,15 +70,15 @@ module CoreMIDI
     end
 
     def self.first
-      Device.first(:input)
+      Entity.first(:input)
     end
 
     def self.last
-      Device.last(:input)
+      Entity.last(:input)
     end
 
     def self.all
-      Device.all_by_type[:input]
+      Entity.all_by_type[:input]
     end
 
     private

@@ -30,6 +30,14 @@ module CoreMIDI
       @enabled = false
     end
 
+    def enable_entity
+      client_name = Map::CF.CFStringCreateWithCString( nil, "Client #{@id}: #{@name}", 0 )
+      client_ptr = FFI::MemoryPointer.new(:pointer)
+
+      Map.MIDIClientCreate(client_name, nil, nil, client_ptr)
+      @client = client_ptr.read_pointer
+    end
+
     # select the first device of type <em>type</em>
     def self.first(type)
       all_by_type[type].first

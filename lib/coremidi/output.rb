@@ -44,11 +44,7 @@ module CoreMIDI
 
     # enable this device; also takes a block
     def enable(options = {}, &block)
-      client_name = Map::CF.CFStringCreateWithCString( nil, "Client #{@id}: #{@name}", 0 )
-      client_ptr = FFI::MemoryPointer.new(:pointer)
-
-      Map.MIDIClientCreate(client_name, nil, nil, client_ptr)
-      @client = client_ptr.read_pointer
+      enable_entity
 
       port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
       outport_ptr = FFI::MemoryPointer.new(:pointer)
