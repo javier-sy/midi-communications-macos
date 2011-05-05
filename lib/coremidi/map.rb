@@ -14,7 +14,11 @@ module CoreMIDI
     SnowLeopard = `uname -r` =~ /10\.\d\.\d/
 
     # readProc(const MIDIPacketList *newPackets, void *refCon, void *connRefCon)
-    callback :readProc, [:pointer, :pointer, :pointer], :pointer
+    #@blocking = true
+    #callback :readProc, [:pointer, :pointer, :pointer], :pointer
+
+    #@blocking = true
+    #callback :sysex_output_callback, [:pointer], :pointer
 
     module TypeAliases
       CFStringRef = :pointer
@@ -25,12 +29,10 @@ module CoreMIDI
       MIDIEntityRef = :pointer
       MIDIObjectRef = :pointer
       MIDIPortRef = :pointer
-      MIDIReadProc = :readProc
+      MIDIReadProc = :pointer
       OSStatus = :int
     end
     TA = TypeAliases
-
-    callback :sysex_output_callback, [:pointer], :pointer
 
     class MIDISysexSendRequest < FFI::Struct
 
@@ -39,7 +41,7 @@ module CoreMIDI
              :bytes_to_send,       :uint32,
              :complete,            :int,
              :reserved,            [:char, 3],
-             :completion_proc,     :sysex_output_callback,
+             :completion_proc,     :pointer,
              :completion_ref_con,  :pointer
     end
 

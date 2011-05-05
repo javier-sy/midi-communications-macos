@@ -114,7 +114,8 @@ module CoreMIDI
     end
 
     SysexCompletionCallback =
-      Proc.new do |sysex_request_ptr|
+      FFI::Function.new(:void, [:pointer]) do |sysex_request_ptr|
+        p 'hi'
         # this isn't working for some reason
         # as of now, we don't need it though
       end

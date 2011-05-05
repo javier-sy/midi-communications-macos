@@ -40,12 +40,11 @@ module CoreMIDI
     def gets_s
     end
     alias_method :gets_bytestr, :gets_s
-
+      require 'pp'
     def connect_endpoint
       port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
       endpoint_ptr = FFI::MemoryPointer.new(:pointer)
-      @callback = get_event_callback
-      Map.MIDIInputPortCreate(@client, port_name, @callback, nil, endpoint_ptr)
+      pp Map.MIDIInputPortCreate(@client, port_name, EventCallback, nil, endpoint_ptr)
       @endpoint = endpoint_ptr.read_pointer
     end
 
@@ -95,10 +94,8 @@ module CoreMIDI
 
     private
 
-    def get_event_callback
-      Proc.new do | newPackets_ptr, refCon_ptr, connRefCon_ptr |
-        p 'hi'
-      end
+    EventCallback = FFI::Function.new(:pointer, [:pointer, :pointer, :pointer]) do | newPackets_ptr, refCon_ptr, connRefCon_ptr |
+      puts "hello!"
     end
 
     # launch a background thread that collects messages
@@ -109,8 +106,6 @@ module CoreMIDI
         end
       end
     end
-
-    private
 
   end
 
