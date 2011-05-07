@@ -22,7 +22,7 @@ module CoreMIDI
 
 
     typedef :pointer, :CFStringRef
-    typedef :uint32, :ItemCount
+    typedef :int32, :ItemCount
     typedef :pointer, :MIDIClientRef
     typedef :pointer, :MIDIDeviceRef
     typedef :pointer, :MIDIEndpointRef
@@ -30,7 +30,7 @@ module CoreMIDI
     typedef :pointer, :MIDIObjectRef
     typedef :pointer, :MIDIPortRef
     typedef :pointer, :MIDIReadProc
-    typedef :uint32, :OSStatus
+    typedef :int32, :OSStatus
 
     class MIDISysexSendRequest < FFI::Struct
 
