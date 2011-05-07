@@ -38,6 +38,9 @@ module CoreMIDI
     #
     #
     def gets_s
+      msgs = gets
+      msgs.each { |msg| msg[:data] = msg[:data].map { |b| s = b.to_s(16).upcase; b < 16 ? s = "0" + s : s; s }.join }
+      msgs
     end
     alias_method :gets_bytestr, :gets_s
 
@@ -91,10 +94,19 @@ module CoreMIDI
 
     private
 
-    EventCallback = Proc.new do | new_packets, refCon_ptr, connRefCon_ptr |
-      packet = new_packets[:packet][0]
-      p "packets received: #{new_packets[:numPackets]}"
-      p "first packet length: #{packet[:length]} data: #{packet[:data].to_a.to_s}"
+    def get_event_callback
+      Proc.new do | new_packets, refCon_ptr, connRefCon_ptr |
+        packet = new_packets[:packet][0]
+        #p "packets received: #{new_packets[:numPackets]}"
+        #p "first packet length: #{packet[:length]} data: #{packet[:data].to_a.to_s}"
+        @buffer << get_message_formatted(packet[:data].to_a[0, packet[:length]])
+      end
+    end
+
+    # give a message its timestamp and package it in a Hash
+    def get_message_formatted(raw)
+      time = ((Time.now.to_f - @start_time) * 1000).to_i # same time format as winmm
+      { :data => raw, :timestamp => time }
     end
 
     # launch a background thread that collects messages
@@ -109,7 +121,8 @@ module CoreMIDI
     def initialize_port
       port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
       handle_ptr = FFI::MemoryPointer.new(:pointer)
-      error = Map.MIDIInputPortCreate(@client, port_name, EventCallback, nil, handle_ptr)
+      @callback = get_event_callback
+      error = Map.MIDIInputPortCreate(@client, port_name, @callback, nil, handle_ptr)
       @handle = handle_ptr.read_pointer
       raise "MIDIInputPortCreate returned error code #{error}" unless error.zero?
     end

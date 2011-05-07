@@ -1,6 +1,4 @@
-current status (4/29/2011): all output examples working
-
-= coreMIDI
+= ffi-coremidi
 
 == Summary
 
@@ -17,6 +15,10 @@ Realtime MIDI IO with Ruby for OSX
 
 * {ffi}[http://github.com/ffi/ffi] (gem install ffi)
 
+== Install
+
+  gem install ffi-coremidi
+
 == Author
 
 * {Ari Russo}[http://github.com/arirusso] <ari.russo at gmail.com>
@@ -30,6 +32,8 @@ This library began with some coremidi/ffi binding code for MIDI output by
 contained in {his fork of MIDIator}[http://github.com/aberant/midiator] and a {blog post}[http://aberant.tumblr.com/post/694878119/sending-midi-sysex-with-core-midi-and-ruby-ffi]
 
 {MIDIator}[http://github.com/bleything/midiator] is (c)2008 by Ben Bleything and Topher Cyll and released under the MIT license (see LICENSE.midiator and LICENSE.prp)
+
+Also thank you to {Jeremy Voorhis}[http://github.com/jvoorhis] for some useful debugging
 
 == License
 
