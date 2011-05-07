@@ -89,6 +89,8 @@ module CoreMIDI
     # extern OSStatus MIDIOutputPortCreate( MIDIClientRef client, CFStringRef portName, MIDIPortRef * outPort );
     attach_function :MIDIOutputPortCreate, [:MIDIClientRef, :CFStringRef, :pointer], :int
 
+    attach_function :MIDIPacketListInit, [:pointer], :pointer
+
     #extern OSStatus MIDIPortConnectSource( MIDIPortRef port, MIDIEndpointRef source, void * connRefCon )
     attach_function :MIDIPortConnectSource, [:MIDIPortRef, :MIDIEndpointRef, :pointer], :OSStatus
 

@@ -56,6 +56,7 @@ module CoreMIDI
       raise "Map.MIDIPortConnectSource returned error code #{error}" unless error.zero?
 
       @buffer = []
+      @sysex_buffer = []
       @start_time = Time.now.to_f
       @enabled = true
       spawn_listener
@@ -97,9 +98,20 @@ module CoreMIDI
     def get_event_callback
       Proc.new do | new_packets, refCon_ptr, connRefCon_ptr |
         packet = new_packets[:packet][0]
+        len = packet[:length]
         #p "packets received: #{new_packets[:numPackets]}"
-        #p "first packet length: #{packet[:length]} data: #{packet[:data].to_a.to_s}"
-        @buffer << get_message_formatted(packet[:data].to_a[0, packet[:length]])
+        #p "first packet length: #{len} data: #{packet[:data].to_a.to_s}"
+        if len > 0
+          bytes = packet[:data].to_a[0, len]
+          if bytes.first.eql?(0xF0) || !@sysex_buffer.empty?
+            @sysex_buffer += bytes
+            if bytes.last.eql?(0xF7)
+              bytes = @sysex_buffer.dup
+              @sysex_buffer.clear
+            end
+          end
+          @buffer << get_message_formatted(bytes) if @sysex_buffer.empty?
+        end
       end
     end
 
