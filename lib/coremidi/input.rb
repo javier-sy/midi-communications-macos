@@ -41,19 +41,16 @@ module CoreMIDI
     end
     alias_method :gets_bytestr, :gets_s
 
-    def connect_endpoint
-      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
-      endpoint_ptr = FFI::MemoryPointer.new(:pointer)
-      pp Map.MIDIInputPortCreate(@client, port_name, EventCallback, nil, endpoint_ptr)
-      @endpoint = endpoint_ptr.read_pointer
-    end
-
     # enable this the input for use; can be passed a block
     def enable(options = {}, &block)
       enable_entity
+      initialize_port
       connect_endpoint
 
-      @source = Map.MIDIPortConnectSource( @client, @endpoint, nil )
+      @port = FFI::MemoryPointer.new(:pointer)
+
+      error = Map.MIDIPortConnectSource(@handle, @endpoint, nil )
+      raise "Map.MIDIPortConnectSource returned error code #{error}" unless error.zero?
 
       @buffer = []
       @start_time = Time.now.to_f
@@ -105,6 +102,18 @@ module CoreMIDI
           sleep(0.1)
         end
       end
+    end
+
+    def initialize_port
+      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
+      handle_ptr = FFI::MemoryPointer.new(:pointer)
+      error = Map.MIDIInputPortCreate(@client, port_name, EventCallback, nil, handle_ptr)
+      @handle = handle_ptr.read_pointer
+      raise "MIDIInputPortCreate returned error code #{error}" unless error.zero?
+    end
+
+    def connect_endpoint
+      @endpoint = Map.MIDIEntityGetSource(@entity_pointer, 0)
     end
 
   end
