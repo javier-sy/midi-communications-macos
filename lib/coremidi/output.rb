@@ -42,13 +42,6 @@ module CoreMIDI
     end
     alias_method :write, :puts
 
-    def connect_endpoint
-      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
-      outport_ptr = FFI::MemoryPointer.new(:pointer)
-      Map.MIDIOutputPortCreate(@client, port_name, outport_ptr)
-      @endpoint = outport_ptr.read_pointer
-    end
-
     # enable this device; also takes a block
     def enable(options = {}, &block)
       enable_entity
@@ -119,6 +112,15 @@ module CoreMIDI
         # this isn't working for some reason
         # as of now, we don't need it though
       end
+
+    private
+
+    def connect_endpoint
+      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
+      outport_ptr = FFI::MemoryPointer.new(:pointer)
+      Map.MIDIOutputPortCreate(@client, port_name, outport_ptr)
+      @endpoint = outport_ptr.read_pointer
+    end
 
   end
 
