@@ -20,7 +20,6 @@ module CoreMIDI
     #@blocking = true
     #callback :sysex_output_callback, [:pointer], :pointer
 
-
     typedef :pointer, :CFStringRef
     typedef :int32, :ItemCount
     typedef :pointer, :MIDIClientRef
@@ -57,13 +56,13 @@ module CoreMIDI
     attach_function :MIDIGetDestination, [:int], :pointer
 
     # MIDIEndpointRef MIDIEntityGetDestination( MIDIEntityRef entity, ItemCount destIndex0 );
-    attach_function :MIDIEntityGetDestination, [:pointer, :int], :MIDIEndpointRef
+    attach_function :MIDIEntityGetDestination, [:MIDIEntityRef, :int], :MIDIEndpointRef
 
     # ItemCount MIDIEntityGetNumberOfDestinations (MIDIEntityRef  entity);
     attach_function :MIDIEntityGetNumberOfDestinations, [:MIDIEntityRef], :ItemCount
 
     # ItemCount MIDIEntityGetNumberOfSources (MIDIEntityRef  entity);
-    attach_function :MIDIEntityGetNumberOfSources, [:pointer], :ItemCount
+    attach_function :MIDIEntityGetNumberOfSources, [:MIDIEntityRef], :ItemCount
 
     # MIDIEndpointRef MIDIEntityGetSource (MIDIEntityRef  entity, ItemCount sourceIndex0);
     attach_function :MIDIEntityGetSource, [:MIDIEntityRef, :ItemCount], :MIDIEndpointRef
