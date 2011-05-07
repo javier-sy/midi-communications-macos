@@ -39,7 +39,12 @@ module CoreMIDI
     #
     def gets_s
       msgs = gets
-      msgs.each { |msg| msg[:data] = msg[:data].map { |b| s = b.to_s(16).upcase; b < 16 ? s = "0" + s : s; s }.join }
+      msgs.each do |msg|
+        msg[:data] = msg[:data].map do |b|
+          s = b.to_s(16).upcase
+          b < 16 ? "0" + s : s
+        end.join
+      end
       msgs
     end
     alias_method :gets_bytestr, :gets_s
@@ -76,7 +81,10 @@ module CoreMIDI
 
     # close this input
     def close
-      Map.MIDIPortDisconnectSource( @client, @endpoint )
+      error = Map.MIDIPortDisconnectSource( @handle, @endpoint )
+      raise "MIDIPortDisconnectSource returned error code #{error}" unless error.zero?
+      error = Map.MIDIPortDispose(@handle)
+      raise "MIDIPortDisposePort returned error code #{error}" unless error.zero?
       Thread.kill(@listener)
       @enabled = false
     end

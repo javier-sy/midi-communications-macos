@@ -16,11 +16,20 @@ module CoreMIDI
     end
 
     # sends a MIDI message comprised of a String of hex digits
-    def puts_bytestr(data)
+    def puts_s(data)
+      data = data.dup
+	    output = []
+      until (str = data.slice!(0,2)).eql?("")
+      	output << str.hex
+      end
+      puts_bytes(*output)
     end
+    alias_method :puts_bytestr, :puts_s
+    alias_method :puts_hex, :puts_s
 
     # sends a MIDI messages comprised of Numeric bytes
     def puts_bytes(*data)
+
       format = "C" * data.size
       bytes = (FFI::MemoryPointer.new FFI.type_size(:char) * data.size)
       bytes.write_string(data.pack(format))
@@ -93,7 +102,7 @@ module CoreMIDI
 
     def puts_sysex(bytes, size)
 
-      @callback =
+      #@callback =
 
       request = Map::MIDISysexSendRequest.new
       request[:destination] = @destination

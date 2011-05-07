@@ -26,7 +26,7 @@ class IoTest < Test::Unit::TestCase
           $>.puts "received: " + received.inspect
 
           assert_equal(msg, received)
-          
+
         end
 
       end

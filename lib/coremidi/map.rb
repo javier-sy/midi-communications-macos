@@ -97,6 +97,9 @@ module CoreMIDI
     #extern OSStatus MIDIPortDisconnectSource( MIDIPortRef port, MIDIEndpointRef source );
     attach_function :MIDIPortDisconnectSource, [:MIDIPortRef, :MIDIEndpointRef], :OSStatus
 
+    #extern OSStatus MIDIPortDispose(MIDIPortRef port );
+    attach_function :MIDIPortDispose, [:MIDIPortRef], :OSStatus
+
     attach_function :MIDISend, [:pointer, :pointer, :pointer], :int
 
     attach_function :MIDISendSysex, [:pointer], :int
