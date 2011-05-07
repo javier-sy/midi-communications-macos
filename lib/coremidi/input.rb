@@ -92,7 +92,9 @@ module CoreMIDI
     private
 
     EventCallback = FFI::Function.new(:pointer, [:pointer, :pointer, :pointer]) do | newPackets_ptr, refCon_ptr, connRefCon_ptr |
-      puts "hello!"
+      packet_list = Map::MIDIPacketList.new(newPackets_ptr)
+      p packet_list
+
     end
 
     # launch a background thread that collects messages

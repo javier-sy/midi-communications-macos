@@ -44,9 +44,17 @@ module CoreMIDI
     end
 
     class MIDIPacket < FFI::Struct
+
       layout :timestamp, :MIDITimeStamp,
              :length, :uint16,
-             :data, [:byte, 256]
+             :data, [:char, 256]
+
+    end
+
+    class MIDIPacketList < FFI::Struct
+      layout :numPackets, :uint32,
+             :packet, [MIDIPacket, 1]
+
     end
 
     attach_function :MIDIClientCreate, [:pointer, :pointer, :pointer, :pointer], :int
