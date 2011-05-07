@@ -3,7 +3,7 @@
 module CoreMIDI
 
   #
-  # coremidi struct, enum and function bindings
+  # coremidi binding
   #
   #
   module Map
@@ -13,13 +13,6 @@ module CoreMIDI
 
     SnowLeopard = `uname -r` =~ /10\.\d\.\d/
 
-    # readProc(const MIDIPacketList *newPackets, void *refCon, void *connRefCon)
-    #@blocking = true
-    #callback :readProc, [:pointer, :pointer, :pointer], :pointer
-
-    #@blocking = true
-    #callback :sysex_output_callback, [:pointer], :pointer
-
     typedef :pointer, :CFStringRef
     typedef :int32, :ItemCount
     typedef :pointer, :MIDIClientRef
@@ -28,7 +21,7 @@ module CoreMIDI
     typedef :pointer, :MIDIEntityRef
     typedef :pointer, :MIDIObjectRef
     typedef :pointer, :MIDIPortRef
-    typedef :pointer, :MIDIReadProc
+    #typedef :pointer, :MIDIReadProc
     typedef :uint64, :MIDITimeStamp
     typedef :int32, :OSStatus
 
@@ -47,15 +40,17 @@ module CoreMIDI
 
       layout :timestamp, :MIDITimeStamp,
              :length, :uint16,
-             :data, [:char, 256]
+             :data, [:uint8, 256]
 
     end
 
     class MIDIPacketList < FFI::Struct
       layout :numPackets, :uint32,
-             :packet, [MIDIPacket, 1]
+             :packet, [MIDIPacket.by_value, 1]
 
     end
+
+    callback :MIDIReadProc, [MIDIPacketList.by_ref, :pointer, :pointer], :pointer
 
     attach_function :MIDIClientCreate, [:pointer, :pointer, :pointer, :pointer], :int
 
@@ -93,8 +88,6 @@ module CoreMIDI
     # extern OSStatus MIDIOutputPortCreate( MIDIClientRef client, CFStringRef portName, MIDIPortRef * outPort );
     attach_function :MIDIOutputPortCreate, [:MIDIClientRef, :CFStringRef, :pointer], :int
 
-    attach_function :MIDIPacketListInit, [:pointer], :pointer
-
     #extern OSStatus MIDIPortConnectSource( MIDIPortRef port, MIDIEndpointRef source, void * connRefCon )
     attach_function :MIDIPortConnectSource, [:MIDIPortRef, :MIDIEndpointRef, :pointer], :OSStatus
 
@@ -121,6 +114,13 @@ module CoreMIDI
       # CString* CFStringGetCStringPtr(CFString*, encoding)
       attach_function :CFStringGetCStringPtr, [:pointer, :int], :pointer
 
+    end
+
+    module HostTime
+      extend FFI::Library
+      ffi_lib '/System/Library/Frameworks/CoreAudio.framework/Versions/Current/CoreAudio'
+
+      attach_function :AudioConvertHostTimeToNanos, [:uint64], :uint64
     end
 
   end
