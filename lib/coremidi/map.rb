@@ -29,6 +29,7 @@ module CoreMIDI
     typedef :pointer, :MIDIObjectRef
     typedef :pointer, :MIDIPortRef
     typedef :pointer, :MIDIReadProc
+    typedef :uint64, :MIDITimeStamp
     typedef :int32, :OSStatus
 
     class MIDISysexSendRequest < FFI::Struct
@@ -40,6 +41,12 @@ module CoreMIDI
              :reserved,            [:char, 3],
              :completion_proc,     :pointer,
              :completion_ref_con,  :pointer
+    end
+
+    class MIDIPacket < FFI::Struct
+      layout :timestamp, :MIDITimeStamp,
+             :length, :uint16,
+             :data, [:byte, 256]
     end
 
     attach_function :MIDIClientCreate, [:pointer, :pointer, :pointer, :pointer], :int
