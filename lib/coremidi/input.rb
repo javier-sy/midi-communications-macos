@@ -129,7 +129,8 @@ module CoreMIDI
     # launch a background thread that collects messages
     def spawn_listener
       @listener = Thread.fork do
-        while @internal_buffer.empty? do
+        len = @buffer.length
+        while @buffer.length.eql?(len) do
           sleep(0.05)
         end
       end
