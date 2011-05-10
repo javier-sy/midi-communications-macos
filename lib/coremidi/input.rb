@@ -24,8 +24,8 @@ module CoreMIDI
     #
     def gets
       @listener.join
-      msgs = @internal_buffer.dup
-      @internal_buffer.clear
+      msgs = @buffer.slice(@pointer, @buffer.length - @pointer)
+      @pointer += 1
       spawn_listener
       msgs
     end
@@ -41,12 +41,7 @@ module CoreMIDI
     #
     def gets_s
       msgs = gets
-      msgs.each do |msg|
-        msg[:data] = msg[:data].map do |b|
-          s = b.to_s(16).upcase
-          b < 16 ? "0" + s : s
-        end.join
-      end
+      msgs.each { |msg| msg[:data] = numeric_bytes_to_hex_string(msg[:data]) }
       msgs
     end
     alias_method :gets_bytestr, :gets_s
@@ -61,8 +56,9 @@ module CoreMIDI
 
       error = Map.MIDIPortConnectSource(@handle, @endpoint, nil )
       raise "Map.MIDIPortConnectSource returned error code #{error}" unless error.zero?
-
-      @buffer, @internal_buffer, @sysex_buffer = [],[],[]
+      
+      initialize_buffer
+      @sysex_buffer = []
       @start_time = Time.now.to_f
       @enabled = true
       spawn_listener
@@ -119,7 +115,7 @@ module CoreMIDI
               @sysex_buffer.clear
             end
           end
-          record_bytes(bytes) if @sysex_buffer.empty?             
+          @buffer << get_message_formatted(bytes) if @sysex_buffer.empty?             
         end
       end
     end
@@ -152,11 +148,18 @@ module CoreMIDI
       @endpoint = Map.MIDIEntityGetSource(@entity_pointer, 0)
     end
     
-    def record_bytes(bytes)
-      msg = get_message_formatted(bytes)
-      @internal_buffer << msg
-      @buffer << msg
+    def initialize_buffer
+      @pointer = 0
+      @buffer = []
+      def @buffer.clear
+        super
+        @pointer = 0
+      end     
     end
+    
+    def numeric_bytes_to_hex_string(bytes)
+      bytes.map { |b| s = b.to_s(16).upcase; b < 16 ? s = "0" + s : s; s }.join
+    end 
 
   end
 
