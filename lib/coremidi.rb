@@ -17,5 +17,5 @@ require 'coremidi/map'
 require 'coremidi/output'
 
 module CoreMIDI
-  VERSION = "0.0.2"
+  VERSION = "0.0.3"
 end
