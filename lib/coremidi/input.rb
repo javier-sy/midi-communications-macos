@@ -134,7 +134,7 @@ module CoreMIDI
     def spawn_listener
       @listener = Thread.fork do
         while @internal_buffer.empty? do
-          sleep(0.1)
+          sleep(0.05)
         end
       end
     end
