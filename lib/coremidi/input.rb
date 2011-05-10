@@ -8,6 +8,8 @@ module CoreMIDI
   class Input
 
     include Entity
+    
+    attr_reader :buffer
 
     #
     # returns an array of MIDI event hashes as such:
@@ -22,8 +24,8 @@ module CoreMIDI
     #
     def gets
       @listener.join
-      msgs = @buffer.dup
-      @buffer.clear
+      msgs = @internal_buffer.dup
+      @internal_buffer.clear
       spawn_listener
       msgs
     end
@@ -60,8 +62,7 @@ module CoreMIDI
       error = Map.MIDIPortConnectSource(@handle, @endpoint, nil )
       raise "Map.MIDIPortConnectSource returned error code #{error}" unless error.zero?
 
-      @buffer = []
-      @sysex_buffer = []
+      @buffer, @internal_buffer, @sysex_buffer = [],[],[]
       @start_time = Time.now.to_f
       @enabled = true
       spawn_listener
@@ -118,7 +119,7 @@ module CoreMIDI
               @sysex_buffer.clear
             end
           end
-          @buffer << get_message_formatted(bytes) if @sysex_buffer.empty?
+          record_bytes(bytes) if @sysex_buffer.empty?             
         end
       end
     end
@@ -132,7 +133,7 @@ module CoreMIDI
     # launch a background thread that collects messages
     def spawn_listener
       @listener = Thread.fork do
-        while @buffer.empty? do
+        while @internal_buffer.empty? do
           sleep(0.1)
         end
       end
@@ -149,6 +150,12 @@ module CoreMIDI
 
     def connect_endpoint
       @endpoint = Map.MIDIEntityGetSource(@entity_pointer, 0)
+    end
+    
+    def record_bytes(bytes)
+      msg = get_message_formatted(bytes)
+      @internal_buffer << msg
+      @buffer << msg
     end
 
   end
