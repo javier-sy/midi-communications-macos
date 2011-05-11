@@ -25,7 +25,7 @@ module CoreMIDI
     def gets
       @listener.join
       msgs = @buffer.slice(@pointer, @buffer.length - @pointer)
-      @pointer += 1
+      @pointer = @buffer.length
       spawn_listener
       msgs
     end
