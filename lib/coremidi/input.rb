@@ -13,11 +13,11 @@ module CoreMIDI
 
     #
     # returns an array of MIDI event hashes as such:
-    # [
-    #   { :data => [144, 60, 100], :timestamp => 1024 },
-    #   { :data => [128, 60, 100], :timestamp => 1100 },
-    #   { :data => [144, 40, 120], :timestamp => 1200 }
-    # ]
+    #   [
+    #     { :data => [144, 60, 100], :timestamp => 1024 },
+    #     { :data => [128, 60, 100], :timestamp => 1100 },
+    #     { :data => [144, 40, 120], :timestamp => 1200 }
+    #   ]
     #
     # the data is an array of Numeric bytes
     # the timestamp is the number of millis since this input was enabled
@@ -32,11 +32,11 @@ module CoreMIDI
     alias_method :read, :gets
 
     # same as gets but returns message data as string of hex digits as such:
-    # [
-    #   { :data => "904060", :timestamp => 904 },
-    #   { :data => "804060", :timestamp => 1150 },
-    #   { :data => "90447F", :timestamp => 1300 }
-    # ]
+    #   [
+    #     { :data => "904060", :timestamp => 904 },
+    #     { :data => "804060", :timestamp => 1150 },
+    #     { :data => "90447F", :timestamp => 1300 }
+    #   ]
     #
     #
     def gets_s
@@ -131,7 +131,7 @@ module CoreMIDI
       @listener = Thread.fork do
         len = @buffer.length
         while @buffer.length.eql?(len) do
-          sleep(0.05)
+          #sleep(0.05)
         end
       end
     end
