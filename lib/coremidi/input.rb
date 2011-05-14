@@ -23,10 +23,10 @@ module CoreMIDI
     # the timestamp is the number of millis since this input was enabled
     #
     def gets
-      @listener.join
-      msgs = @buffer.slice(@pointer, @buffer.length - @pointer)
+      until queued_messages?
+      end
+      msgs = queued_messages
       @pointer = @buffer.length
-      spawn_listener
       msgs
     end
     alias_method :read, :gets
@@ -61,7 +61,6 @@ module CoreMIDI
       @sysex_buffer = []
       @start_time = Time.now.to_f
       @enabled = true
-      spawn_listener
 
       unless block.nil?
         begin
@@ -82,7 +81,6 @@ module CoreMIDI
       raise "MIDIPortDisconnectSource returned error code #{error}" unless error.zero?
       error = Map.MIDIPortDispose(@handle)
       raise "MIDIPortDisposePort returned error code #{error}" unless error.zero?
-      Thread.kill(@listener)
       @enabled = false
     end
 
@@ -99,6 +97,14 @@ module CoreMIDI
     end
 
     private
+
+    def queued_messages
+      @buffer.slice(@pointer, @buffer.length - @pointer)
+    end
+
+    def queued_messages?
+      @pointer < @buffer.length
+    end
 
     def get_event_callback
       Proc.new do | new_packets, refCon_ptr, connRefCon_ptr |
@@ -124,16 +130,6 @@ module CoreMIDI
     def get_message_formatted(raw)
       time = ((Time.now.to_f - @start_time) * 1000).to_i # same time format as winmm
       { :data => raw, :timestamp => time }
-    end
-
-    # launch a background thread that collects messages
-    def spawn_listener
-      @listener = Thread.fork do
-        len = @buffer.length
-        while @buffer.length.eql?(len) do
-          #sleep(0.05)
-        end
-      end
     end
 
     def initialize_port
