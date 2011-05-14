@@ -128,7 +128,7 @@ module CoreMIDI
 
     # give a message its timestamp and package it in a Hash
     def get_message_formatted(raw)
-      time = ((Time.now.to_f - @start_time) * 1000).to_i # same time format as winmm
+      time = ((Time.now.to_f - @start_time) * 1000)
       { :data => raw, :timestamp => time }
     end
 
