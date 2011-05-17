@@ -10,7 +10,7 @@ module CoreMIDI
                 # device name from coremidi
                 :name
 
-    def initialize(id, device_pointer)
+    def initialize(id, entity_count, device_pointer)
       @id = id
       @device_pointer = device_pointer
       prop = Map::CF.CFStringCreateWithCString( nil, "name", 0 )
@@ -18,14 +18,17 @@ module CoreMIDI
       Map::MIDIObjectGetStringProperty(@device_pointer, prop, name)
 
       @name = Map::CF.CFStringGetCStringPtr(name.read_pointer, 0).read_string
-      populate_entities
+      populate_entities(entity_count)
     end
 
     def self.all
       devices = []
       i = 0
+      entity_counter = 0
       while !(device_pointer = Map.MIDIGetDevice(i)).null?
-        devices << new(i, device_pointer)
+        device = new(i, entity_counter, device_pointer)
+        devices << device
+        entity_counter += device.entities.values.flatten.length
         i+=1
       end
       devices
@@ -33,9 +36,9 @@ module CoreMIDI
 
     private
 
-    def populate_entities
+    def populate_entities(starting_id)
       entities = { :input => [], :output => [] }
-      id = 0
+      id = starting_id
       i = 0
       while !(entity_pointer = Map.MIDIDeviceGetEntity(@device_pointer, i)).null?
         dests = Map.MIDIEntityGetNumberOfDestinations(entity_pointer)
