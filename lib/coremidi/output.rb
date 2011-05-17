@@ -61,7 +61,7 @@ module CoreMIDI
       @enabled = true
       unless block.nil?
       	begin
-      		block.call(self)
+      		yield(self)
       	ensure
       		close
       	end
