@@ -68,7 +68,7 @@ module CoreMIDI
       prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
       val = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 ) # placeholder
       Map::MIDIObjectGetStringProperty(from, prop, val)
-      Map::CF.CFStringGetCStringPtr(val.read_pointer, 0).read_string
+      Map::CF.CFStringGetCStringPtr(val.read_pointer, 0).read_string rescue nil
     end
 
   end
