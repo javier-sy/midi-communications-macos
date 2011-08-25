@@ -33,6 +33,7 @@ module CoreMIDI
       @name = "#{@manufacturer} #{@model}"
 
       @is_online = get_property(:offline, :type => :int) == 0 && connect?
+      close unless online?
       @enabled = false
     end
 
