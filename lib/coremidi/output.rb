@@ -67,15 +67,6 @@ module CoreMIDI
     end
     alias_method :open, :enable
     alias_method :start, :enable
-    
-    def connect
-      client_error = enable_client
-      endpoint_error = create_endpoint
-
-      @destination = Map.MIDIEntityGetDestination( @entity_pointer, @endpoint_id )
-      !@destination.address.zero? && client_error.zero? && endpoint_error.zero?
-    end
-    alias_method :connect?, :connect
 
     def self.first
       Endpoint.first(:output)
@@ -88,6 +79,17 @@ module CoreMIDI
     def self.all
       Endpoint.all_by_type[:output]
     end
+    
+    protected
+
+    def connect
+      client_error = enable_client
+      endpoint_error = create_endpoint
+
+      @destination = Map.MIDIEntityGetDestination( @entity_pointer, @endpoint_id )
+      !@destination.address.zero? && client_error.zero? && endpoint_error.zero?
+    end
+    alias_method :connect?, :connect
 
     private
 
@@ -126,8 +128,6 @@ module CoreMIDI
         # this isn't working for some reason
         # as of now, we don't need it though
       end
-
-    private
 
     def create_endpoint
       port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
