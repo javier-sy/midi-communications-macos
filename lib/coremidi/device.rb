@@ -37,7 +37,7 @@ module CoreMIDI
 
     private
 
-    def populate_endpoints(type, entity_pointer, starting_id, include_offline)
+    def populate_endpoints(type, entity_pointer, starting_id, include_if_offline)
       endpoint_type, device_class = *case type
         when :input then [:source, Input]
         when :output then [:destination, Output]
