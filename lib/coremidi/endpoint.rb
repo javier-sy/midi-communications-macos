@@ -28,11 +28,17 @@ module CoreMIDI
 
       @manufacturer = get_property(:manufacturer)
       @model = get_property(:model)
-      @is_online = get_property(:offline, :type => :int) == 0
+      @is_online = get_property(:offline, :type => :int) == 0 && connect?
       #@subname = get_property(:Name, @endpoint)
       @name = "#{@manufacturer} #{@model}"
 
       @enabled = false
+    end
+    
+    def connect?
+      status = true
+      status = connect rescue false
+      status
     end
 
     def enable_client

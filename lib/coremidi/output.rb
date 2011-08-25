@@ -53,8 +53,6 @@ module CoreMIDI
 
     # enable this device; also takes a block
     def enable(options = {}, &block)
-      enable_client
-      connect_endpoint
 
       @destination = Map.MIDIEntityGetDestination( @entity_pointer, @endpoint_id )
 
@@ -129,6 +127,11 @@ module CoreMIDI
       outport_ptr = FFI::MemoryPointer.new(:pointer)
       Map.MIDIOutputPortCreate(@client, port_name, outport_ptr)
       @endpoint = outport_ptr.read_pointer
+    end
+    
+    def connect
+      enable_client
+      connect_endpoint
     end
 
   end

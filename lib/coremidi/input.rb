@@ -48,9 +48,7 @@ module CoreMIDI
 
     # enable this the input for use; can be passed a block
     def enable(options = {}, &block)
-      enable_client
-      initialize_port
-      connect_endpoint
+      
 
       @port = FFI::MemoryPointer.new(:pointer)
 
@@ -159,6 +157,12 @@ module CoreMIDI
     
     def numeric_bytes_to_hex_string(bytes)
       bytes.map { |b| s = b.to_s(16).upcase; b < 16 ? s = "0" + s : s; s }.join
+    end
+    
+    def connect
+      enable_client
+      initialize_port
+      connect_endpoint
     end 
 
   end
