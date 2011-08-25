@@ -3,11 +3,11 @@
 module CoreMIDI
 
   #
-  # Output entity class
+  # Output endpoint class
   #
   class Output
 
-    include Entity
+    include Endpoint
 
     # close this output
     def close
@@ -53,7 +53,7 @@ module CoreMIDI
 
     # enable this device; also takes a block
     def enable(options = {}, &block)
-      enable_entity
+      enable_client
       connect_endpoint
 
       @destination = Map.MIDIEntityGetDestination( @entity_pointer, @endpoint_id )
@@ -73,15 +73,15 @@ module CoreMIDI
     alias_method :start, :enable
 
     def self.first
-      Entity.first(:output)
+      Endpoint.first(:output)
     end
 
     def self.last
-      Entity.last(:output)
+      Endpoint.last(:output)
     end
 
     def self.all
-      Entity.all_by_type[:output]
+      Endpoint.all_by_type[:output]
     end
 
     private

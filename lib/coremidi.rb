@@ -5,7 +5,7 @@
 require 'ffi'
 
 require 'coremidi/device'
-require 'coremidi/entity'
+require 'coremidi/endpoint'
 require 'coremidi/input'
 require 'coremidi/map'
 require 'coremidi/output'

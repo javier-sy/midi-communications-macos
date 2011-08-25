@@ -4,7 +4,7 @@ module CoreMIDI
 
   class Device
 
-    attr_reader :entities,
+    attr_reader :endpoints,
                 # unique Numeric id
                 :id,
                 # device name from coremidi
@@ -18,18 +18,18 @@ module CoreMIDI
       Map::MIDIObjectGetStringProperty(@device_pointer, prop, name)
 
       @name = Map::CF.CFStringGetCStringPtr(name.read_pointer, 0).read_string
-      populate_entities(entity_count, include_if_offline)
+      populate_endpoints(entity_count, include_if_offline)
     end
 
     def self.all(options = {})
-      include_offline_entities = options[:include_offline] || false
+      include_offline = options[:include_offline] || false
       devices = []
       i = 0
-      entity_counter = 0
+      endpoint_counter = 0
       while !(device_pointer = Map.MIDIGetDevice(i)).null?
-        device = new(i, entity_counter, device_pointer, include_offline_entities)
+        device = new(i, endpoint_counter, device_pointer, include_offline)
         devices << device
-        entity_counter += device.entities.values.flatten.length
+        endpoint_counter += device.endpoints.values.flatten.length
         i+=1
       end
       devices
@@ -46,9 +46,9 @@ module CoreMIDI
       num_endpoints = get_endpoints(endpoint_type, entity_pointer)
       (0..num_endpoints).each do |i|
         dev = device_class.new((i + starting_id), i, entity_pointer, include_if_offline)
-        @entities[type] << dev if dev.online? || include_if_offline
+        @endpoints[type] << dev if dev.online? || include_if_offline
       end  
-      @entities[type].size   
+      @endpoints[type].size   
     end
     
     def get_endpoints(type, entity_pointer)
@@ -58,8 +58,8 @@ module CoreMIDI
       end
     end
 
-    def populate_entities(starting_id, include_if_offline)
-      @entities = { :input => [], :output => [] }
+    def populate_endpoints(starting_id, include_if_offline)
+      @endpoints = { :input => [], :output => [] }
       id = starting_id
       i = 0
       while !(entity_pointer = Map.MIDIDeviceGetEntity(@device_pointer, i)).null?

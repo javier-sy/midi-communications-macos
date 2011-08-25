@@ -2,7 +2,7 @@
 
 module CoreMIDI
 
-  module Entity
+  module Endpoint
 
                 # has the device been initialized?
     attr_reader :enabled,
@@ -35,7 +35,7 @@ module CoreMIDI
       @enabled = false
     end
 
-    def enable_entity
+    def enable_client
       client_name = Map::CF.CFStringCreateWithCString( nil, "Client #{@id}: #{@name}", 0 )
       client_ptr = FFI::MemoryPointer.new(:pointer)
 
@@ -56,14 +56,14 @@ module CoreMIDI
     # a Hash of :input and :output devices
     def self.all_by_type
       {
-        :input => Device.all.map { |d| d.entities[:input] }.flatten,
-        :output => Device.all.map { |d| d.entities[:output] }.flatten
+        :input => Device.all.map { |d| d.endpoints[:input] }.flatten,
+        :output => Device.all.map { |d| d.endpoints[:output] }.flatten
       }
     end
 
     # all devices of both types
     def self.all
-      Device.all.map { |d| d.entities }.flatten
+      Device.all.map { |d| d.endpoints }.flatten
     end
 
     private

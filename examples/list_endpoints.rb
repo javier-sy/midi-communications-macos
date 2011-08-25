@@ -6,4 +6,4 @@ $LOAD_PATH.unshift dir + '/../lib'
 require 'coremidi'
 require 'pp'
 
-pp CoreMIDI::Device.all.map { |device| device.entities.values }.flatten
+pp CoreMIDI::Device.all.map { |device| device.endpoints.values }.flatten

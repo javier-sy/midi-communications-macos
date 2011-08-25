@@ -3,11 +3,11 @@
 module CoreMIDI
 
   #
-  # Input entity class
+  # Input endpoint class
   #
   class Input
 
-    include Entity
+    include Endpoint
     
     attr_reader :buffer
 
@@ -48,7 +48,7 @@ module CoreMIDI
 
     # enable this the input for use; can be passed a block
     def enable(options = {}, &block)
-      enable_entity
+      enable_client
       initialize_port
       connect_endpoint
 
@@ -85,15 +85,15 @@ module CoreMIDI
     end
 
     def self.first
-      Entity.first(:input)
+      Endpoint.first(:input)
     end
 
     def self.last
-      Entity.last(:input)
+      Endpoint.last(:input)
     end
 
     def self.all
-      Entity.all_by_type[:input]
+      Endpoint.all_by_type[:input]
     end
 
     private
