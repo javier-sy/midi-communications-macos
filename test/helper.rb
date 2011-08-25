@@ -7,6 +7,25 @@ require 'test/unit'
 require 'coremidi'
 
 module TestHelper
+  
+  def self.select_devices
+    $test_device ||= {}
+    { :input => CoreMIDI::Input.all, :output => CoreMIDI::Output.all }.each do |type, devs|
+      puts ""
+      puts "select an #{type.to_s}..."
+      while $test_device[type].nil?
+        devs.each do |device|
+          puts device.pretty_name
+        end
+        selection = $stdin.gets.chomp
+        if selection != ""
+          selection = selection.to_i
+          $test_device[type] = devs.find { |d| d.id == selection }
+          puts "selected #{selection} for #{type.to_s}" unless $test_device[type]
+        end
+      end
+    end
+  end 
 	    
   def bytestrs_to_ints(arr)
     data = arr.map { |m| m[:data] }.join
@@ -36,4 +55,4 @@ module TestHelper
     
 end
 
-require File.dirname(__FILE__) + '/config'
+TestHelper.select_devices
