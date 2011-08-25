@@ -80,7 +80,7 @@ module CoreMIDI
       val.read_int
     end        
 
-    def get_property(name)
+    def get_property(name, options = {})
       from = options[:from] || @entity_pointer
       type = options[:type] || :string
       
