@@ -47,17 +47,19 @@ module CoreMIDI
     alias_method :gets_bytestr, :gets_s
     
     def connect
+      return if @attempt_connect
       enable_client
       initialize_port
       @endpoint = Map.MIDIEntityGetSource(@entity_pointer, @endpoint_id)
       error = Map.MIDIPortConnectSource(@handle, @endpoint, nil )
+      @attempt_connect = true
       error.zero?
     end
     alias_method :connect?, :connect
 
     # enable this the input for use; can be passed a block
     def enable(options = {}, &block)
-      connect      
+      #connect      
       initialize_buffer
       @sysex_buffer = []
       @start_time = Time.now.to_f
