@@ -1,10 +1,6 @@
-coverage
-docs
-pkg
-examples/sandbox.rb
 .idea
-.idea/*
 .idea/*/**
 .loadpath
 .project
-ffi-coremidi.gemspec
+*.gem
+*.gemspec
