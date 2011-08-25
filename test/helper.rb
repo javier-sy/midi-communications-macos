@@ -15,7 +15,7 @@ module TestHelper
       puts "select an #{type.to_s}..."
       while $test_device[type].nil?
         devs.each do |device|
-          puts device.pretty_name
+          puts "#{device.id}: #{device.name}"
         end
         selection = $stdin.gets.chomp
         if selection != ""
