@@ -26,7 +26,7 @@ module CoreMIDI
 
       @manufacturer = get_property(:manufacturer)
       @model = get_property(:model)
-      @online = get_property(:offline, :int)
+      @online = get_property(:offline, :type => :int)
       #@subname = get_property(:Name, @endpoint)
       @name = "#{@manufacturer} #{@model}"
 
