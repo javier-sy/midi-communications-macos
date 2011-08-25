@@ -53,6 +53,7 @@ module CoreMIDI
 
     # enable this device; also takes a block
     def enable(options = {}, &block)
+      connect
       @enabled = true
       unless block.nil?
       	begin

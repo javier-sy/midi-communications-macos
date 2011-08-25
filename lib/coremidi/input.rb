@@ -57,9 +57,7 @@ module CoreMIDI
 
     # enable this the input for use; can be passed a block
     def enable(options = {}, &block)
-
-
-      
+      connect      
       initialize_buffer
       @sysex_buffer = []
       @start_time = Time.now.to_f

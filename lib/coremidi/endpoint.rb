@@ -32,8 +32,8 @@ module CoreMIDI
       #@subname = get_property(:Name, @endpoint)
       @name = "#{@manufacturer} #{@model}"
 
-      @is_online = get_property(:offline, :type => :int) == 0 && connect?
-      close unless online?
+      @is_online = get_property(:offline, :type => :int) == 0
+
       @enabled = false
     end
 
