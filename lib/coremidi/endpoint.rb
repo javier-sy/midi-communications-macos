@@ -34,12 +34,6 @@ module CoreMIDI
 
       @enabled = false
     end
-    
-    def connect?
-      status = true
-      connect 
-      status
-    end
 
     def enable_client
       client_name = Map::CF.CFStringCreateWithCString( nil, "Client #{@id}: #{@name}", 0 )
