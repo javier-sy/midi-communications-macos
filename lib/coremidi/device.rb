@@ -18,7 +18,7 @@ module CoreMIDI
       Map::MIDIObjectGetStringProperty(@device_pointer, prop, name)
 
       @name = Map::CF.CFStringGetCStringPtr(name.read_pointer, 0).read_string
-      populate_endpoints(entity_count, include_if_offline)
+      populate_entities(entity_count, include_if_offline)
     end
 
     def self.all(options = {})
@@ -58,7 +58,7 @@ module CoreMIDI
       end
     end
 
-    def populate_endpoints(starting_id, include_if_offline)
+    def populate_entities(starting_id, include_if_offline)
       @endpoints = { :input => [], :output => [] }
       id = starting_id
       i = 0
