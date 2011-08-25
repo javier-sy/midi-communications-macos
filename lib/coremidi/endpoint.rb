@@ -47,7 +47,7 @@ module CoreMIDI
 
       error = Map.MIDIClientCreate(client_name, nil, nil, client_ptr)
       @client = client_ptr.read_pointer
-      error.zero?
+      error
     end
 
     # select the first device of type <em>type</em>
