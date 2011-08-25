@@ -48,13 +48,6 @@ module CoreMIDI
 
     # enable this the input for use; can be passed a block
     def enable(options = {}, &block)
-      
-
-      @port = FFI::MemoryPointer.new(:pointer)
-
-      error = Map.MIDIPortConnectSource(@handle, @endpoint, nil )
-      raise "Map.MIDIPortConnectSource returned error code #{error}" unless error.zero?
-      
       initialize_buffer
       @sysex_buffer = []
       @start_time = Time.now.to_f
@@ -80,6 +73,18 @@ module CoreMIDI
       error = Map.MIDIPortDispose(@handle)
       raise "MIDIPortDisposePort returned error code #{error}" unless error.zero?
       @enabled = false
+    end
+    
+    def connect
+      enable_client
+      initialize_port
+      get_endpoint
+      @port = FFI::MemoryPointer.new(:pointer)
+      Map.MIDIPortConnectSource(@handle, @endpoint, nil )
+    end
+    
+    def connect?
+      connect.zero?
     end
 
     def self.first
@@ -142,7 +147,7 @@ module CoreMIDI
       raise "MIDIInputPortCreate returned error code #{error}" unless error.zero?
     end
 
-    def connect_endpoint
+    def get_endpoint
       @endpoint = Map.MIDIEntityGetSource(@entity_pointer, @endpoint_id)
     end
     
@@ -157,12 +162,6 @@ module CoreMIDI
     
     def numeric_bytes_to_hex_string(bytes)
       bytes.map { |b| s = b.to_s(16).upcase; b < 16 ? s = "0" + s : s; s }.join
-    end
-    
-    def connect
-      enable_client
-      initialize_port
-      connect_endpoint
     end 
 
   end

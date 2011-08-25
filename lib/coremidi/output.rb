@@ -53,9 +53,6 @@ module CoreMIDI
 
     # enable this device; also takes a block
     def enable(options = {}, &block)
-
-      @destination = Map.MIDIEntityGetDestination( @entity_pointer, @endpoint_id )
-
       @enabled = true
       unless block.nil?
       	begin
@@ -69,6 +66,18 @@ module CoreMIDI
     end
     alias_method :open, :enable
     alias_method :start, :enable
+    
+    def connect
+      enable_client
+      get_endpoint
+
+      @destination = Map.MIDIEntityGetDestination( @entity_pointer, @endpoint_id )
+    end
+    
+    def connect?
+      connect
+      !@destination.nil?
+    end
 
     def self.first
       Endpoint.first(:output)
@@ -122,16 +131,11 @@ module CoreMIDI
 
     private
 
-    def connect_endpoint
+    def get_endpoint
       port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
       outport_ptr = FFI::MemoryPointer.new(:pointer)
       Map.MIDIOutputPortCreate(@client, port_name, outport_ptr)
       @endpoint = outport_ptr.read_pointer
-    end
-    
-    def connect
-      enable_client
-      connect_endpoint
     end
 
   end
