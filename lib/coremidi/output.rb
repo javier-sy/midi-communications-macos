@@ -73,7 +73,7 @@ module CoreMIDI
       endpoint_error = create_endpoint
 
       @destination = Map.MIDIEntityGetDestination( @entity_pointer, @endpoint_id )
-      !@destination.nil? && client_error.zero? && endpoint_error.zero?
+      !@destination.address.zero? && client_error.zero? && endpoint_error.zero?
     end
     alias_method :connect?, :connect
 
