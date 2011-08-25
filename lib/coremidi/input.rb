@@ -79,7 +79,6 @@ module CoreMIDI
       client_error = enable_client
       port_error = initialize_port
       @endpoint = Map.MIDIEntityGetSource(@entity_pointer, @endpoint_id)
-      #@port = FFI::MemoryPointer.new(:pointer)
       connect_error = Map.MIDIPortConnectSource(@handle, @endpoint, nil )
       port_error.zero? && connect_error.zero? && client_error.zero?
     end
