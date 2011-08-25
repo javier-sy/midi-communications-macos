@@ -45,9 +45,21 @@ module CoreMIDI
       msgs
     end
     alias_method :gets_bytestr, :gets_s
+    
+    def connect
+      enable_client
+      initialize_port
+      @endpoint = Map.MIDIEntityGetSource(@entity_pointer, @endpoint_id)
+      error = Map.MIDIPortConnectSource(@handle, @endpoint, nil )
+      error.zero?
+    end
+    alias_method :connect?, :connect
 
     # enable this the input for use; can be passed a block
     def enable(options = {}, &block)
+
+
+      
       initialize_buffer
       @sysex_buffer = []
       @start_time = Time.now.to_f
@@ -74,15 +86,6 @@ module CoreMIDI
       raise "MIDIPortDisposePort returned error code #{error}" unless error.zero?
       @enabled = false
     end
-    
-    def connect
-      client_error = enable_client
-      port_error = initialize_port
-      @endpoint = Map.MIDIEntityGetSource(@entity_pointer, @endpoint_id)
-      connect_error = Map.MIDIPortConnectSource(@handle, @endpoint, nil )
-      port_error.zero? && connect_error.zero? && client_error.zero?
-    end
-    alias_method :connect?, :connect
 
     def self.first
       Endpoint.first(:input)
@@ -141,7 +144,7 @@ module CoreMIDI
       @callback = get_event_callback
       error = Map.MIDIInputPortCreate(@client, port_name, @callback, nil, handle_ptr)
       @handle = handle_ptr.read_pointer
-      error
+      raise "MIDIInputPortCreate returned error code #{error}" unless error.zero?
     end
     
     def initialize_buffer
