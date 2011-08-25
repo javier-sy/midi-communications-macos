@@ -37,7 +37,7 @@ module CoreMIDI
     
     def connect?
       status = true
-      status = connect rescue false
+      connect rescue status = false
       status
     end
 
