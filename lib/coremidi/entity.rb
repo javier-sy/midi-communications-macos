@@ -8,6 +8,7 @@ module CoreMIDI
     attr_reader :enabled,
                 # unique Numeric id of the device
                 :id,
+                :is_online,
                 :manufacturer,
                 :model,
                 :name,
@@ -15,6 +16,7 @@ module CoreMIDI
                 :type
 
     alias_method :enabled?, :enabled
+    alias_method :online?, :is_online
 
     def initialize(id, endpoint_id, entity_pointer, options = {}, &block)
       @endpoint_id = endpoint_id
@@ -26,7 +28,7 @@ module CoreMIDI
 
       @manufacturer = get_property(:manufacturer)
       @model = get_property(:model)
-      @online = get_property(:offline, :type => :int)
+      @is_online = get_property(:offline, :type => :int) == 0
       #@subname = get_property(:Name, @endpoint)
       @name = "#{@manufacturer} #{@model}"
 
