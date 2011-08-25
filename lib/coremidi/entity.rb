@@ -16,7 +16,8 @@ module CoreMIDI
 
     alias_method :enabled?, :enabled
 
-    def initialize(id, entity_pointer, options = {}, &block)
+    def initialize(id, endpoint_id, entity_pointer, options = {}, &block)
+      @endpoint_id = endpoint_id
       @entity_pointer = entity_pointer
       @id = id
 

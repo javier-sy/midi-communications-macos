@@ -145,7 +145,7 @@ module CoreMIDI
     end
 
     def connect_endpoint
-      @endpoint = Map.MIDIEntityGetSource(@entity_pointer, 0)
+      @endpoint = Map.MIDIEntityGetSource(@entity_pointer, @endpoint_id)
     end
     
     def initialize_buffer

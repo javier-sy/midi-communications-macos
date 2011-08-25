@@ -56,7 +56,7 @@ module CoreMIDI
       enable_entity
       connect_endpoint
 
-      @destination = Map.MIDIGetDestination( 0 )
+      @destination = Map.MIDIEntityGetDestination( @entity_pointer, @endpoint_id )
 
       @enabled = true
       unless block.nil?

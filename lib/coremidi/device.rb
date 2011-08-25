@@ -36,24 +36,36 @@ module CoreMIDI
 
     private
 
+    def populate_endpoints(type, entity_pointer, starting_id)
+      endpoint_type, device_class = *case type
+        when :input then [:source, Input]
+        when :output then [:destination, Output]
+      end  
+      id = starting_id
+      num_endpoints = get_endpoints(endpoint_type, entity_pointer)
+      (0..num_endpoints).each do |i|
+        @entities[type] << device_class.new((i + starting_id), i, entity_pointer)
+      end  
+      @entities[type].size   
+    end
+    
+    def get_endpoints(type, entity_pointer)
+      case type
+        when :source then Map.MIDIEntityGetNumberOfSources(entity_pointer)
+        when :destination then Map.MIDIEntityGetNumberOfDestinations(entity_pointer)
+      end
+    end
+
     def populate_entities(starting_id)
-      entities = { :input => [], :output => [] }
+      @entities = { :input => [], :output => [] }
       id = starting_id
       i = 0
       while !(entity_pointer = Map.MIDIDeviceGetEntity(@device_pointer, i)).null?
-        dests = Map.MIDIEntityGetNumberOfDestinations(entity_pointer)
-        sources = Map.MIDIEntityGetNumberOfSources(entity_pointer)
-        if sources > 0
-          entities[:input] << Input.new(id, entity_pointer)
-          id += 1
+        [:input, :output].each do |type|
+          id += populate_endpoints(type, entity_pointer, id)
         end
-        if dests > 0
-          entities[:output] << Output.new(id, entity_pointer)
-          id += 1
-        end
-        i+=1
+        i += 1
       end
-      @entities = entities
     end
 
   end
