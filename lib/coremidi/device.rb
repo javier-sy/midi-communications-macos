@@ -46,7 +46,7 @@ module CoreMIDI
       num_endpoints = get_endpoints(endpoint_type, entity_pointer)
       (0..num_endpoints).each do |i|
         dev = device_class.new((i + starting_id), i, entity_pointer, include_if_offline)
-        @entities[type] << dev if dev.online? || include_offline
+        @entities[type] << dev if dev.online? || include_if_offline
       end  
       @entities[type].size   
     end
