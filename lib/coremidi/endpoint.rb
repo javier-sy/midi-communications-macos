@@ -22,7 +22,6 @@ module CoreMIDI
       @endpoint_id = endpoint_id
       @entity_pointer = entity_pointer
       @id = id
-      @attempt_connect = false
 
       # cache the type name so that inspecting the class isn't necessary each time
       @type = self.class.name.split('::').last.downcase.to_sym

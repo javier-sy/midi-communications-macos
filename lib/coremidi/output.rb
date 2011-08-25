@@ -69,12 +69,10 @@ module CoreMIDI
     alias_method :start, :enable
     
     def connect
-      return if @attempt_connect
       client_error = enable_client
       endpoint_error = create_endpoint
 
       @destination = Map.MIDIEntityGetDestination( @entity_pointer, @endpoint_id )
-      @attempt_connect = true
       !@destination.nil? && client_error.zero? && endpoint_error.zero?
     end
     alias_method :connect?, :connect
