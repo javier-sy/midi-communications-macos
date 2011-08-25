@@ -45,8 +45,9 @@ module CoreMIDI
       client_name = Map::CF.CFStringCreateWithCString( nil, "Client #{@id}: #{@name}", 0 )
       client_ptr = FFI::MemoryPointer.new(:pointer)
 
-      Map.MIDIClientCreate(client_name, nil, nil, client_ptr)
+      error = Map.MIDIClientCreate(client_name, nil, nil, client_ptr)
       @client = client_ptr.read_pointer
+      error.zero?
     end
 
     # select the first device of type <em>type</em>

@@ -76,16 +76,14 @@ module CoreMIDI
     end
     
     def connect
-      enable_client
-      initialize_port
-      get_endpoint
-      @port = FFI::MemoryPointer.new(:pointer)
-      Map.MIDIPortConnectSource(@handle, @endpoint, nil )
+      client_error = enable_client
+      port_error = initialize_port.zero?
+      @endpoint = Map.MIDIEntityGetSource(@entity_pointer, @endpoint_id)
+      #@port = FFI::MemoryPointer.new(:pointer)
+      connect_error = Map.MIDIPortConnectSource(@handle, @endpoint, nil )
+      port_error.zero? && connect_error.zero? && client_error.zero?
     end
-    
-    def connect?
-      connect.zero?
-    end
+    alias_method :connect?, :connect
 
     def self.first
       Endpoint.first(:input)
@@ -144,11 +142,7 @@ module CoreMIDI
       @callback = get_event_callback
       error = Map.MIDIInputPortCreate(@client, port_name, @callback, nil, handle_ptr)
       @handle = handle_ptr.read_pointer
-      raise "MIDIInputPortCreate returned error code #{error}" unless error.zero?
-    end
-
-    def get_endpoint
-      @endpoint = Map.MIDIEntityGetSource(@entity_pointer, @endpoint_id)
+      error
     end
     
     def initialize_buffer
