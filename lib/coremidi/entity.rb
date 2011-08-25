@@ -26,7 +26,7 @@ module CoreMIDI
 
       @manufacturer = get_property(:manufacturer)
       @model = get_property(:model)
-      @online = get_property(:offline)
+      @online = get_property(:offline, :int)
       #@subname = get_property(:Name, @endpoint)
       @name = "#{@manufacturer} #{@model}"
 
@@ -65,12 +65,29 @@ module CoreMIDI
     end
 
     private
-
-    def get_property(name, from = @entity_pointer)
+    
+    def get_string(name, from)
       prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
       val = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 ) # placeholder
       Map::MIDIObjectGetStringProperty(from, prop, val)
       Map::CF.CFStringGetCStringPtr(val.read_pointer, 0).read_string rescue nil
+    end
+    
+    def get_int(name, from)
+      prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
+      val = FFI::MemoryPointer.new(:pointer, 32)
+      Map::MIDIObjectGetIntegerProperty(from, prop, val)
+      val.read_int
+    end        
+
+    def get_property(name)
+      from = options[:from] || @entity_pointer
+      type = options[:type] || :string
+      
+      case type
+        when :string then get_string(name, from)
+        when :int then get_int(name, from)
+      end
     end
 
   end
