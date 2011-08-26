@@ -10,7 +10,8 @@ module CoreMIDI
                 # device name from coremidi
                 :name
 
-    def initialize(id, device_pointer, include_if_offline)
+    def initialize(id, device_pointer, options = {})
+      include_if_offline = options[:include_offline] || false
       @id = id
       @device_pointer = device_pointer
       @endpoints = { :input => [], :output => [] }
@@ -20,7 +21,7 @@ module CoreMIDI
       Map::MIDIObjectGetStringProperty(@device_pointer, prop, name)
 
       @name = Map::CF.CFStringGetCStringPtr(name.read_pointer, 0).read_string
-      populate_entities(include_if_offline)
+      populate_entities(:include_offline => include_if_offline)
     end
 
     def self.all(options = {})
@@ -29,7 +30,7 @@ module CoreMIDI
         @devices = []
         i = 0
         while !(device_pointer = Map.MIDIGetDevice(i)).null?
-          device = new(i, device_pointer, include_offline)
+          device = new(i, device_pointer, :include_offline => include_offline)
           @devices << device
           i+=1
         end
@@ -51,15 +52,16 @@ module CoreMIDI
       end
     end
 
-    def populate_endpoints(type, entity_pointer, include_if_offline)
-      endpoint_type, device_class = *case type
+    def populate_endpoints(type, entity_pointer, options = {})
+      include_if_offline = options[:include_offline] || false
+      endpoint_type, endpoint_class = *case type
         when :input then [:source, Input]
         when :output then [:destination, Output]
       end  
       num_endpoints = get_endpoints(endpoint_type, entity_pointer)
       (0..num_endpoints).each do |i|
-        dev = device_class.new(i, entity_pointer, include_if_offline)
-        @endpoints[type] << dev if dev.online? || include_if_offline
+        ep = endpoint_class.new(i, entity_pointer)
+        @endpoints[type] << ep if ep.online? || include_if_offline
       end  
       @endpoints[type].size   
     end
@@ -71,11 +73,12 @@ module CoreMIDI
       end
     end
 
-    def populate_entities(include_if_offline)
+    def populate_entities(options = {})
+      include_if_offline = options[:include_offline] || false
       i = 0
       while !(entity_pointer = Map.MIDIDeviceGetEntity(@device_pointer, i)).null?
         [:input, :output].each do |type|
-          populate_endpoints(type, entity_pointer, include_if_offline)
+          populate_endpoints(type, entity_pointer, :include_offline => include_if_offline)
         end
         i += 1
       end
