@@ -68,31 +68,37 @@ module CoreMIDI
     alias_method :open, :enable
     alias_method :start, :enable
 
+    # shortcut to the first output endpoint available
     def self.first
       Endpoint.first(:output)
     end
-
+    
+    # shortcut to the last output endpoint available
     def self.last
       Endpoint.last(:output)
     end
 
+    # all output endpoints
     def self.all
       Endpoint.all_by_type[:output]
     end
     
     protected
 
+    # base initialization for this endpoint -- done whether or not the endpoint is enabled to
+    # check whether it is truly available for use
     def connect
       client_error = enable_client
-      endpoint_error = create_endpoint
+      port_error = initialize_port
 
       @destination = Map.MIDIEntityGetDestination( @entity_pointer, @endpoint_id )
-      !@destination.address.zero? && client_error.zero? && endpoint_error.zero?
+      !@destination.address.zero? && client_error.zero? && port_error.zero?
     end
     alias_method :connect?, :connect
 
     private
 
+    # output a short MIDI message
     def puts_small(bytes, size)
       packet_list = FFI::MemoryPointer.new(256)
       packet_ptr = Map.MIDIPacketListInit(packet_list)
@@ -107,9 +113,8 @@ module CoreMIDI
       Map.MIDISend( @endpoint, @destination, packet_list )
     end
 
+    # output a System Exclusive MIDI message
     def puts_sysex(bytes, size)
-
-      #@callback =
 
       request = Map::MIDISysexSendRequest.new
       request[:destination] = @destination
@@ -128,8 +133,9 @@ module CoreMIDI
         # this isn't working for some reason
         # as of now, we don't need it though
       end
-
-    def create_endpoint
+      
+    # initialize a coremidi port for this endpoint
+    def initialize_port
       port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
       outport_ptr = FFI::MemoryPointer.new(:pointer)
       error = Map.MIDIOutputPortCreate(@client, port_name, outport_ptr)

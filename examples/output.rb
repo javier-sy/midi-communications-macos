@@ -11,7 +11,7 @@ notes = [36, 40, 43] # C E G
 octaves = 5
 duration = 0.1
 
-# AlsaRawMIDI::Device.all.to_s will list your midi devices
+# CoreMIDI::Device.all.to_s will list your midi devices
 # or amidi -l from the command line
 
 CoreMIDI::Output.first.open do |output|

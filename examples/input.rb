@@ -10,7 +10,7 @@ require 'coremidi'
 
 num_messages = 10
 
-# AlsaRawMIDI::Device.all.to_s will list your midi devices
+# CoreMIDI::Device.all.to_s will list your midi devices
 # or amidi -l from the command line
 
 CoreMIDI::Input.all[0].open do |input|

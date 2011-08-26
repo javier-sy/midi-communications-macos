@@ -36,6 +36,7 @@ module CoreMIDI
       @enabled = false
     end
     
+    # sets the id for this endpoint (the id is immutable once its set)
     def id=(val)
       @id ||= val
     end
@@ -65,6 +66,7 @@ module CoreMIDI
     
     protected
     
+    # enables the coremidi MIDI client that will go with this endpoint
     def enable_client
       client_name = Map::CF.CFStringCreateWithCString( nil, "Client #{@endpoint_id}: #{@name}", 0 )
       client_ptr = FFI::MemoryPointer.new(:pointer)
@@ -75,6 +77,7 @@ module CoreMIDI
 
     private
     
+    # gets a CFString property
     def get_string(name, from)
       prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
       val = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 ) # placeholder
@@ -82,6 +85,7 @@ module CoreMIDI
       Map::CF.CFStringGetCStringPtr(val.read_pointer, 0).read_string rescue nil
     end
     
+    # gets an Integer property
     def get_int(name, from)
       prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
       val = FFI::MemoryPointer.new(:pointer, 32)
@@ -89,6 +93,7 @@ module CoreMIDI
       val.read_int
     end        
 
+    # gets a property from this endpoint's entity
     def get_property(name, options = {})
       from = options[:from] || @entity_pointer
       type = options[:type] || :string

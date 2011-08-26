@@ -72,20 +72,25 @@ module CoreMIDI
       @enabled = false
     end
 
+    # shortcut to the first available input endpoint
     def self.first
       Endpoint.first(:input)
     end
 
+    # shortcut to the last available input endpoint
     def self.last
       Endpoint.last(:input)
     end
 
+    # all input endpoints
     def self.all
       Endpoint.all_by_type[:input]
     end
     
     protected
     
+    # base initialization for this endpoint -- done whether or not the endpoint is enabled to
+    # check whether it is truly available for use
     def connect   
       enable_client
       initialize_port
@@ -101,14 +106,17 @@ module CoreMIDI
 
     private
 
+    # returns new MIDI messages from the queue
     def queued_messages
       @buffer.slice(@pointer, @buffer.length - @pointer)
     end
 
+    # are there new MIDI messages in the queue?
     def queued_messages?
       @pointer < @buffer.length
     end
 
+    # the callback which is called by coremidi when new MIDI messages are in the buffer
     def get_event_callback
       Proc.new do | new_packets, refCon_ptr, connRefCon_ptr |
         packet = new_packets[:packet][0]
@@ -129,6 +137,7 @@ module CoreMIDI
       end
     end
 
+    # timestamp
     def now
       ((Time.now.to_f - @start_time) * 1000)
     end
@@ -138,6 +147,7 @@ module CoreMIDI
       { :data => raw, :timestamp => now }
     end
 
+    # initialize a coremidi port for this endpoint
     def initialize_port
       port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
       handle_ptr = FFI::MemoryPointer.new(:pointer)
@@ -147,6 +157,7 @@ module CoreMIDI
       raise "MIDIInputPortCreate returned error code #{error}" unless error.zero?
     end
     
+    # initialize the MIDI message buffer
     def initialize_buffer
       @pointer = 0
       @buffer = []
@@ -156,6 +167,9 @@ module CoreMIDI
       end     
     end
     
+    # convert an array of numeric byes to a hex string
+    # e.g.
+    # [0x90, 0x40, 0x40] -> "904040"
     def numeric_bytes_to_hex_string(bytes)
       bytes.map { |b| s = b.to_s(16).upcase; b < 16 ? s = "0" + s : s; s }.join
     end 

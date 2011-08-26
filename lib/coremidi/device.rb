@@ -23,10 +23,18 @@ module CoreMIDI
       @name = Map::CF.CFStringGetCStringPtr(name.read_pointer, 0).read_string
       populate_entities(:include_offline => include_if_offline)
     end
-
+    
+    # returns all devices which are cached in an instance variable @devices on the Device class
+    #
+    # options:
+    # 
+    # * <b>cache</b>: if false, the device list will never be cached. this would be useful if one needs to alter the device list (e.g. plug in a USB MIDI interface) while their program is running.
+    # * <b>include_offline</b>: if true, devices marked offline by coremidi will be included in the list
+    #
     def self.all(options = {})
+      use_cache = options[:cache] || true
       include_offline = options[:include_offline] || false
-      if @devices.nil? || @devices.empty?
+      if @devices.nil? || @devices.empty? || !use_cache
         @devices = []
         i = 0
         while !(device_pointer = Map.MIDIGetDevice(i)).null?
@@ -39,26 +47,37 @@ module CoreMIDI
       @devices
     end
     
+    # Refresh the Device cash.  You'll need to do this if, for instance, you plug in
+    # a USB MIDI device while the program is running 
     def self.refresh
       @devices.clear
     end
 
     private
     
+    def populate_endpoint_ids(starting_id)
+      id = nil
+      endpoints.values.flatten.each_with_index do |e, i| 
+        id = (i + starting_id)
+        e.id = id
+      end
+      id
+    end
+    
+    # gives all of the endpoints for all devices an id
     def self.populate_endpoint_ids
       i = 0
-      all.each_with_index do |device|         
-        device.endpoints.values.flatten.each { |e| e.id = (i += 1) }
-      end
+      all.each { |device| i += device.populate_endpoint_ids(i) }
     end
-
+ 
+    # populate endpoints for this device
     def populate_endpoints(type, entity_pointer, options = {})
       include_if_offline = options[:include_offline] || false
       endpoint_type, endpoint_class = *case type
         when :input then [:source, Input]
         when :output then [:destination, Output]
       end  
-      num_endpoints = get_endpoints(endpoint_type, entity_pointer)
+      num_endpoints = number_of_endpoints(endpoint_type, entity_pointer)
       (0..num_endpoints).each do |i|
         ep = endpoint_class.new(i, entity_pointer)
         @endpoints[type] << ep if ep.online? || include_if_offline
@@ -66,13 +85,15 @@ module CoreMIDI
       @endpoints[type].size   
     end
     
-    def get_endpoints(type, entity_pointer)
+    # gets the number of endpoints for this device
+    def number_of_endpoints(type, entity_pointer)
       case type
         when :source then Map.MIDIEntityGetNumberOfSources(entity_pointer)
         when :destination then Map.MIDIEntityGetNumberOfDestinations(entity_pointer)
       end
     end
 
+    # populates the entities for this device. these are in turn used to gather the endpoints
     def populate_entities(options = {})
       include_if_offline = options[:include_offline] || false
       i = 0
