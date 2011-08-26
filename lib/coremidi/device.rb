@@ -47,8 +47,8 @@ module CoreMIDI
     
     def self.populate_endpoint_ids
       i = 0
-      all.values.each_with_index do |device| 
-        device.endpoints.values.each { |e, i2| e.id = (i += 1) }
+      all.each_with_index do |device|         
+        device.endpoints.values.flatten.each { |e| e.id = (i += 1) }
       end
     end
 

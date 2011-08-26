@@ -8,7 +8,7 @@ class IoTest < Test::Unit::TestCase
   include TestHelper
 
   def test_full_io
-    sleep(1)
+    sleep(2)
     messages = VariousMIDIMessages
     messages_arr = messages.inject { |a,b| a+b }.flatten
     received_arr = []
@@ -43,7 +43,7 @@ class IoTest < Test::Unit::TestCase
 
   # ** this test assumes that TestOutput is connected to TestInput
   def test_full_io_bytestr
-    sleep(1) # pause between tests
+    sleep(2) # pause between tests
 
     messages = VariousMIDIByteStrMessages
     messages_str = messages.join
