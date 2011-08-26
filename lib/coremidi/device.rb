@@ -55,6 +55,7 @@ module CoreMIDI
 
     private
     
+    # assign all of this Device's endpoints an id
     def populate_endpoint_ids(starting_id)
       id = nil
       endpoints.values.flatten.each_with_index do |e, i| 
