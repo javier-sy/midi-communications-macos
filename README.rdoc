@@ -4,7 +4,7 @@
 
 Realtime MIDI IO with Ruby for OSX
 
-Note that in the interest of allowing people on other platforms to utilize your code, you should consider using {unimidi}[http://github.com/arirusso/unimidi].  Unimidi is a platform independent wrapper that implements this library.
+Note that in the interest of allowing people on other platforms to utilize your code, you should consider using {unimidi}[http://github.com/arirusso/unimidi].  Unimidi is a platform independent wrapper that implements this library and has a similar API.
 
 == Features
 
