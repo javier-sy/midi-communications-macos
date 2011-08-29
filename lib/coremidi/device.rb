@@ -53,6 +53,14 @@ module CoreMIDI
       @devices.clear
     end
     
+    def endpoints
+      endpoints = { :input => [], :output => [] }
+      entities.each do |entity| 
+        endpoints.each { |k,v| v += entity.endpoints[k] }
+      end
+      endpoints
+    end
+    
     def populate_endpoint_ids(starting_id)
       i = 0
       entities.each_with_index { |entity| i += entity.populate_endpoint_ids(i + starting_id) }
