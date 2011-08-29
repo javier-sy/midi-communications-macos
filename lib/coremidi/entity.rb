@@ -34,14 +34,14 @@ module CoreMIDI
     
     private
     
-    # populate endpoints for this device
+    # populate endpoints for this entity
     def populate_endpoints(type, options = {})
       include_if_offline = options[:include_offline] || false
-      endpoint_type, endpoint_class = *case type
-        when :input then [:source, Input]
-        when :output then [:destination, Output]
+      endpoint_class = case type
+        when :input then Input
+        when :output then Output
       end  
-      num_endpoints = number_of_endpoints(endpoint_type)
+      num_endpoints = number_of_endpoints(type)
       (0..num_endpoints).each do |i|
         ep = endpoint_class.new(i, self)
         @endpoints[type] << ep if ep.online? || include_if_offline
@@ -49,11 +49,11 @@ module CoreMIDI
       @endpoints[type].size   
     end
     
-    # gets the number of endpoints for this device
+    # gets the number of endpoints for this entity
     def number_of_endpoints(type)
       case type
-        when :source then Map.MIDIEntityGetNumberOfSources(@resource)
-        when :destination then Map.MIDIEntityGetNumberOfDestinations(@resource)
+        when :input then Map.MIDIEntityGetNumberOfSources(@resource)
+        when :output then Map.MIDIEntityGetNumberOfDestinations(@resource)
       end
     end
     

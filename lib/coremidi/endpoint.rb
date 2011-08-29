@@ -11,7 +11,6 @@ module CoreMIDI
                 :entity,
                 # unique Numeric id of the device
                 :id,
-                :is_online,
                 :resource_id,
                 # :input or :output
                 :type
@@ -19,14 +18,17 @@ module CoreMIDI
     def_delegators :entity, :manufacturer, :model, :name
 
     alias_method :enabled?, :enabled
-    alias_method :online?, :is_online
 
     def initialize(resource_id, entity, options = {}, &block)
       @entity = entity
       @resource_id = resource_id
       @type = self.class.name.split('::').last.downcase.to_sym
-      @is_online = @entity.online? && connect?
       @enabled = false
+    end
+    
+    # is this endpoint online?
+    def online?
+      @entity.online? && connect?
     end
     
     # sets the id for this endpoint (the id is immutable once its set)
