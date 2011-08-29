@@ -11,8 +11,14 @@ module CoreMIDI
 
     # close this output
     def close
-      Map.MIDIClientDispose( @client )
+      error = Map.MIDIClientDispose(@handle)
+      raise "MIDIClientDispose returned error code #{error}" unless error.zero?
+      error = Map.MIDIPortDispose(@handle)
+      raise "MIDIPortDispose returned error code #{error}" unless error.zero?
+      error = Map.MIDIEndpointDispose(@resource)
+      raise "MIDIEndpointDispose returned error code #{error}" unless error.zero?
       @enabled = false
+
     end
 
     # sends a MIDI message comprised of a String of hex digits

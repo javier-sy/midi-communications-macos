@@ -65,6 +65,9 @@ module CoreMIDI
     attach_function :MIDIGetNumberOfDevices, [], :ItemCount
 
     attach_function :MIDIGetDestination, [:int], :pointer
+    
+    #extern OSStatus MIDIEndpointDispose( MIDIEndpointRef endpt );
+    attach_function :MIDIEndpointDispose, [:MIDIEndpointRef], :OSStatus
 
     # MIDIEndpointRef MIDIEntityGetDestination( MIDIEntityRef entity, ItemCount destIndex0 );
     attach_function :MIDIEntityGetDestination, [:MIDIEntityRef, :int], :MIDIEndpointRef

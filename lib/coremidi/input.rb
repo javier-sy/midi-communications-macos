@@ -67,8 +67,12 @@ module CoreMIDI
     def close
       error = Map.MIDIPortDisconnectSource( @handle, @resource )
       raise "MIDIPortDisconnectSource returned error code #{error}" unless error.zero?
+      error = Map.MIDIClientDispose(@handle)
+      raise "MIDIClientDispose returned error code #{error}" unless error.zero?
       error = Map.MIDIPortDispose(@handle)
       raise "MIDIPortDisposePort returned error code #{error}" unless error.zero?
+      error = Map.MIDIEndpointDispose(@resource)
+      raise "MIDIEndpointDispose returned error code #{error}" unless error.zero?
       @enabled = false
     end
 
