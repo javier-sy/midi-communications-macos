@@ -4,7 +4,7 @@ module CoreMIDI
 
   class Device
 
-    attr_reader :endpoints,
+    attr_reader :entities,
                 # unique Numeric id
                 :id,
                 # device name from coremidi
@@ -14,7 +14,7 @@ module CoreMIDI
       include_if_offline = options[:include_offline] || false
       @id = id
       @device_pointer = device_pointer
-      @endpoints = { :input => [], :output => [] }
+      @entities = []
       
       prop = Map::CF.CFStringCreateWithCString( nil, "name", 0 )
       name = Map::CF.CFStringCreateWithCString( nil, id.to_s, 0 )
@@ -55,14 +55,10 @@ module CoreMIDI
 
     private
     
-    # assign all of this Device's endpoints an id
     def populate_endpoint_ids(starting_id)
-      id = nil
-      endpoints.values.flatten.each_with_index do |e, i| 
-        id = (i + starting_id)
-        e.id = id
-      end
-      id
+      i = 0
+      entities.each_with_index { |entity| i += entity.populate_endpoint_ids(i + starting_id) }
+      i
     end
     
     # gives all of the endpoints for all devices an id
@@ -70,38 +66,13 @@ module CoreMIDI
       i = 0
       all.each { |device| i += device.populate_endpoint_ids(i) }
     end
- 
-    # populate endpoints for this device
-    def populate_endpoints(type, entity_pointer, options = {})
-      include_if_offline = options[:include_offline] || false
-      endpoint_type, endpoint_class = *case type
-        when :input then [:source, Input]
-        when :output then [:destination, Output]
-      end  
-      num_endpoints = number_of_endpoints(endpoint_type, entity_pointer)
-      (0..num_endpoints).each do |i|
-        ep = endpoint_class.new(i, entity_pointer)
-        @endpoints[type] << ep if ep.online? || include_if_offline
-      end  
-      @endpoints[type].size   
-    end
-    
-    # gets the number of endpoints for this device
-    def number_of_endpoints(type, entity_pointer)
-      case type
-        when :source then Map.MIDIEntityGetNumberOfSources(entity_pointer)
-        when :destination then Map.MIDIEntityGetNumberOfDestinations(entity_pointer)
-      end
-    end
 
     # populates the entities for this device. these are in turn used to gather the endpoints
     def populate_entities(options = {})
       include_if_offline = options[:include_offline] || false
       i = 0
       while !(entity_pointer = Map.MIDIDeviceGetEntity(@device_pointer, i)).null?
-        [:input, :output].each do |type|
-          populate_endpoints(type, entity_pointer, :include_offline => include_if_offline)
-        end
+        @entities << Entity.new(entity_pointer, :include_offline => include_if_offline)
         i += 1
       end
     end

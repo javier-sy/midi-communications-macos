@@ -7,6 +7,7 @@
 
 # libs
 require 'ffi'
+require 'forwardable'
 
 # modules
 require 'coremidi/endpoint'
