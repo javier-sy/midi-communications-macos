@@ -91,8 +91,8 @@ module CoreMIDI
       client_error = enable_client
       port_error = initialize_port
 
-      @destination = Map.MIDIEntityGetDestination( @entity_pointer, @endpoint_id )
-      !@destination.address.zero? && client_error.zero? && port_error.zero?
+      @resource = Map.MIDIEntityGetDestination( @entity.pointer, @resource_id )
+      !@resource.address.zero? && client_error.zero? && port_error.zero?
     end
     alias_method :connect?, :connect
 
@@ -110,14 +110,14 @@ module CoreMIDI
         packet_ptr = Map.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, 0, size, bytes)
       end
 
-      Map.MIDISend( @endpoint, @destination, packet_list )
+      Map.MIDISend( @handle, @resource, packet_list )
     end
 
     # output a System Exclusive MIDI message
     def puts_sysex(bytes, size)
 
       request = Map::MIDISysexSendRequest.new
-      request[:destination] = @destination
+      request[:destination] = @resource
       request[:data] = bytes
       request[:bytes_to_send] = size
       request[:complete] = 0
@@ -136,10 +136,10 @@ module CoreMIDI
       
     # initialize a coremidi port for this endpoint
     def initialize_port
-      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
+      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@resource_id}: #{name}", 0)
       outport_ptr = FFI::MemoryPointer.new(:pointer)
       error = Map.MIDIOutputPortCreate(@client, port_name, outport_ptr)
-      @endpoint = outport_ptr.read_pointer
+      @handle = outport_ptr.read_pointer
       error
     end
 

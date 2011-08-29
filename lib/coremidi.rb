@@ -4,12 +4,18 @@
 # Realtime MIDI IO with Ruby for OSX
 # (c)2011 Ari Russo
 # 
+
+# libs
 require 'ffi'
 
-require 'coremidi/device'
+# modules
 require 'coremidi/endpoint'
-require 'coremidi/input'
 require 'coremidi/map'
+
+# classes
+require 'coremidi/entity'
+require 'coremidi/device'
+require 'coremidi/input'
 require 'coremidi/output'
 
 module CoreMIDI

@@ -65,7 +65,7 @@ module CoreMIDI
 
     # close this input
     def close
-      error = Map.MIDIPortDisconnectSource( @handle, @endpoint )
+      error = Map.MIDIPortDisconnectSource( @handle, @resource )
       raise "MIDIPortDisconnectSource returned error code #{error}" unless error.zero?
       error = Map.MIDIPortDispose(@handle)
       raise "MIDIPortDisposePort returned error code #{error}" unless error.zero?
@@ -94,8 +94,8 @@ module CoreMIDI
     def connect   
       enable_client
       initialize_port
-      @endpoint = Map.MIDIEntityGetSource(@entity_pointer, @endpoint_id)
-      error = Map.MIDIPortConnectSource(@handle, @endpoint, nil )
+      @resource = Map.MIDIEntityGetSource(@entity.pointer, @resource_id)
+      error = Map.MIDIPortConnectSource(@handle, @resource, nil )
       initialize_buffer
       @sysex_buffer = []
       @start_time = Time.now.to_f
@@ -149,7 +149,7 @@ module CoreMIDI
 
     # initialize a coremidi port for this endpoint
     def initialize_port
-      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@id}: #{@name}", 0)
+      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@resource_id}: #{name}", 0)
       handle_ptr = FFI::MemoryPointer.new(:pointer)
       @callback = get_event_callback
       error = Map.MIDIInputPortCreate(@client, port_name, @callback, nil, handle_ptr)
