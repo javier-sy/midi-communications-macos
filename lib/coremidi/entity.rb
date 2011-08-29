@@ -43,7 +43,7 @@ module CoreMIDI
       end  
       num_endpoints = number_of_endpoints(endpoint_type, @resource)
       (0..num_endpoints).each do |i|
-        ep = endpoint_class.new(i, @resource)
+        ep = endpoint_class.new(i, self)
         @endpoints[type] << ep if ep.online? || include_if_offline
       end  
       @endpoints[type].size   
