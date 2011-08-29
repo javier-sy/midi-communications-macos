@@ -9,7 +9,7 @@ module CoreMIDI
                 :manufacturer,
                 :model,
                 :name,
-                :pointer
+                :resource
                 
     alias_method :online?, :is_online
 
