@@ -41,7 +41,7 @@ module CoreMIDI
         when :input then [:source, Input]
         when :output then [:destination, Output]
       end  
-      num_endpoints = number_of_endpoints(endpoint_type, @resource)
+      num_endpoints = number_of_endpoints(endpoint_type)
       (0..num_endpoints).each do |i|
         ep = endpoint_class.new(i, self)
         @endpoints[type] << ep if ep.online? || include_if_offline
