@@ -3,8 +3,6 @@
 module CoreMIDI
 
   module Entity
-    
-    extend Forwardable
 
     attr_reader :endpoints, 
                 :is_online,

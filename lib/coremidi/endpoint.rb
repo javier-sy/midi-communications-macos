@@ -3,6 +3,8 @@
 module CoreMIDI
 
   module Endpoint
+    
+    extend Forwardable
 
                 # has the device been initialized?
     attr_reader :enabled,
