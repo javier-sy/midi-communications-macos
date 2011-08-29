@@ -13,12 +13,12 @@ module CoreMIDI
     def initialize(id, device_pointer, options = {})
       include_if_offline = options[:include_offline] || false
       @id = id
-      @device_pointer = device_pointer
+      @resource = device_pointer
       @entities = []
       
       prop = Map::CF.CFStringCreateWithCString( nil, "name", 0 )
       name = Map::CF.CFStringCreateWithCString( nil, id.to_s, 0 )
-      Map::MIDIObjectGetStringProperty(@device_pointer, prop, name)
+      Map::MIDIObjectGetStringProperty(@resource, prop, name)
 
       @name = Map::CF.CFStringGetCStringPtr(name.read_pointer, 0).read_string
       populate_entities(:include_offline => include_if_offline)
@@ -79,7 +79,7 @@ module CoreMIDI
     def populate_entities(options = {})
       include_if_offline = options[:include_offline] || false
       i = 0
-      while !(entity_pointer = Map.MIDIDeviceGetEntity(@device_pointer, i)).null?
+      while !(entity_pointer = Map.MIDIDeviceGetEntity(@resource, i)).null?
         @entities << Entity.new(entity_pointer, :include_offline => include_if_offline)
         i += 1
       end

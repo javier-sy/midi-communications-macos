@@ -20,6 +20,7 @@ module CoreMIDI
       @model = get_property(:model)
       @name = "#{@manufacturer} #{@model}"
       @is_online = get_property(:offline, :type => :int) == 0
+      [:input, :output].each { |type| populate_endpoints(type) }
     end
     
     # assign all of this Entity's endpoints an consecutive id
@@ -34,7 +35,7 @@ module CoreMIDI
     
     private
     
-    # populate endpoints for this entity
+    # populate endpoints of <em>type</em> for this entity
     def populate_endpoints(type, options = {})
       include_if_offline = options[:include_offline] || false
       endpoint_class = case type
