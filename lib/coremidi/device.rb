@@ -56,7 +56,7 @@ module CoreMIDI
     def endpoints
       endpoints = { :input => [], :output => [] }
       endpoints.keys.each do |k|
-        endpoints[k] += entities.map { |entitiy| entity.endpoints[k] }.flatten
+        endpoints[k] += entities.map { |entity| entity.endpoints[k] }.flatten
       end
       endpoints
     end
