@@ -52,14 +52,14 @@ module CoreMIDI
     def self.refresh
       @devices.clear
     end
-
-    private
     
     def populate_endpoint_ids(starting_id)
       i = 0
       entities.each_with_index { |entity| i += entity.populate_endpoint_ids(i + starting_id) }
       i
     end
+
+    private
     
     # gives all of the endpoints for all devices an id
     def self.populate_endpoint_ids
