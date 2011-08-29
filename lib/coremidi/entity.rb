@@ -24,9 +24,10 @@ module CoreMIDI
     
     # assign all of this Entity's endpoints an consecutive id
     def populate_endpoint_ids(starting_id)
-      i = nil
-      @endpoints.values.flatten.each_with_index do |e, i|  
+      i = 0
+      @endpoints.values.flatten.each do |e|  
         e.id = (i + starting_id)
+        i += 1
       end
       i
     end
