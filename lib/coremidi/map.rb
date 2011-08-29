@@ -110,6 +110,7 @@ module CoreMIDI
     if SnowLeopard
       attach_function :MIDIPacketListAdd, [:pointer, :int, :pointer, :int, :int, :pointer], :pointer
     else
+      # extern MIDIPacket * MIDIPacketListAdd( MIDIPacketList * pktlist, ByteCount listSize, MIDIPacket * curPacket, MIDITimeStamp time, ByteCount nData, const Byte * data)
       attach_function :MIDIPacketListAdd, [:pointer, :int, :pointer, :int, :int, :int, :pointer], :pointer
     end
 
