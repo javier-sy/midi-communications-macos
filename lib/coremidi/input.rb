@@ -94,7 +94,7 @@ module CoreMIDI
     def connect   
       enable_client
       initialize_port
-      @resource = Map.MIDIEntityGetSource(@entity.pointer, @resource_id)
+      @resource = Map.MIDIEntityGetSource(@entity.resource, @resource_id)
       error = Map.MIDIPortConnectSource(@handle, @resource, nil )
       initialize_buffer
       @sysex_buffer = []

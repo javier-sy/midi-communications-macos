@@ -91,7 +91,7 @@ module CoreMIDI
       client_error = enable_client
       port_error = initialize_port
 
-      @resource = Map.MIDIEntityGetDestination( @entity.pointer, @resource_id )
+      @resource = Map.MIDIEntityGetDestination( @entity.resource, @resource_id )
       !@resource.address.zero? && client_error.zero? && port_error.zero?
     end
     alias_method :connect?, :connect
