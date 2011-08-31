@@ -20,6 +20,10 @@ Note that in the interest of allowing people on other platforms to utilize your 
 == Install
 
   gem install ffi-coremidi
+  
+== Documentation
+
+* {rdoc}[http://rubydoc.info/github/arirusso/ffi-coremidi]
 
 == Author
 
