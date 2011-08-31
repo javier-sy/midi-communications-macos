@@ -23,7 +23,7 @@ module CoreMIDI
       [:input, :output].each { |type| populate_endpoints(type) }
     end
     
-    # assign all of this Entity's endpoints an consecutive id
+    # assign all of this Entity's endpoints an consecutive local id
     def populate_endpoint_ids(starting_id)
       i = 0
       @endpoints.values.flatten.each do |e|  
@@ -74,7 +74,7 @@ module CoreMIDI
       val.read_int
     end        
 
-    # gets a property from this endpoint's entity
+    # gets a CString or Integer property from this Endpoint's entity
     def get_property(name, options = {})
       from = options[:from] || @resource
       type = options[:type] || :string

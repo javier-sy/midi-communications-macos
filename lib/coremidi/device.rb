@@ -53,6 +53,7 @@ module CoreMIDI
       @devices.clear
     end
     
+    # returns all of the Endpoints for this device
     def endpoints
       endpoints = { :input => [], :output => [] }
       endpoints.keys.each do |k|
@@ -61,6 +62,7 @@ module CoreMIDI
       endpoints
     end
     
+    # assign all of this Device's endpoints an consecutive local id
     def populate_endpoint_ids(starting_id)
       i = 0
       entities.each_with_index { |entity| i += entity.populate_endpoint_ids(i + starting_id) }
@@ -69,7 +71,7 @@ module CoreMIDI
 
     private
     
-    # gives all of the endpoints for all devices an id
+    # gives all of the endpoints for all devices a consecutive local id
     def self.populate_endpoint_ids
       i = 0
       all.each { |device| i += device.populate_endpoint_ids(i) }

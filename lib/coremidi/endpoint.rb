@@ -6,10 +6,10 @@ module CoreMIDI
     
     extend Forwardable
 
-                # has the device been initialized?
+                # has the endpoint been initialized?
     attr_reader :enabled,
                 :entity,
-                # unique Numeric id of the device
+                # unique local Numeric id of the endpoint
                 :id,
                 :resource_id,
                 # :input or :output
@@ -36,17 +36,17 @@ module CoreMIDI
       @id ||= val
     end
 
-    # select the first device of type <em>type</em>
+    # select the first endpoint of type <em>type</em>
     def self.first(type)
       all_by_type[type].first
     end
 
-    # select the last device of type <em>type</em>
+    # select the last endpoint of type <em>type</em>
     def self.last(type)
       all_by_type[type].last
     end
 
-    # a Hash of :input and :output devices
+    # a Hash of :input and :output endpoints
     def self.all_by_type
       {
         :input => Device.all.map { |d| d.endpoints[:input] }.flatten,
@@ -54,7 +54,7 @@ module CoreMIDI
       }
     end
 
-    # all devices of both types
+    # all endpoints of both types
     def self.all
       Device.all.map { |d| d.endpoints }.flatten
     end
