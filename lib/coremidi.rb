@@ -20,5 +20,5 @@ require 'coremidi/input'
 require 'coremidi/output'
 
 module CoreMIDI
-  VERSION = "0.1.1"
+  VERSION = "0.1.2"
 end
