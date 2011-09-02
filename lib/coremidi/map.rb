@@ -11,7 +11,7 @@ module CoreMIDI
     extend FFI::Library
     ffi_lib '/System/Library/Frameworks/CoreMIDI.framework/Versions/Current/CoreMIDI'
 
-    SnowLeopard = `uname -r`.scan(/1\d*\.\d*/).first.to_f >= 10.6
+    SnowLeopard = `uname -r`.scan(/\d*\.\d*/).first.to_f >= 10.6
 
     typedef :pointer, :CFStringRef
     typedef :int32, :ItemCount
