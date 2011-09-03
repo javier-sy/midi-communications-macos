@@ -16,8 +16,8 @@ require 'coremidi/map'
 # classes
 require 'coremidi/entity'
 require 'coremidi/device'
-require 'coremidi/input'
-require 'coremidi/output'
+require 'coremidi/source'
+require 'coremidi/destination'
 
 module CoreMIDI
   VERSION = "0.1.2"

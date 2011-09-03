@@ -46,11 +46,11 @@ module CoreMIDI
       all_by_type[type].last
     end
 
-    # a Hash of :input and :output endpoints
+    # a Hash of :source and :destination endpoints
     def self.all_by_type
       {
-        :input => Device.all.map { |d| d.endpoints[:input] }.flatten,
-        :output => Device.all.map { |d| d.endpoints[:output] }.flatten
+        :source => Device.all.map { |d| d.endpoints[:source] }.flatten,
+        :destination => Device.all.map { |d| d.endpoints[:destination] }.flatten
       }
     end
 

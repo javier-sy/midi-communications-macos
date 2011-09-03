@@ -55,7 +55,7 @@ module CoreMIDI
     
     # returns all of the Endpoints for this device
     def endpoints
-      endpoints = { :input => [], :output => [] }
+      endpoints = { :source => [], :destination => [] }
       endpoints.keys.each do |k|
         endpoints[k] += entities.map { |entity| entity.endpoints[k] }.flatten
       end

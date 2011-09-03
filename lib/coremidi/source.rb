@@ -3,9 +3,9 @@
 module CoreMIDI
 
   #
-  # Input endpoint class
+  # Input/Source endpoint class
   #
-  class Input
+  class Source
 
     include Endpoint
     
@@ -65,30 +65,30 @@ module CoreMIDI
 
     # close this input
     def close
-      error = Map.MIDIPortDisconnectSource( @handle, @resource )
-      raise "MIDIPortDisconnectSource returned error code #{error}" unless error.zero?
+      #error = Map.MIDIPortDisconnectSource( @handle, @resource )
+      #raise "MIDIPortDisconnectSource returned error code #{error}" unless error.zero?
       #error = Map.MIDIClientDispose(@handle)
       #raise "MIDIClientDispose returned error code #{error}" unless error.zero?
       error = Map.MIDIPortDispose(@handle)
       raise "MIDIPortDisposePort returned error code #{error}" unless error.zero?
-      error = Map.MIDIEndpointDispose(@resource)
-      raise "MIDIEndpointDispose returned error code #{error}" unless error.zero?
+      #error = Map.MIDIEndpointDispose(@resource)
+      #raise "MIDIEndpointDispose returned error code #{error}" unless error.zero?
       @enabled = false
     end
 
     # shortcut to the first available input endpoint
     def self.first
-      Endpoint.first(:input)
+      Endpoint.first(:source)
     end
 
     # shortcut to the last available input endpoint
     def self.last
-      Endpoint.last(:input)
+      Endpoint.last(:source)
     end
 
     # all input endpoints
     def self.all
-      Endpoint.all_by_type[:input]
+      Endpoint.all_by_type[:source]
     end
     
     protected

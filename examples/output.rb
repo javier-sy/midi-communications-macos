@@ -14,7 +14,7 @@ duration = 0.1
 # CoreMIDI::Device.all.to_s will list your midi devices
 # or amidi -l from the command line
 
-CoreMIDI::Output.first.open do |output|
+CoreMIDI::Destination.first.open do |output|
 
   (0..((octaves-1)*12)).step(12) do |oct|
 

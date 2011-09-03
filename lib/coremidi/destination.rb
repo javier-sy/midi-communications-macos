@@ -3,9 +3,9 @@
 module CoreMIDI
 
   #
-  # Output endpoint class
+  # Output/Destination endpoint class
   #
-  class Output
+  class Destination
 
     include Endpoint
 
@@ -15,8 +15,8 @@ module CoreMIDI
       #raise "MIDIClientDispose returned error code #{error}" unless error.zero?
       error = Map.MIDIPortDispose(@handle)
       raise "MIDIPortDispose returned error code #{error}" unless error.zero?
-      error = Map.MIDIEndpointDispose(@resource)
-      raise "MIDIEndpointDispose returned error code #{error}" unless error.zero?
+      #error = Map.MIDIEndpointDispose(@resource)
+      #raise "MIDIEndpointDispose returned error code #{error}" unless error.zero?
       @enabled = false
 
     end
@@ -76,17 +76,17 @@ module CoreMIDI
 
     # shortcut to the first output endpoint available
     def self.first
-      Endpoint.first(:output)
+      Endpoint.first(:destination)
     end
     
     # shortcut to the last output endpoint available
     def self.last
-      Endpoint.last(:output)
+      Endpoint.last(:destination)
     end
 
     # all output endpoints
     def self.all
-      Endpoint.all_by_type[:output]
+      Endpoint.all_by_type[:destination]
     end
     
     protected

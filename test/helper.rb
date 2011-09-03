@@ -10,7 +10,7 @@ module TestHelper
   
   def self.select_devices
     $test_device ||= {}
-    { :input => CoreMIDI::Input.all, :output => CoreMIDI::Output.all }.each do |type, devs|
+    { :input => CoreMIDI::Source.all, :output => CoreMIDI::Destination.all }.each do |type, devs|
       puts ""
       puts "select an #{type.to_s}..."
       while $test_device[type].nil?

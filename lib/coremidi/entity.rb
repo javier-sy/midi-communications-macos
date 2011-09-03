@@ -14,13 +14,13 @@ module CoreMIDI
     alias_method :online?, :is_online
 
     def initialize(resource, options = {}, &block)
-      @endpoints = { :input => [], :output => [] }
+      @endpoints = { :source => [], :destination => [] }
       @resource = resource
       @manufacturer = get_property(:manufacturer)
       @model = get_property(:model)
       @name = "#{@manufacturer} #{@model}"
       @is_online = get_property(:offline, :type => :int) == 0
-      [:input, :output].each { |type| populate_endpoints(type) }
+      @endpoints.keys.each { |type| populate_endpoints(type) }
     end
     
     # assign all of this Entity's endpoints an consecutive local id
@@ -39,8 +39,8 @@ module CoreMIDI
     def populate_endpoints(type, options = {})
       include_if_offline = options[:include_offline] || false
       endpoint_class = case type
-        when :input then Input
-        when :output then Output
+        when :source then Source
+        when :destination then Destination
       end  
       num_endpoints = number_of_endpoints(type)
       (0..num_endpoints).each do |i|
@@ -53,8 +53,8 @@ module CoreMIDI
     # gets the number of endpoints for this entity
     def number_of_endpoints(type)
       case type
-        when :input then Map.MIDIEntityGetNumberOfSources(@resource)
-        when :output then Map.MIDIEntityGetNumberOfDestinations(@resource)
+        when :source then Map.MIDIEntityGetNumberOfSources(@resource)
+        when :destination then Map.MIDIEntityGetNumberOfDestinations(@resource)
       end
     end
     
