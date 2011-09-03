@@ -15,6 +15,8 @@ class IoTest < Test::Unit::TestCase
     pointer = 0
     $test_device[:output].open do |output|
       $test_device[:input].open do |input|
+        
+        input.buffer.clear
 
         messages.each do |msg|
 
@@ -24,7 +26,6 @@ class IoTest < Test::Unit::TestCase
           sleep(1)
           received = input.gets.map { |m| m[:data] }.flatten
           
-
           $>.puts "received: " + received.inspect
 
           assert_equal(messages_arr.slice(pointer, received.length), received)
@@ -52,6 +53,8 @@ class IoTest < Test::Unit::TestCase
 
     $test_device[:output].open do |output|
       $test_device[:input].open do |input|
+        
+        input.buffer.clear
 
         messages.each do |msg|
 
