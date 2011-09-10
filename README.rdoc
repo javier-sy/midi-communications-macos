@@ -12,7 +12,7 @@ Note that in the interest of allowing people on other platforms to utilize your 
 * Input and output on multiple devices concurrently
 * Agnostically handle different MIDI Message types (including SysEx)
 * Timestamped input events
-* Internally patch MIDI to other programs using IAC and {MIDI Patch Bay}[http://www.apple.com/downloads/macosx/audio/midipatchbay.html]
+* Internally patch MIDI to other programs using IAC (and {MIDI Patch Bay}[http://notahat.com/midi_patchbay] if you're using OSX Snow Leopard or earlier)
 == Requirements
 
 * {ffi}[http://github.com/ffi/ffi] (gem install ffi)
