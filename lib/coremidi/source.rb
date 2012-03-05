@@ -136,19 +136,19 @@ module CoreMIDI
               @sysex_buffer.clear
             end
           end
-          @buffer << get_message_formatted(bytes) if @sysex_buffer.empty?             
+          @buffer << get_message_formatted(bytes, Time.now.to_i) if @sysex_buffer.empty?             
         end
       end
     end
 
     # timestamp
-    def now
-      ((Time.now.to_f - @start_time) * 1000)
+    def timestamp(now)
+      ((now - @start_time) * 1000)
     end
 
     # give a message its timestamp and package it in a Hash
-    def get_message_formatted(raw)
-      { :data => raw, :timestamp => now }
+    def get_message_formatted(raw, time)
+      { :data => raw, :timestamp => timestamp(time) }
     end
 
     # initialize a coremidi port for this endpoint
