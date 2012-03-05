@@ -123,6 +123,7 @@ module CoreMIDI
     # the callback which is called by coremidi when new MIDI messages are in the buffer
     def get_event_callback
       Proc.new do | new_packets, refCon_ptr, connRefCon_ptr |
+        time = Time.now.to_i
         packet = new_packets[:packet][0]
         len = packet[:length]
         #p "packets received: #{new_packets[:numPackets]}"
@@ -136,7 +137,7 @@ module CoreMIDI
               @sysex_buffer.clear
             end
           end
-          @buffer << get_message_formatted(bytes, Time.now.to_i) if @sysex_buffer.empty?             
+          @buffer << get_message_formatted(bytes, time) if @sysex_buffer.empty?             
         end
       end
     end
