@@ -65,7 +65,7 @@ module CoreMIDI
     # assign all of this Device's endpoints an consecutive local id
     def populate_endpoint_ids(starting_id)
       i = 0
-      entities.each_with_index { |entity| i += entity.populate_endpoint_ids(i + starting_id) }
+      entities.each { |entity| i += entity.populate_endpoint_ids(i + starting_id) }
       i
     end
 

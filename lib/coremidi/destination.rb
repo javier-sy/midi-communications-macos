@@ -9,6 +9,8 @@ module CoreMIDI
 
     include Endpoint
 
+    attr_reader :entity
+
     # close this output
     def close
       #error = Map.MIDIClientDispose(@handle)
@@ -51,17 +53,16 @@ module CoreMIDI
     def puts(*a)
   	  case a.first
         when Array then puts_bytes(*a.first)
-    	  when Numeric then puts_bytes(*a)
-    	  when String then puts_bytestr(*a)
+    	when Numeric then puts_bytes(*a)
+    	when String then puts_bytestr(*a)
       end
     end
     alias_method :write, :puts
 
-    # enable this device; also takes a block
+    # enable this device
     def enable(options = {}, &block)
-      #connect
       @enabled = true
-      unless block.nil?
+      if block_given?
       	begin
       		yield(self)
       	ensure
@@ -135,7 +136,6 @@ module CoreMIDI
 
     SysexCompletionCallback =
       FFI::Function.new(:void, [:pointer]) do |sysex_request_ptr|
-        p 'hi'
         # this isn't working for some reason
         # as of now, we don't need it though
       end
