@@ -60,7 +60,7 @@ class IoTest < Test::Unit::TestCase
 
           $>.puts "sending: " + msg.inspect
 
-          output.puts(msg)
+          output.puts_s(msg)
           sleep(1)
           received = input.gets_bytestr.map { |m| m[:data] }.flatten.join
           $>.puts "received: " + received.inspect
