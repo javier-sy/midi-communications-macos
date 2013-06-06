@@ -17,10 +17,20 @@ module CoreMIDI
       @entities = []
       
       prop = Map::CF.CFStringCreateWithCString( nil, "name", 0 )
-      name = Map::CF.CFStringCreateWithCString( nil, id.to_s, 0 )
-      Map::MIDIObjectGetStringProperty(@resource, prop, name)
 
-      @name = Map::CF.CFStringGetCStringPtr(name.read_pointer, 0).read_string
+      begin
+        name_ptr = FFI::MemoryPointer.new(:pointer)
+        Map::MIDIObjectGetStringProperty(@resource, prop, name_ptr)
+        name = name_ptr.read_pointer
+        len = Map::CF.CFStringGetMaximumSizeForEncoding(Map::CF.CFStringGetLength(name), :kCFStringEncodingUTF8)
+        bytes = FFI::MemoryPointer.new(len + 1)
+        raise RuntimeError.new("CFStringGetCString") unless Map::CF.CFStringGetCString(name, bytes, len, :kCFStringEncodingUTF8)
+        @name = bytes.read_string
+      ensure
+        Map::CF.CFRelease(name) unless name.nil? || name.null?
+        Map::CF.CFRelease(prop) unless prop.null?
+      end
+
       populate_entities(:include_offline => include_if_offline)
     end
     

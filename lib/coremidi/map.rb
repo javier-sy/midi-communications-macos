@@ -122,10 +122,22 @@ module CoreMIDI
       extend FFI::Library
       ffi_lib '/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation'
 
+      typedef :pointer, :CFStringRef
+      typedef :long, :CFIndex
+      enum :CFStringEncoding, [ :kCFStringEncodingUTF8, 0x08000100 ]
+
       # CFString* CFStringCreateWithCString( ?, CString, encoding)
       attach_function :CFStringCreateWithCString, [:pointer, :string, :int], :pointer
       # CString* CFStringGetCStringPtr(CFString*, encoding)
       attach_function :CFStringGetCStringPtr, [:pointer, :int], :pointer
+
+      attach_function :CFStringGetLength, [ :CFStringRef ], :CFIndex
+
+      attach_function :CFStringGetMaximumSizeForEncoding, [ :CFIndex, :CFStringEncoding ], :long
+
+      attach_function :CFStringGetCString, [ :CFStringRef, :pointer, :CFIndex, :CFStringEncoding ], :bool
+
+      attach_function :CFRelease, [ :pointer ], :void
 
     end
 
