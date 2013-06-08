@@ -9,14 +9,7 @@ module CoreMIDI
 
     # Close this output
     def close
-      #error = Map.MIDIClientDispose(@handle)
-      #raise "MIDIClientDispose returned error code #{error}" unless error.zero?
-      #error = Map.MIDIPortDispose(@handle)
-      #raise "MIDIPortDispose returned error code #{error}" unless error.zero?
-      #error = Map.MIDIEndpointDispose(@resource)
-      #raise "MIDIEndpointDispose returned error code #{error}" unless error.zero?
       @enabled = false
-
     end
 
     # Send a MIDI message comprised of a String of hex digits
@@ -93,7 +86,6 @@ module CoreMIDI
     def connect
       client_error = enable_client
       port_error = initialize_port
-
       @resource = Map.MIDIEntityGetDestination( @entity.resource, @resource_id )
       !@resource.address.zero? && client_error.zero? && port_error.zero?
     end
@@ -105,20 +97,17 @@ module CoreMIDI
     def puts_small(bytes, size)
       packet_list = FFI::MemoryPointer.new(256)
       packet_ptr = Map.MIDIPacketListInit(packet_list)
-
       if Map::SnowLeopard
         packet_ptr = Map.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, size, bytes)
       else
         # Pass in two 32-bit 0s for the 64 bit time
         packet_ptr = Map.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, 0, size, bytes)
       end
-
       Map.MIDISend( @handle, @resource, packet_list )
     end
 
     # Output a System Exclusive MIDI message
     def puts_sysex(bytes, size)
-
       request = Map::MIDISysexSendRequest.new
       request[:destination] = @resource
       request[:data] = bytes
@@ -126,14 +115,12 @@ module CoreMIDI
       request[:complete] = 0
       request[:completion_proc] = SysexCompletionCallback
       request[:completion_ref_con] = request
-
       Map.MIDISendSysex(request)
     end
 
     SysexCompletionCallback =
       FFI::Function.new(:void, [:pointer]) do |sysex_request_ptr|
-        # this isn't working for some reason
-        # as of now, we don't need it though
+        # this isn't working for some reason. as of now, it's not needed though
       end
       
     # Initialize a coremidi port for this endpoint
