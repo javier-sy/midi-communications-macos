@@ -1,18 +1,13 @@
-#!/usr/bin/env ruby
-
 module CoreMIDI
 
   module Endpoint
     
     extend Forwardable
 
-                # has the endpoint been initialized?
-    attr_reader :enabled,
-                :entity,
-                # unique local Numeric id of the endpoint
+    attr_reader :enabled, # has the endpoint been initialized?
+                :entity, # unique local Numeric id of the endpoint
                 :id,
-                :resource_id,
-                # :input or :output
+                :resource_id, # :input or :output
                 :type
                 
     def_delegators :entity, :manufacturer, :model, :name
@@ -26,27 +21,27 @@ module CoreMIDI
       @enabled = false
     end
     
-    # is this endpoint online?
+    # Is this endpoint online?
     def online?
       @entity.online? && connect?
     end
     
-    # sets the id for this endpoint (the id is immutable once its set)
+    # Set the id for this endpoint (the id is immutable once its set)
     def id=(val)
       @id ||= val
     end
 
-    # select the first endpoint of type <em>type</em>
+    # Select the first endpoint of the specified type
     def self.first(type)
       all_by_type[type].first
     end
 
-    # select the last endpoint of type <em>type</em>
+    # Select the last endpoint of the specified type
     def self.last(type)
       all_by_type[type].last
     end
 
-    # a Hash of :source and :destination endpoints
+    # A Hash of :source and :destination endpoints
     def self.all_by_type
       {
         :source => Device.all.map { |d| d.endpoints[:source] }.flatten,
@@ -54,14 +49,14 @@ module CoreMIDI
       }
     end
 
-    # all endpoints of both types
+    # All endpoints of both types
     def self.all
       Device.all.map { |d| d.endpoints }.flatten
     end
     
     protected
     
-    # enables the coremidi MIDI client that will go with this endpoint
+    # Enables the coremidi MIDI client that will go with this endpoint
     def enable_client
       client_name = Map::CF.CFStringCreateWithCString( nil, "Client #{@resource_id} #{name}", 0 )
       client_ptr = FFI::MemoryPointer.new(:pointer)

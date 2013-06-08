@@ -1,17 +1,13 @@
-#!/usr/bin/env ruby
-
 module CoreMIDI
 
-  #
   # Output/Destination endpoint class
-  #
   class Destination
 
     include Endpoint
 
     attr_reader :entity
 
-    # close this output
+    # Close this output
     def close
       #error = Map.MIDIClientDispose(@handle)
       #raise "MIDIClientDispose returned error code #{error}" unless error.zero?
@@ -23,7 +19,7 @@ module CoreMIDI
 
     end
 
-    # sends a MIDI message comprised of a String of hex digits
+    # Send a MIDI message comprised of a String of hex digits
     def puts_s(data)
       data = data.dup
 	    output = []
@@ -35,7 +31,7 @@ module CoreMIDI
     alias_method :puts_bytestr, :puts_s
     alias_method :puts_hex, :puts_s
 
-    # sends a MIDI messages comprised of Numeric bytes
+    # Send a MIDI messages comprised of Numeric bytes
     def puts_bytes(*data)
 
       format = "C" * data.size
@@ -49,7 +45,7 @@ module CoreMIDI
       end
     end
 
-    # send a MIDI message of an indeterminant type
+    # Send a MIDI message of an indeterminant type
     def puts(*a)
   	  case a.first
         when Array then puts_bytes(*a.first)
@@ -59,7 +55,7 @@ module CoreMIDI
     end
     alias_method :write, :puts
 
-    # enable this device
+    # Enable this device
     def enable(options = {}, &block)
       @enabled = true
       if block_given?
@@ -75,24 +71,24 @@ module CoreMIDI
     alias_method :open, :enable
     alias_method :start, :enable
 
-    # shortcut to the first output endpoint available
+    # Shortcut to the first output endpoint available
     def self.first
       Endpoint.first(:destination)
     end
     
-    # shortcut to the last output endpoint available
+    # Shortcut to the last output endpoint available
     def self.last
       Endpoint.last(:destination)
     end
 
-    # all output endpoints
+    # All output endpoints
     def self.all
       Endpoint.all_by_type[:destination]
     end
     
     protected
 
-    # base initialization for this endpoint -- done whether or not the endpoint is enabled to
+    # Base initialization for this endpoint -- done whether or not the endpoint is enabled to
     # check whether it is truly available for use
     def connect
       client_error = enable_client
@@ -105,7 +101,7 @@ module CoreMIDI
 
     private
 
-    # output a short MIDI message
+    # Output a short MIDI message
     def puts_small(bytes, size)
       packet_list = FFI::MemoryPointer.new(256)
       packet_ptr = Map.MIDIPacketListInit(packet_list)
@@ -120,7 +116,7 @@ module CoreMIDI
       Map.MIDISend( @handle, @resource, packet_list )
     end
 
-    # output a System Exclusive MIDI message
+    # Output a System Exclusive MIDI message
     def puts_sysex(bytes, size)
 
       request = Map::MIDISysexSendRequest.new
@@ -140,7 +136,7 @@ module CoreMIDI
         # as of now, we don't need it though
       end
       
-    # initialize a coremidi port for this endpoint
+    # Initialize a coremidi port for this endpoint
     def initialize_port
       port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@resource_id}: #{name}", 0)
       outport_ptr = FFI::MemoryPointer.new(:pointer)

@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 module CoreMIDI
 
   class Entity
@@ -23,7 +21,7 @@ module CoreMIDI
       @endpoints.keys.each { |type| populate_endpoints(type) }
     end
     
-    # assign all of this Entity's endpoints an consecutive local id
+    # Assign all of this Entity's endpoints an consecutive local id
     def populate_endpoint_ids(starting_id)
       i = 0
       @endpoints.values.flatten.each do |e|  
@@ -35,7 +33,7 @@ module CoreMIDI
     
     private
     
-    # populate endpoints of <em>type</em> for this entity
+    # Populate endpoints of a specified type for this entity
     def populate_endpoints(type, options = {})
       include_if_offline = options[:include_offline] || false
       endpoint_class = case type
@@ -50,7 +48,7 @@ module CoreMIDI
       @endpoints[type].size   
     end
     
-    # gets the number of endpoints for this entity
+    # The number of endpoints for this entity
     def number_of_endpoints(type)
       case type
         when :source then Map.MIDIEntityGetNumberOfSources(@resource)
@@ -58,7 +56,7 @@ module CoreMIDI
       end
     end
     
-    # gets a CFString property
+    # A CFString property
     def get_string(name, pointer)
       prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
       val = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 ) # placeholder
@@ -66,7 +64,7 @@ module CoreMIDI
       Map::CF.CFStringGetCStringPtr(val.read_pointer, 0).read_string rescue nil
     end
     
-    # gets an Integer property
+    # An Integer property
     def get_int(name, pointer)
       prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
       val = FFI::MemoryPointer.new(:pointer, 32)
@@ -74,7 +72,7 @@ module CoreMIDI
       val.read_int
     end        
 
-    # gets a CString or Integer property from this Endpoint's entity
+    # A CString or Integer property from this Endpoint's entity
     def get_property(name, options = {})
       from = options[:from] || @resource
       type = options[:type] || :string

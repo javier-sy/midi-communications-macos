@@ -1,11 +1,6 @@
-#!/usr/bin/env ruby
-
 module CoreMIDI
 
-  #
-  # coremidi binding
-  #
-  #
+  # Coremidi C binding
   module Map
 
     extend FFI::Library
