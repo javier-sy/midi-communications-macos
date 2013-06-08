@@ -1,9 +1,6 @@
-#!/usr/bin/env ruby
-#
 # ffi-coremidi
 # Realtime MIDI IO with Ruby for OSX
-# (c)2011 Ari Russo
-# 
+# (c)2011-2013 Ari Russo
 
 # libs
 require 'ffi'
@@ -20,5 +17,5 @@ require 'coremidi/source'
 require 'coremidi/destination'
 
 module CoreMIDI
-  VERSION = "0.1.8"
+  VERSION = "0.2.0"
 end
