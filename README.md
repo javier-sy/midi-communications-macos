@@ -2,7 +2,7 @@
 
 #### Realtime MIDI IO with Ruby for OSX
 
-This is a Ruby implementation of the Apple Core MIDI framework API.
+This is a Ruby implementation of the [Apple Core MIDI framework API](https://developer.apple.com/library/mac/#documentation/MusicAudio/Reference/CACoreMIDIRef/MIDIServices/).
 
 Note that in the interest of allowing people on other platforms to utilize your code, please consider using [UniMIDI](http://github.com/arirusso/unimidi).  UniMIDI is a platform independent wrapper which implements this library with a similar API.
 
@@ -18,7 +18,7 @@ Note that in the interest of allowing people on other platforms to utilize your 
 
 * [ffi](http://github.com/ffi/ffi)
 
-### Install
+### Installation
 
 If you're using Bundler, add this line to your application's Gemfile:
 
