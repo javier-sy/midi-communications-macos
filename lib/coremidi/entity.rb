@@ -58,10 +58,7 @@ module CoreMIDI
     
     # A CFString property
     def get_string(name, pointer)
-      prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
-      val = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 ) # placeholder
-      Map::MIDIObjectGetStringProperty(pointer, prop, val)
-      Map::CF.CFStringGetCStringPtr(val.read_pointer, 0).read_string rescue nil
+      Utility.device_name(name, pointer)
     end
     
     # An Integer property

@@ -9,6 +9,7 @@ require 'forwardable'
 # modules
 require 'coremidi/endpoint'
 require 'coremidi/map'
+require 'coremidi/utility'
 
 # classes
 require 'coremidi/entity'
