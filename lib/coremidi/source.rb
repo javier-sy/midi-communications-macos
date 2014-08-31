@@ -46,7 +46,7 @@ module CoreMIDI
     def enable(options = {}, &block)
       @enabled = true
 
-      unless block.nil?
+      if block_given?
         begin
           yield(self)
         ensure
