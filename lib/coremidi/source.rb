@@ -8,16 +8,17 @@ module CoreMIDI
     attr_reader :buffer
 
     #
-    # returns an array of MIDI event hashes as such:
+    # An array of MIDI event hashes as such:
     #   [
     #     { :data => [144, 60, 100], :timestamp => 1024 },
     #     { :data => [128, 60, 100], :timestamp => 1100 },
     #     { :data => [144, 40, 120], :timestamp => 1200 }
     #   ]
     #
-    # the data is an array of Numeric bytes
-    # the timestamp is the number of millis since this input was enabled
+    # The data is an array of Numeric bytes
+    # The timestamp is the number of millis since this input was enabled
     #
+    # @return [Array<Hash>]
     def gets
       until queued_messages?
       end
@@ -27,14 +28,15 @@ module CoreMIDI
     end
     alias_method :read, :gets
 
-    # same as gets but returns message data as string of hex digits as such:
+    # Same as Source#gets except that it returns message data as string of hex 
+    # digits as such:
     #   [
     #     { :data => "904060", :timestamp => 904 },
     #     { :data => "804060", :timestamp => 1150 },
     #     { :data => "90447F", :timestamp => 1300 }
     #   ]
     #
-    #
+    # @return [Array<Hash>]
     def gets_s
       msgs = gets
       msgs.each { |msg| msg[:data] = numeric_bytes_to_hex_string(msg[:data]) }
@@ -42,7 +44,7 @@ module CoreMIDI
     end
     alias_method :gets_bytestr, :gets_s
 
-    # enable this the input for use; can be passed a block
+    # Enable this the input for use; can be passed a block
     def enable(options = {}, &block)
       @enabled = true
 
@@ -70,6 +72,7 @@ module CoreMIDI
       #error = Map.MIDIEndpointDispose(@resource)
       #raise "MIDIEndpointDispose returned error code #{error}" unless error.zero?
       @enabled = false
+      true
     end
 
     # Shortcut to the first available input endpoint
@@ -140,12 +143,15 @@ module CoreMIDI
 
     # Timestamp for a received MIDI message
     def timestamp(now)
-      ((now - @start_time) * 1000)
+      (now - @start_time) * 1000
     end
 
     # Give a message its timestamp and package it in a Hash
     def get_message_formatted(raw, time)
-      { :data => raw, :timestamp => timestamp(time) }
+      { 
+        :data => raw, 
+        :timestamp => timestamp(time) 
+      }
     end
 
     # Initialize a coremidi port for this endpoint
@@ -156,6 +162,7 @@ module CoreMIDI
       error = Map.MIDIInputPortCreate(@client, port_name, @callback, nil, handle_ptr)
       @handle = handle_ptr.read_pointer
       raise "MIDIInputPortCreate returned error code #{error}" unless error.zero?
+      true
     end
     
     # Initialize the MIDI message buffer
@@ -165,12 +172,18 @@ module CoreMIDI
       def @buffer.clear
         super
         @pointer = 0
-      end     
+      end
+      true
     end
     
     # Convert an array of numeric byes to a hex string (e.g. [0x90, 0x40, 0x40] becomes "904040")
     def numeric_bytes_to_hex_string(bytes)
-      bytes.map { |b| s = b.to_s(16).upcase; b < 16 ? s = "0" + s : s; s }.join
+      string_bytes = bytes.map do |byte| 
+        str = byte.to_s(16).upcase
+        str = "0" + str if byte < 16
+        str
+      end
+      string_bytes.join
     end 
 
   end
