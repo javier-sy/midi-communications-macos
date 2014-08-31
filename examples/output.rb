@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 
 dir = File.dirname(File.expand_path(__FILE__))
-$LOAD_PATH.unshift dir + '/../lib'
+$LOAD_PATH.unshift dir + "/../lib"
 
-require 'coremidi'
+require "coremidi"
 
-# this program selects the first midi output and sends some arpeggiated chords to it
+# This program selects the first midi output and sends some arpeggiated chords to it
 
 notes = [36, 40, 43] # C E G
 octaves = 5

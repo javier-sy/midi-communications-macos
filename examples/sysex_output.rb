@@ -3,9 +3,9 @@
 dir = File.dirname(File.expand_path(__FILE__))
 $LOAD_PATH.unshift dir + '/../lib'
 
-require 'coremidi'
+require "coremidi"
 
-# this example outputs a raw sysex message to the first Output endpoint
+# This example outputs a raw sysex message to the first Output endpoint
 # there will not be any output to the console
 
 output = CoreMIDI::Destination.first
