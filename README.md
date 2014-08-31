@@ -48,4 +48,4 @@ Also thank you to [Jeremy Voorhis](http://github.com/jvoorhis) for some useful d
 
 Apache 2.0, See the file LICENSE
 
-Copyright (c) 2011-2013 [Ari Russo](http://github.com/arirusso)
+Copyright (c) 2011-2014 [Ari Russo](http://github.com/arirusso)
