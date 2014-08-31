@@ -19,8 +19,9 @@ module CoreMIDI
     # @return [Array<Endpoint>]
     def endpoints
       endpoints = { :source => [], :destination => [] }
-      endpoints.keys.each do |k|
-        endpoints[k] += entities.map { |entity| entity.endpoints[k] }.flatten
+      endpoints.keys.each do |key|
+        endpoint_group = entities.map { |entity| entity.endpoints[key] }.flatten
+        endpoints[key] += endpoint_group
       end
       endpoints
     end
@@ -42,7 +43,7 @@ module CoreMIDI
     def self.all(options = {})
       use_cache = options[:cache] || true
       include_offline = options[:include_offline] || false
-      if @devices.nil? || @devices.empty? || !use_cache
+      if !has_devices? || !use_cache
         @devices = []
         i = 0
         while !(device_pointer = Map.MIDIGetDevice(i)).null?
@@ -60,6 +61,10 @@ module CoreMIDI
     def self.refresh
       @devices.clear
       @devices
+    end
+
+    def self.has_devices?
+      !@devices.nil? && !@devices.empty? 
     end
 
     private
@@ -86,6 +91,7 @@ module CoreMIDI
     def self.populate_endpoint_ids
       i = 0
       all.each { |device| i += device.populate_endpoint_ids(i) }
+      i
     end
 
     # Populates the entities for this device. These entities are in turn used to gather the endpoints.

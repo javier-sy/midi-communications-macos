@@ -22,26 +22,32 @@ module CoreMIDI
     end
     
     # Is this endpoint online?
+    # @return [Boolean]
     def online?
       @entity.online? && connect?
     end
     
-    # Set the id for this endpoint (the id is immutable once its set)
-    def id=(val)
-      @id ||= val
+    # Set the id for this endpoint (the id is immutable)
+    # @param [Fixnum] val
+    # @return [Fixnum]
+    def id=(id)
+      @id ||= id
     end
 
     # Select the first endpoint of the specified type
+    # @return [Destination, Source]
     def self.first(type)
       all_by_type[type].first
     end
 
     # Select the last endpoint of the specified type
+    # @return [Destination, Source]
     def self.last(type)
       all_by_type[type].last
     end
 
     # A Hash of :source and :destination endpoints
+    # @return [Hash]
     def self.all_by_type
       {
         :source => Device.all.map { |d| d.endpoints[:source] }.flatten,
@@ -50,8 +56,9 @@ module CoreMIDI
     end
 
     # All endpoints of both types
+    # @return [Array<Destination, Source>]
     def self.all
-      Device.all.map { |d| d.endpoints }.flatten
+      Device.all.map { |device| device.endpoints }.flatten
     end
     
     protected

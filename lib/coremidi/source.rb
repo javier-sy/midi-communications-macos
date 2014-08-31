@@ -49,23 +49,25 @@ module CoreMIDI
     alias_method :gets_bytestr, :gets_s
 
     # Enable this the input for use; can be passed a block
+    # @return [Source]
     def enable(options = {}, &block)
-      @enabled = true
-
-      if block_given?
-        begin
-          yield(self)
-        ensure
-          close
+      if !@enabled
+        @enabled = true
+        if block_given?
+          begin
+            yield(self)
+          ensure
+            close
+          end
         end
-      else
-        self
       end
+      self
     end
     alias_method :open, :enable
     alias_method :start, :enable
 
     # Close this input
+    # @return [Boolean]
     def close
       #error = Map.MIDIPortDisconnectSource( @handle, @resource )
       #raise "MIDIPortDisconnectSource returned error code #{error}" unless error.zero?
@@ -75,21 +77,28 @@ module CoreMIDI
       #raise "MIDIPortDispose returned error code #{error}" unless error.zero?
       #error = Map.MIDIEndpointDispose(@resource)
       #raise "MIDIEndpointDispose returned error code #{error}" unless error.zero?
-      @enabled = false
-      true
+      if @enabled
+        @enabled = false
+        true
+      else
+        false
+      end
     end
 
     # Shortcut to the first available input endpoint
+    # @return [Source]
     def self.first
       Endpoint.first(:source)
     end
 
     # Shortcut to the last available input endpoint
+    # @return [Source]
     def self.last
       Endpoint.last(:source)
     end
 
     # All input endpoints
+    # @return [Array<Source>]
     def self.all
       Endpoint.all_by_type[:source]
     end
@@ -181,6 +190,8 @@ module CoreMIDI
     end
     
     # Convert an array of numeric byes to a hex string (e.g. [0x90, 0x40, 0x40] becomes "904040")
+    # @param [Array<Fixnum>] bytes
+    # @return [String]
     def numeric_bytes_to_hex_string(bytes)
       string_bytes = bytes.map do |byte| 
         str = byte.to_s(16).upcase

@@ -56,17 +56,19 @@ module CoreMIDI
     alias_method :write, :puts
 
     # Enable this device
+    # @return [Destination]
     def enable(options = {}, &block)
-      @enabled = true
-      if block_given?
-      	begin
-      		yield(self)
-      	ensure
-      		close
-      	end
-      else
-        self
+      if !@enabled
+        @enabled = true
+        if block_given?
+      	  begin
+      		  yield(self)
+      	  ensure
+      		  close
+      	  end
+        end
       end
+      self
     end
     alias_method :open, :enable
     alias_method :start, :enable
