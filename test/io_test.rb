@@ -1,81 +1,88 @@
-#!/usr/bin/env ruby
-
 require 'helper'
 
-class IoTest < Test::Unit::TestCase
+class CoreMIDI::IOTest < Test::Unit::TestCase
 
-  include CoreMIDI
-  include TestHelper
+  # ** these tests assume that TestOutput is connected to TestInput
+  context "CoreMIDI" do
 
-  def test_full_io
-    sleep(2)
-    messages = VariousMIDIMessages
-    messages_arr = messages.inject { |a,b| a+b }.flatten
-    received_arr = []
-    pointer = 0
-    $test_device[:output].open do |output|
-      $test_device[:input].open do |input|
-        
-        input.buffer.clear
-
-        messages.each do |msg|
-
-          $>.puts "sending: " + msg.inspect
-
-          output.puts(msg)
-          sleep(1)
-          received = input.gets.map { |m| m[:data] }.flatten
-          
-          $>.puts "received: " + received.inspect
-
-          assert_equal(messages_arr.slice(pointer, received.length), received)
-          
-          pointer += received.length
-          
-          received_arr += received
-          
-        end
-        
-        assert_equal(messages_arr.length, received_arr.length)
-
-      end
+    setup do
+      sleep(1)
     end
-  end
 
-  # ** this test assumes that TestOutput is connected to TestInput
-  def test_full_io_bytestr
-    sleep(2) # pause between tests
+    context "full IO" do
 
-    messages = VariousMIDIByteStrMessages
-    messages_str = messages.join
-    received_str = ""
-    pointer = 0
+      context "using Arrays" do
 
-    $test_device[:output].open do |output|
-      $test_device[:input].open do |input|
-        
-        input.buffer.clear
-
-        messages.each do |msg|
-
-          $>.puts "sending: " + msg.inspect
-
-          output.puts_s(msg)
-          sleep(1)
-          received = input.gets_bytestr.map { |m| m[:data] }.flatten.join
-          $>.puts "received: " + received.inspect
-
-          assert_equal(messages_str.slice(pointer, received.length), received)
-          
-          pointer += received.length
-          
-          received_str += received
-          
+        setup do
+          @messages = TestHelper::VariousMIDIMessages
+          @messages_arr = @messages.inject { |a,b| a+b }.flatten
+          @received_arr = []
+          @pointer = 0
         end
-   
-        assert_equal(messages_str, received_str)
-        
+
+        should "do IO" do
+          $test_device[:output].open do |output|
+            $test_device[:input].open do |input|
+
+              input.buffer.clear
+
+              @messages.each do |msg|
+
+                $>.puts "sending: " + msg.inspect
+
+                output.puts(msg)
+                sleep(1)
+                received = input.gets.map { |m| m[:data] }.flatten
+
+                $>.puts "received: " + received.inspect
+
+                assert_equal(@messages_arr.slice(@pointer, received.length), received)
+                @pointer += received.length
+                @received_arr += received
+              end
+              assert_equal(@messages_arr.length, @received_arr.length)
+            end
+          end
+
+        end
       end
+
+      context "using byte Strings" do
+
+        setup do
+          @messages = TestHelper::VariousMIDIByteStrMessages
+          @messages_str = @messages.join
+          @received_str = ""
+          @pointer = 0
+        end
+
+        should "do IO" do
+          $test_device[:output].open do |output|
+            $test_device[:input].open do |input|
+
+              @messages.each do |msg|
+
+                $>.puts "sending: " + msg.inspect
+
+                output.puts(msg)
+                sleep(1)
+                received = input.gets_bytestr.map { |m| m[:data] }.flatten.join
+                $>.puts "received: " + received.inspect
+
+                assert_equal(@messages_str.slice(@pointer, received.length), received)
+                @pointer += received.length
+                @received_str += received
+              end
+              assert_equal(@messages_str, @received_str)
+
+            end
+          end
+
+
+        end
+
+      end
+
     end
 
   end
