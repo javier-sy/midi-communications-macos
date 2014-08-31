@@ -4,15 +4,15 @@
 
 This is a Ruby implementation of the [Apple Core MIDI framework API](https://developer.apple.com/library/mac/#documentation/MusicAudio/Reference/CACoreMIDIRef/MIDIServices/).
 
-Note that in the interest of allowing people on other platforms to utilize your code, please consider using [UniMIDI](http://github.com/arirusso/unimidi).  UniMIDI is a platform independent wrapper which implements this library with a similar API.
+Note that in the interest of allowing people on other platforms to utilize your code, please consider using [UniMIDI](http://github.com/arirusso/unimidi).  UniMIDI is a platform independent wrapper which implements this library and has a similar API.
 
 ### Features
 
-* Simpler API than Core MIDI
+* Simplified API
 * Input and output on multiple devices concurrently
-* Agnostically handle different MIDI Message types (including SysEx)
+* Generalized handling of different MIDI Message types (including SysEx)
 * Timestamped input events
-* Internally patch MIDI to other programs using IAC 
+* Patch MIDI via software to other programs using IAC 
 
 ### Requirements
 
