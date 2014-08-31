@@ -8,43 +8,49 @@ module CoreMIDI
     attr_reader :entity
 
     # Close this output
+    # @return [Boolean]
     def close
-      @enabled = false
+      if @enabled
+        @enabled = false
+        true
+      else
+        false
+      end
     end
 
     # Send a MIDI message comprised of a String of hex digits
+    # @param [String] data A string of hex digits eg "904040"
+    # @return [Boolean]
     def puts_s(data)
       data = data.dup
-	    output = []
+	    bytes = []
       until (str = data.slice!(0,2)).eql?("")
-      	output << str.hex
+      	bytes << str.hex
       end
-
-      puts_bytes(*output)
+      puts_bytes(*bytes)
+      true
     end
     alias_method :puts_bytestr, :puts_s
     alias_method :puts_hex, :puts_s
 
-    # Send a MIDI messages comprised of Numeric bytes
+    # Send a MIDI message comprised of numeric bytes
+    # @param [*Fixnum] data Numeric bytes eg 0x90, 0x40, 0x40
+    # @return [Boolean]
     def puts_bytes(*data)
-
-      format = "C" * data.size
-      bytes = (FFI::MemoryPointer.new FFI.type_size(:char) * data.size)
-      bytes.write_string(data.pack(format))
-
-      if data.first.eql?(0xF0) && data.last.eql?(0xF7)
-        puts_sysex(bytes, data.size)
-      else
-        puts_small(bytes, data.size)
-      end
+      bytes = pack_data(data)
+      type = sysex?(data) ? :sysex : :small
+      send("puts_#{type.to_s}", bytes, data.size)
+      true
     end
 
-    # Send a MIDI message of an indeterminant type
-    def puts(*a)
-  	  case a.first
-        when Array then puts_bytes(*a.first)
-    	when Numeric then puts_bytes(*a)
-    	when String then puts_bytestr(*a)
+    # Send a MIDI message of indeterminate type
+    # @param [*Array<Fixnum>, *Array<String>, *Fixnum, *String] args
+    # @return [Boolean]
+    def puts(*args)
+  	  case args.first
+      when Array then puts_bytes(*args.first)
+    	when Fixnum then puts_bytes(*args)
+    	when String then puts_bytestr(*args)
       end
     end
     alias_method :write, :puts
@@ -66,16 +72,19 @@ module CoreMIDI
     alias_method :start, :enable
 
     # Shortcut to the first output endpoint available
+    # @return [Destination]
     def self.first
       Endpoint.first(:destination)
     end
     
     # Shortcut to the last output endpoint available
+    # @return [Destination]
     def self.last
       Endpoint.last(:destination)
     end
 
     # All output endpoints
+    # @return [Array<Destination>]
     def self.all
       Endpoint.all_by_type[:destination]
     end
@@ -84,6 +93,7 @@ module CoreMIDI
 
     # Base initialization for this endpoint -- done whether or not the endpoint is enabled to
     # check whether it is truly available for use
+    # @return [Boolean]
     def connect
       client_error = enable_client
       port_error = initialize_port
@@ -105,6 +115,7 @@ module CoreMIDI
         packet_ptr = Map.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, 0, size, bytes)
       end
       Map.MIDISend( @handle, @resource, packet_list )
+      true
     end
 
     # Output a System Exclusive MIDI message
@@ -117,6 +128,7 @@ module CoreMIDI
       request[:completion_proc] = SysexCompletionCallback
       request[:completion_ref_con] = request
       Map.MIDISendSysex(request)
+      true
     end
 
     SysexCompletionCallback =
@@ -131,6 +143,19 @@ module CoreMIDI
       error = Map.MIDIOutputPortCreate(@client, port_name, outport_ptr)
       @handle = outport_ptr.read_pointer
       error
+    end
+
+    def pack_data(data)
+      format = "C" * data.size
+      packed_data = data.pack(format)
+      char_size = FFI.type_size(:char) * data.size
+      bytes = FFI::MemoryPointer.new(char_size)
+      bytes.write_string(packed_data)
+      bytes
+    end
+
+    def sysex?(data)
+      data.first.eql?(0xF0) && data.last.eql?(0xF7)
     end
 
   end
