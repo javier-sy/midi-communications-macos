@@ -19,6 +19,7 @@ module CoreMIDI
       until (str = data.slice!(0,2)).eql?("")
       	output << str.hex
       end
+
       puts_bytes(*output)
     end
     alias_method :puts_bytestr, :puts_s
