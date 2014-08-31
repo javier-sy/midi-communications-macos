@@ -21,10 +21,12 @@ module CoreMIDI
     # @return [Array<Hash>]
     def gets
       until queued_messages?
+        # per https://github.com/arirusso/unimidi/issues/20#issuecomment-44761318
+        sleep(0.0001) # patch to prevent 100% CPU issue with some midi controllers
       end
-      msgs = queued_messages
+      messages = queued_messages
       @pointer = @buffer.length
-      msgs
+      messages
     end
     alias_method :read, :gets
 
@@ -38,9 +40,11 @@ module CoreMIDI
     #
     # @return [Array<Hash>]
     def gets_s
-      msgs = gets
-      msgs.each { |msg| msg[:data] = numeric_bytes_to_hex_string(msg[:data]) }
-      msgs
+      messages = gets
+      messages.each do |message| 
+        message[:data] = numeric_bytes_to_hex_string(message[:data])
+      end
+      messages
     end
     alias_method :gets_bytestr, :gets_s
 
