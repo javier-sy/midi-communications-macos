@@ -7,14 +7,14 @@ module CoreMIDI
                 :name # Device name from coremidi
 
     # @param [Fixnum] id The ID for the device
-    # @
+    # @param [Object] device_pointer The underlying device pointer
+    # @param [Hash] options
+    # @option options [Boolean] :include_offline Whether to include offline entities (default: false)
     def initialize(id, device_pointer, options = {})
-      include_if_offline = options.fetch(:include_offline, false)
       @id = id
       @resource = device_pointer
       @entities = []
-      populate_name
-      populate_entities(:include_offline => include_if_offline)
+      populate(options)
     end
             
     # Endpoints for this device
@@ -32,9 +32,9 @@ module CoreMIDI
     # @param [Integer] last_id The highest already used endpoint ID 
     # @return [Integer] The highest used endpoint ID after populating this device's endpoints
     def populate_endpoint_ids(last_id)
-      i = 0
-      entities.each { |entity| i += entity.populate_endpoint_ids(i + last_id) }
-      i
+      id = 0
+      entities.each { |entity| id += entity.populate_endpoint_ids(id + last_id) }
+      id
     end
 
     # All cached devices
@@ -47,11 +47,11 @@ module CoreMIDI
       include_offline = options[:include_offline] || false
       if !populated? || !use_cache
         @devices = []
-        i = 0
-        while !(device_pointer = Map.MIDIGetDevice(i)).null?
-          device = new(i, device_pointer, :include_offline => include_offline)
+        counter = 0
+        while !(device_pointer = Map.MIDIGetDevice(counter)).null?
+          device = new(counter, device_pointer, :include_offline => include_offline)
           @devices << device
-          i+=1
+          counter += 1
         end
         populate_endpoint_ids
       end
@@ -92,13 +92,15 @@ module CoreMIDI
     
     # All of the endpoints for all devices a consecutive local id
     def self.populate_endpoint_ids
-      i = 0
-      all.each { |device| i += device.populate_endpoint_ids(i) }
-      i
+      counter = 0
+      all.each { |device| counter += device.populate_endpoint_ids(counter) }
+      counter
     end
 
     # Populates the entities for this device. These entities are in turn used to gather the endpoints.
-    #
+    # @param [Hash] options
+    # @option options [Boolean] :include_offline Whether to include offline entities (default: false)
+    # @return [Fixnum] The number of entities populated
     def populate_entities(options = {})
       include_if_offline = options[:include_offline] || false
       i = 0
@@ -106,6 +108,13 @@ module CoreMIDI
         @entities << Entity.new(entity_pointer, :include_offline => include_if_offline)
         i += 1
       end
+      i
+    end
+
+    # Populate the instance
+    def populate(options = {})
+      populate_name
+      populate_entities(:include_offline => options[:include_offline])
     end
 
   end

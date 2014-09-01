@@ -37,8 +37,8 @@ module CoreMIDI
     # @param [*Fixnum] data Numeric bytes eg 0x90, 0x40, 0x40
     # @return [Boolean]
     def puts_bytes(*data)
-      bytes = pack_data(data)
       type = sysex?(data) ? :sysex : :small
+      bytes = pack_data(data)
       send("puts_#{type.to_s}", bytes, data.size)
       true
     end
@@ -147,6 +147,7 @@ module CoreMIDI
       error
     end
 
+    # Pack the given data into a coremidi MIDI packet
     def pack_data(data)
       format = "C" * data.size
       packed_data = data.pack(format)
@@ -156,6 +157,7 @@ module CoreMIDI
       bytes
     end
 
+    # Is the given data a MIDI sysex message?
     def sysex?(data)
       data.first.eql?(0xF0) && data.last.eql?(0xF7)
     end
