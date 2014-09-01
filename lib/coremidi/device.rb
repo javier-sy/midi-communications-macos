@@ -6,6 +6,8 @@ module CoreMIDI
                 :id, # Unique Numeric id
                 :name # Device name from coremidi
 
+    # @param [Fixnum] id The ID for the device
+    # @
     def initialize(id, device_pointer, options = {})
       include_if_offline = options.fetch(:include_offline, false)
       @id = id
@@ -43,7 +45,7 @@ module CoreMIDI
     def self.all(options = {})
       use_cache = options[:cache] || true
       include_offline = options[:include_offline] || false
-      if !has_devices? || !use_cache
+      if !populated? || !use_cache
         @devices = []
         i = 0
         while !(device_pointer = Map.MIDIGetDevice(i)).null?
@@ -63,7 +65,8 @@ module CoreMIDI
       @devices
     end
 
-    def self.has_devices?
+    # Has the device list been populated?
+    def self.populated?
       !@devices.nil? && !@devices.empty? 
     end
 
