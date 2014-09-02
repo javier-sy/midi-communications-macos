@@ -9,8 +9,6 @@ module CoreMIDI
                 :name,
                 :resource
                 
-    alias_method :online?, :is_online
-
     # @param [FFI::Pointer] resource A pointer to the underlying entity
     # @param [Hash] options
     def initialize(resource, options = {}, &block)
@@ -19,11 +17,7 @@ module CoreMIDI
         :destination => [] 
       }
       @resource = resource
-      @manufacturer = get_property(:manufacturer)
-      @model = get_property(:model)
-      @name = get_name
-      @is_online = get_property(:offline, :type => :int) == 0
-      @endpoints.keys.each { |type| populate_endpoints(type) }
+      populate
     end
     
     # Assign all of this Entity's endpoints an consecutive local id
@@ -38,6 +32,12 @@ module CoreMIDI
       counter
     end
     
+    # Is the entity online?
+    # @return [Boolean]
+    def online?
+      get_property(:offline, :type => :int) == 0
+    end
+
     private
 
     # Construct a display name for the entity
@@ -51,7 +51,7 @@ module CoreMIDI
     # @param [Hash] options
     # @option options [Boolean] :include_offline Include offline endpoints in the list
     # @return [Fixnum]
-    def populate_endpoints(type, options = {})
+    def populate_endpoints_by_type(type, options = {})
       endpoint_class = Endpoint.get_class(type)
       num_endpoints = number_of_endpoints(type)
       (0..num_endpoints).each do |i|
@@ -61,6 +61,12 @@ module CoreMIDI
         end
       end  
       @endpoints[type].size   
+    end
+
+    # Populate the endpoints for this entity
+    # @return [Fixnum]
+    def populate_endpoints
+      @endpoints.keys.map { |type| populate_endpoints_by_type(type) }.reduce(&:+)
     end
     
     # The number of endpoints for this entity
@@ -103,6 +109,14 @@ module CoreMIDI
         when :string, nil then get_string(name)
         when :int then get_int(name)
       end
+    end
+
+    # Populate the entity properties from the underlying resource
+    def populate
+      @manufacturer = get_property(:manufacturer)
+      @model = get_property(:model)
+      @name = get_name
+      populate_endpoints
     end
 
   end
