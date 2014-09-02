@@ -74,20 +74,8 @@ module CoreMIDI
 
     # Populate the device name
     def populate_name
-      prop = Map::CF.CFStringCreateWithCString( nil, "name", 0 )
-
-      begin
-        name_ptr = FFI::MemoryPointer.new(:pointer)
-        Map::MIDIObjectGetStringProperty(@resource, prop, name_ptr)
-        name = name_ptr.read_pointer
-        len = Map::CF.CFStringGetMaximumSizeForEncoding(Map::CF.CFStringGetLength(name), :kCFStringEncodingUTF8)
-        bytes = FFI::MemoryPointer.new(len + 1)
-        raise RuntimeError.new("CFStringGetCString") unless Map::CF.CFStringGetCString(name, bytes, len, :kCFStringEncodingUTF8)
-        @name = bytes.read_string
-      ensure
-        Map::CF.CFRelease(name) unless name.nil? || name.null?
-        Map::CF.CFRelease(prop) unless prop.null?
-      end
+      @name = Utility.device_name(@resource)
+      raise RuntimeError.new("Can't get device name") unless @name
     end
     
     # All of the endpoints for all devices a consecutive local id
