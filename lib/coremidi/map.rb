@@ -46,6 +46,25 @@ module CoreMIDI
 
     end
 
+    def self.get_string(resource, name)
+      property = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
+      begin
+        pointer = FFI::MemoryPointer.new(:pointer)
+        Map::MIDIObjectGetStringProperty(resource, property, pointer)
+        string = pointer.read_pointer
+        length = Map::CF.CFStringGetMaximumSizeForEncoding(Map::CF.CFStringGetLength(string), :kCFStringEncodingUTF8)
+
+        bytes = FFI::MemoryPointer.new(length + 1)
+
+        if Map::CF.CFStringGetCString(string, bytes, length + 1, :kCFStringEncodingUTF8)
+          bytes.read_string.force_encoding("utf-8")
+        end
+      ensure
+        Map::CF.CFRelease(string) unless string.nil? || string.null?
+        Map::CF.CFRelease(property) unless property.null?
+      end
+    end
+
     callback :MIDIReadProc, [MIDIPacketList.by_ref, :pointer, :pointer], :pointer
 
     attach_function :MIDIClientCreate, [:pointer, :pointer, :pointer, :pointer], :int

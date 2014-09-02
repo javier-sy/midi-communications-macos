@@ -82,11 +82,7 @@ module CoreMIDI
     # @param [Symbol, String] name The property name
     # @return [String, nil]
     def get_string(name)
-      property = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
-      value = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0) # placeholder
-      Map::MIDIObjectGetStringProperty(@resource, property, value)
-      pointer = Map::CF.CFStringGetCStringPtr(value.read_pointer, 0)
-      pointer.read_string rescue nil
+      Map.get_string(@resource, name)
     end
     
     # An Integer property from the underlying entity
