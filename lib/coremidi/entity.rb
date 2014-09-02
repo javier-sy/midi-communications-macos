@@ -28,7 +28,7 @@ module CoreMIDI
     def populate_endpoint_ids(starting_id)
       counter = 0
       @endpoints.values.flatten.each do |endpoint|  
-        endpoint.id = (counter + starting_id)
+        endpoint.id = counter + starting_id
         counter += 1
       end
       counter
@@ -63,30 +63,28 @@ module CoreMIDI
       end
     end
     
-    # A CFString property
-    def get_string(name, pointer)
-      prop = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
-      val = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0) # placeholder
-      Map::MIDIObjectGetStringProperty(pointer, prop, val)
-      Map::CF.CFStringGetCStringPtr(val.read_pointer, 0).read_string rescue nil
+    # A CFString property from the underlying entity
+    def get_string(name)
+      property = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
+      value = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0) # placeholder
+      Map::MIDIObjectGetStringProperty(@resource, property, value)
+      pointer = Map::CF.CFStringGetCStringPtr(value.read_pointer, 0)
+      pointer.read_string rescue nil
     end
     
-    # An Integer property
-    def get_int(name, pointer)
-      prop = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
-      val = FFI::MemoryPointer.new(:pointer, 32)
-      Map::MIDIObjectGetIntegerProperty(pointer, prop, val)
-      val.read_int
+    # An Integer property from the underlying entity
+    def get_int(name)
+      property = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
+      value = FFI::MemoryPointer.new(:pointer, 32)
+      Map::MIDIObjectGetIntegerProperty(@resource, property, value)
+      value.read_int
     end        
 
-    # A CString or Integer property from this Endpoint's entity
+    # A CString or Integer property from the underlying entity
     def get_property(name, options = {})
-      from = options[:from] || @resource
-      type = options[:type] || :string
-      
-      case type
-        when :string then get_string(name, from)
-        when :int then get_int(name, from)
+      case options[:type]
+        when :string, nil then get_string(name)
+        when :int then get_int(name)
       end
     end
 
