@@ -11,6 +11,8 @@ module CoreMIDI
                 
     alias_method :online?, :is_online
 
+    # @param [FFI::Pointer] resource A pointer to the underlying entity
+    # @param [Hash] options
     def initialize(resource, options = {}, &block)
       @endpoints = { 
         :source => [], 
@@ -25,6 +27,8 @@ module CoreMIDI
     end
     
     # Assign all of this Entity's endpoints an consecutive local id
+    # @param [Fixnum] starting_id
+    # @return [Fixnum]
     def populate_endpoint_ids(starting_id)
       counter = 0
       @endpoints.values.flatten.each do |endpoint|  
@@ -43,6 +47,10 @@ module CoreMIDI
     end
     
     # Populate endpoints of a specified type for this entity
+    # @param [Symbol] type The endpoint type eg :source, :destination
+    # @param [Hash] options
+    # @option options [Boolean] :include_offline Include offline endpoints in the list
+    # @return [Fixnum]
     def populate_endpoints(type, options = {})
       endpoint_class = Endpoint.get_class(type)
       num_endpoints = number_of_endpoints(type)
@@ -56,6 +64,7 @@ module CoreMIDI
     end
     
     # The number of endpoints for this entity
+    # @param [Symbol] type The endpoint type eg :source, :destination
     def number_of_endpoints(type)
       case type
         when :source then Map.MIDIEntityGetNumberOfSources(@resource)
@@ -64,6 +73,8 @@ module CoreMIDI
     end
     
     # A CFString property from the underlying entity
+    # @param [Symbol, String] name The property name
+    # @return [String, nil]
     def get_string(name)
       property = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
       value = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0) # placeholder
@@ -73,6 +84,8 @@ module CoreMIDI
     end
     
     # An Integer property from the underlying entity
+    # @param [Symbol, String] name The property name
+    # @return [Fixnum, nil]
     def get_int(name)
       property = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
       value = FFI::MemoryPointer.new(:pointer, 32)
@@ -81,6 +94,10 @@ module CoreMIDI
     end        
 
     # A CString or Integer property from the underlying entity
+    # @param [Symbol, String] name The property name
+    # @param [Hash] options
+    # @option options [Symbol] :type The property type eg :int, :string (default :string)
+    # @return [Fixnum, String, nil]
     def get_property(name, options = {})
       case options[:type]
         when :string, nil then get_string(name)
