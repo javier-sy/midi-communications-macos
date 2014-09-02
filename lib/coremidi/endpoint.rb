@@ -60,6 +60,16 @@ module CoreMIDI
     def self.all
       Device.all.map { |device| device.endpoints }.flatten
     end
+
+    # Get the class for the given endpoint type name
+    # @param [Symbol] type The endpoint type eg :source, :destination
+    # @return [Class] eg Source, Destination
+    def self.get_class(type)
+      case type
+      when :source then Source
+      when :destination then Destination
+      end  
+    end
     
     protected
     

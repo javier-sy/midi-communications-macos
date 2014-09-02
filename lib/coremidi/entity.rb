@@ -12,38 +12,45 @@ module CoreMIDI
     alias_method :online?, :is_online
 
     def initialize(resource, options = {}, &block)
-      @endpoints = { :source => [], :destination => [] }
+      @endpoints = { 
+        :source => [], 
+        :destination => [] 
+      }
       @resource = resource
       @manufacturer = get_property(:manufacturer)
       @model = get_property(:model)
-      @name = "#{@manufacturer} #{@model}"
+      @name = get_name
       @is_online = get_property(:offline, :type => :int) == 0
       @endpoints.keys.each { |type| populate_endpoints(type) }
     end
     
     # Assign all of this Entity's endpoints an consecutive local id
     def populate_endpoint_ids(starting_id)
-      i = 0
-      @endpoints.values.flatten.each do |e|  
-        e.id = (i + starting_id)
-        i += 1
+      counter = 0
+      @endpoints.values.flatten.each do |endpoint|  
+        endpoint.id = (counter + starting_id)
+        counter += 1
       end
-      i
+      counter
     end
     
     private
+
+    # Construct a display name for the entity
+    # @return [String]
+    def get_name
+      "#{@manufacturer} #{@model}"
+    end
     
     # Populate endpoints of a specified type for this entity
     def populate_endpoints(type, options = {})
-      include_if_offline = options[:include_offline] || false
-      endpoint_class = case type
-        when :source then Source
-        when :destination then Destination
-      end  
+      endpoint_class = Endpoint.get_class(type)
       num_endpoints = number_of_endpoints(type)
       (0..num_endpoints).each do |i|
-        ep = endpoint_class.new(i, self)
-        @endpoints[type] << ep if ep.online? || include_if_offline
+        endpoint = endpoint_class.new(i, self)
+        if endpoint.online? || options[:include_offline]
+          @endpoints[type] << endpoint
+        end
       end  
       @endpoints[type].size   
     end
@@ -58,15 +65,15 @@ module CoreMIDI
     
     # A CFString property
     def get_string(name, pointer)
-      prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
-      val = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 ) # placeholder
+      prop = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
+      val = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0) # placeholder
       Map::MIDIObjectGetStringProperty(pointer, prop, val)
       Map::CF.CFStringGetCStringPtr(val.read_pointer, 0).read_string rescue nil
     end
     
     # An Integer property
     def get_int(name, pointer)
-      prop = Map::CF.CFStringCreateWithCString( nil, name.to_s, 0 )
+      prop = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
       val = FFI::MemoryPointer.new(:pointer, 32)
       Map::MIDIObjectGetIntegerProperty(pointer, prop, val)
       val.read_int
