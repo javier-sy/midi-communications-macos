@@ -1,4 +1,4 @@
-require 'helper'
+require "helper"
 
 class CoreMIDI::IOTest < Test::Unit::TestCase
 
