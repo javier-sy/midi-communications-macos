@@ -46,6 +46,9 @@ module CoreMIDI
 
     end
 
+    # @param [FFI::Pointer] resource A pointer to an underlying struct
+    # @param [String, Symbol] name The property name to get
+    # @return [String]
     def self.get_string(resource, name)
       property = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
       begin
