@@ -1,5 +1,10 @@
 module CoreMIDI
 
+  # A MIDI device may have multiple logically distinct sub-components. For example, one device may 
+  # encompass a MIDI synthesizer and a pair of MIDI ports, both addressable via a USB port. Each 
+  # such element of a device is called a MIDI entity.
+  #
+  # https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDIServices_Reference/Reference/reference.html
   class Device
 
     attr_reader :entities,

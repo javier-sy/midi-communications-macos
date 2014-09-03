@@ -1,5 +1,6 @@
 module CoreMIDI
 
+  # A MIDI source or destination, owned by an entity.
   module Endpoint
     
     extend Forwardable
@@ -14,10 +15,12 @@ module CoreMIDI
 
     alias_method :enabled?, :enabled
 
-    def initialize(resource_id, entity, options = {}, &block)
+    # @param [Fixnum] resource_id
+    # @param [Entity] entity
+    def initialize(resource_id, entity)
       @entity = entity
       @resource_id = resource_id
-      @type = self.class.name.split('::').last.downcase.to_sym
+      @type = get_type
       @enabled = false
     end
     
@@ -72,6 +75,11 @@ module CoreMIDI
     end
     
     protected
+
+    # Constructs the endpoint type (eg source, destination) for easy consumption
+    def get_type
+      self.class.name.split('::').last.downcase.to_sym
+    end
     
     # Enables the coremidi MIDI client that will go with this endpoint
     def enable_client

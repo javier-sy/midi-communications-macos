@@ -1,5 +1,12 @@
 module CoreMIDI
 
+  # A MIDI entity can have any number of MIDI endpoints, each of which is a source or destination 
+  # of a 16-channel MIDI stream. By grouping a device's endpoints into entities, the system has 
+  # enough information for an application to make reasonable default assumptions about how to 
+  # communicate in a bi-directional manner with each entity, as is necessary in MIDI librarian 
+  # applications.
+  #
+  # https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDIServices_Reference/Reference/reference.html
   class Entity
 
     attr_reader :endpoints, 
