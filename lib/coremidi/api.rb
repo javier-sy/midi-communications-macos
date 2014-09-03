@@ -57,6 +57,18 @@ module CoreMIDI
       bytes
     end
 
+    def self.create_midi_client(resource_id, name)
+      client_name = API::CF.CFStringCreateWithCString(nil, "Client #{resource_id} #{name}", 0)
+      client_pointer = FFI::MemoryPointer.new(:pointer)
+      error = API.MIDIClientCreate(client_name, nil, nil, client_pointer)
+      client = client_pointer.read_pointer
+      {
+        :error => error,
+        :pointer => client_pointer,
+        :resource => client
+      }
+    end
+
     def self.create_midi_output_port(client, resource_id, name)
       port_name = CF.CFStringCreateWithCString(nil, "Port #{resource_id}: #{name}", 0)
       port_pointer = FFI::MemoryPointer.new(:pointer)

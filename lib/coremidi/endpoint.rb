@@ -83,11 +83,9 @@ module CoreMIDI
     
     # Enables the coremidi MIDI client that will go with this endpoint
     def enable_client
-      client_name = API::CF.CFStringCreateWithCString(nil, "Client #{@resource_id} #{name}", 0)
-      client_ptr = FFI::MemoryPointer.new(:pointer)
-      error = API.MIDIClientCreate(client_name, nil, nil, client_ptr)
-      @client = client_ptr.read_pointer
-      error
+      client = API.create_midi_client(@resource_id, @name)
+      @client = client[:resource]
+      client[:error]
     end
 
   end
