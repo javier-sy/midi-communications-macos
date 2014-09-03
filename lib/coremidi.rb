@@ -10,6 +10,7 @@ require "forwardable"
 # modules
 require "coremidi/api"
 require "coremidi/endpoint"
+require "coremidi/type_conversion"
 
 # classes
 require "coremidi/entity"
