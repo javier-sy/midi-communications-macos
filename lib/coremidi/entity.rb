@@ -17,13 +17,15 @@ module CoreMIDI
                 :resource
                 
     # @param [FFI::Pointer] resource A pointer to the underlying entity
-    def initialize(resource)
+    # @param [Hash] options
+    # @option options [Boolean] :include_offline Include offline endpoints in the list
+    def initialize(resource, options = {})
       @endpoints = { 
         :source => [], 
         :destination => [] 
       }
       @resource = resource
-      populate
+      populate(options)
     end
     
     # Assign all of this Entity's endpoints an consecutive local id
@@ -70,9 +72,11 @@ module CoreMIDI
     end
 
     # Populate the endpoints for this entity
+    # @param [Hash] options
+    # @option options [Boolean] :include_offline Include offline endpoints in the list
     # @return [Fixnum]
-    def populate_endpoints
-      @endpoints.keys.map { |type| populate_endpoints_by_type(type) }.reduce(&:+)
+    def populate_endpoints(options = {})
+      @endpoints.keys.map { |type| populate_endpoints_by_type(type, options) }.reduce(&:+)
     end
     
     # The number of endpoints for this entity
@@ -114,11 +118,13 @@ module CoreMIDI
     end
 
     # Populate the entity properties from the underlying resource
-    def populate
+    # @param [Hash] options
+    # @option options [Boolean] :include_offline Include offline endpoints in the list
+    def populate(options = {})
       @manufacturer = get_property(:manufacturer)
       @model = get_property(:model)
       @name = get_name
-      populate_endpoints
+      populate_endpoints(options)
     end
 
   end
