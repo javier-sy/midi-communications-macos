@@ -134,7 +134,7 @@ module CoreMIDI
     # Initialize a coremidi port for this endpoint
     def initialize_port
       port = API.create_midi_output_port(@client, @resource_id, @name)
-      @handle = port[:pointer].read_pointer
+      @handle = port[:handle]
       port[:error]
     end
 

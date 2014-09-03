@@ -64,7 +64,6 @@ module CoreMIDI
       client = client_pointer.read_pointer
       {
         :error => error,
-        :pointer => client_pointer,
         :resource => client
       }
     end
@@ -73,9 +72,10 @@ module CoreMIDI
       port_name = CF.CFStringCreateWithCString(nil, "Port #{resource_id}: #{name}", 0)
       port_pointer = FFI::MemoryPointer.new(:pointer)
       error = API.MIDIOutputPortCreate(client, port_name, port_pointer)
+      handle = port_pointer.read_pointer
       {
         :error => error,
-        :pointer => port_pointer
+        :handle => handle
       }
     end
 
