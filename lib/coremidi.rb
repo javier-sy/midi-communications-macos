@@ -8,8 +8,8 @@ require "ffi"
 require "forwardable"
 
 # modules
+require "coremidi/api"
 require "coremidi/endpoint"
-require "coremidi/map"
 
 # classes
 require "coremidi/entity"

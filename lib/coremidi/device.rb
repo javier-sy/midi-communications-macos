@@ -48,7 +48,7 @@ module CoreMIDI
       if !populated? || !use_cache
         @devices = []
         counter = 0
-        while !(device_pointer = Map.MIDIGetDevice(counter)).null?
+        while !(device_pointer = API.MIDIGetDevice(counter)).null?
           device = new(counter, device_pointer, :include_offline => include_offline)
           @devices << device
           counter += 1
@@ -74,7 +74,7 @@ module CoreMIDI
 
     # Populate the device name
     def populate_name
-      @name = Map.get_string(@resource, "name")
+      @name = API.get_string(@resource, "name")
       raise RuntimeError.new("Can't get device name") unless @name
     end
     
@@ -92,7 +92,7 @@ module CoreMIDI
     def populate_entities(options = {})
       include_if_offline = options[:include_offline] || false
       i = 0
-      while !(entity_pointer = Map.MIDIDeviceGetEntity(@resource, i)).null?
+      while !(entity_pointer = API.MIDIDeviceGetEntity(@resource, i)).null?
         @entities << Entity.new(entity_pointer, :include_offline => include_if_offline)
         i += 1
       end

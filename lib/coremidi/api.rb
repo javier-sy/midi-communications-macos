@@ -1,7 +1,7 @@
 module CoreMIDI
 
   # Coremidi C binding
-  module Map
+  module API
 
     extend FFI::Library
     ffi_lib '/System/Library/Frameworks/CoreMIDI.framework/Versions/Current/CoreMIDI'
@@ -50,21 +50,21 @@ module CoreMIDI
     # @param [String, Symbol] name The property name to get
     # @return [String]
     def self.get_string(resource, name)
-      property = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
+      property = CF.CFStringCreateWithCString(nil, name.to_s, 0)
       begin
         pointer = FFI::MemoryPointer.new(:pointer)
-        Map::MIDIObjectGetStringProperty(resource, property, pointer)
+        MIDIObjectGetStringProperty(resource, property, pointer)
         string = pointer.read_pointer
-        length = Map::CF.CFStringGetMaximumSizeForEncoding(Map::CF.CFStringGetLength(string), :kCFStringEncodingUTF8)
+        length = CF.CFStringGetMaximumSizeForEncoding(CF.CFStringGetLength(string), :kCFStringEncodingUTF8)
 
         bytes = FFI::MemoryPointer.new(length + 1)
 
-        if Map::CF.CFStringGetCString(string, bytes, length + 1, :kCFStringEncodingUTF8)
+        if CF.CFStringGetCString(string, bytes, length + 1, :kCFStringEncodingUTF8)
           bytes.read_string.force_encoding("utf-8")
         end
       ensure
-        Map::CF.CFRelease(string) unless string.nil? || string.null?
-        Map::CF.CFRelease(property) unless property.null?
+        CF.CFRelease(string) unless string.nil? || string.null?
+        CF.CFRelease(property) unless property.null?
       end
     end
 

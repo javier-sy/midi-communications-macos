@@ -73,8 +73,8 @@ module CoreMIDI
     # @param [Symbol] type The endpoint type eg :source, :destination
     def number_of_endpoints(type)
       case type
-        when :source then Map.MIDIEntityGetNumberOfSources(@resource)
-        when :destination then Map.MIDIEntityGetNumberOfDestinations(@resource)
+        when :source then API.MIDIEntityGetNumberOfSources(@resource)
+        when :destination then API.MIDIEntityGetNumberOfDestinations(@resource)
       end
     end
     
@@ -82,16 +82,16 @@ module CoreMIDI
     # @param [Symbol, String] name The property name
     # @return [String, nil]
     def get_string(name)
-      Map.get_string(@resource, name)
+      API.get_string(@resource, name)
     end
     
     # An Integer property from the underlying entity
     # @param [Symbol, String] name The property name
     # @return [Fixnum, nil]
     def get_int(name)
-      property = Map::CF.CFStringCreateWithCString(nil, name.to_s, 0)
+      property = API::CF.CFStringCreateWithCString(nil, name.to_s, 0)
       value = FFI::MemoryPointer.new(:pointer, 32)
-      Map::MIDIObjectGetIntegerProperty(@resource, property, value)
+      API::MIDIObjectGetIntegerProperty(@resource, property, value)
       value.read_int
     end        
 

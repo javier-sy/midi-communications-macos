@@ -69,13 +69,13 @@ module CoreMIDI
     # Close this input
     # @return [Boolean]
     def close
-      #error = Map.MIDIPortDisconnectSource( @handle, @resource )
+      #error = API.MIDIPortDisconnectSource( @handle, @resource )
       #raise "MIDIPortDisconnectSource returned error code #{error}" unless error.zero?
-      #error = Map.MIDIClientDispose(@handle)
+      #error = API.MIDIClientDispose(@handle)
       #raise "MIDIClientDispose returned error code #{error}" unless error.zero?
-      #error = Map.MIDIPortDispose(@handle)
+      #error = API.MIDIPortDispose(@handle)
       #raise "MIDIPortDispose returned error code #{error}" unless error.zero?
-      #error = Map.MIDIEndpointDispose(@resource)
+      #error = API.MIDIEndpointDispose(@resource)
       #raise "MIDIEndpointDispose returned error code #{error}" unless error.zero?
       if @enabled
         @enabled = false
@@ -110,8 +110,8 @@ module CoreMIDI
     def connect   
       enable_client
       initialize_port
-      @resource = Map.MIDIEntityGetSource(@entity.resource, @resource_id)
-      error = Map.MIDIPortConnectSource(@handle, @resource, nil )
+      @resource = API.MIDIEntityGetSource(@entity.resource, @resource_id)
+      error = API.MIDIPortConnectSource(@handle, @resource, nil )
       initialize_buffer
       @sysex_buffer = []
       @start_time = Time.now.to_f
@@ -169,10 +169,10 @@ module CoreMIDI
 
     # Initialize a coremidi port for this endpoint
     def initialize_port
-      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@resource_id}: #{name}", 0)
+      port_name = API::CF.CFStringCreateWithCString(nil, "Port #{@resource_id}: #{name}", 0)
       handle_ptr = FFI::MemoryPointer.new(:pointer)
       @callback = get_event_callback
-      error = Map.MIDIInputPortCreate(@client, port_name, @callback, nil, handle_ptr)
+      error = API.MIDIInputPortCreate(@client, port_name, @callback, nil, handle_ptr)
       @handle = handle_ptr.read_pointer
       raise "MIDIInputPortCreate returned error code #{error}" unless error.zero?
       true

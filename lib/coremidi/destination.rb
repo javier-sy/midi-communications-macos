@@ -99,7 +99,7 @@ module CoreMIDI
     def connect
       client_error = enable_client
       port_error = initialize_port
-      @resource = Map.MIDIEntityGetDestination( @entity.resource, @resource_id )
+      @resource = API.MIDIEntityGetDestination( @entity.resource, @resource_id )
       !@resource.address.zero? && client_error.zero? && port_error.zero?
     end
     alias_method :connect?, :connect
@@ -109,27 +109,27 @@ module CoreMIDI
     # Output a short MIDI message
     def puts_small(bytes, size)
       packet_list = FFI::MemoryPointer.new(256)
-      packet_ptr = Map.MIDIPacketListInit(packet_list)
-      if Map::SnowLeopard
-        packet_ptr = Map.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, size, bytes)
+      packet_ptr = API.MIDIPacketListInit(packet_list)
+      packet_ptr = if API::SnowLeopard
+        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, size, bytes)
       else
         # Pass in two 32-bit 0s for the 64 bit time
-        packet_ptr = Map.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, 0, size, bytes)
+        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, 0, size, bytes)
       end
-      Map.MIDISend( @handle, @resource, packet_list )
+      API.MIDISend( @handle, @resource, packet_list )
       true
     end
 
     # Output a System Exclusive MIDI message
     def puts_sysex(bytes, size)
-      request = Map::MIDISysexSendRequest.new
+      request = API::MIDISysexSendRequest.new
       request[:destination] = @resource
       request[:data] = bytes
       request[:bytes_to_send] = size
       request[:complete] = 0
       request[:completion_proc] = SysexCompletionCallback
       request[:completion_ref_con] = request
-      Map.MIDISendSysex(request)
+      API.MIDISendSysex(request)
       true
     end
 
@@ -140,9 +140,9 @@ module CoreMIDI
       
     # Initialize a coremidi port for this endpoint
     def initialize_port
-      port_name = Map::CF.CFStringCreateWithCString(nil, "Port #{@resource_id}: #{name}", 0)
+      port_name = API::CF.CFStringCreateWithCString(nil, "Port #{@resource_id}: #{name}", 0)
       outport_ptr = FFI::MemoryPointer.new(:pointer)
-      error = Map.MIDIOutputPortCreate(@client, port_name, outport_ptr)
+      error = API.MIDIOutputPortCreate(@client, port_name, outport_ptr)
       @handle = outport_ptr.read_pointer
       error
     end
