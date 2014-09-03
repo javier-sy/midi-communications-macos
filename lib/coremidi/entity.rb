@@ -43,7 +43,7 @@ module CoreMIDI
     # Is the entity online?
     # @return [Boolean]
     def online?
-      get_property(:offline, :type => :int) == 0
+      get_int(:offline) == 0
     end
 
     private
@@ -102,24 +102,12 @@ module CoreMIDI
       API.get_int(@resource, name)
     end        
 
-    # A CString or Integer property from the underlying entity
-    # @param [Symbol, String] name The property name
-    # @param [Hash] options
-    # @option options [Symbol] :type The property type eg :int, :string (default :string)
-    # @return [Fixnum, String, nil]
-    def get_property(name, options = {})
-      case options[:type]
-        when :string, nil then get_string(name)
-        when :int then get_int(name)
-      end
-    end
-
     # Populate the entity properties from the underlying resource
     # @param [Hash] options
     # @option options [Boolean] :include_offline Include offline endpoints in the list
     def populate(options = {})
-      @manufacturer = get_property(:manufacturer)
-      @model = get_property(:model)
+      @manufacturer = get_string(:manufacturer)
+      @model = get_string(:model)
       @name = get_name
       populate_endpoints(options)
     end
