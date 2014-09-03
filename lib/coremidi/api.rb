@@ -68,6 +68,17 @@ module CoreMIDI
       }
     end
 
+    def self.create_midi_input_port(client, resource_id, name, callback)
+      port_name = API::CF.CFStringCreateWithCString(nil, "Port #{resource_id}: #{name}", 0)
+      handle_ptr = FFI::MemoryPointer.new(:pointer)
+      error = API.MIDIInputPortCreate(client, port_name, callback, nil, handle_ptr)
+      handle = handle_ptr.read_pointer
+      { 
+        :error => error,
+        :handle => handle
+      }
+    end
+
     def self.create_midi_output_port(client, resource_id, name)
       port_name = CF.CFStringCreateWithCString(nil, "Port #{resource_id}: #{name}", 0)
       port_pointer = FFI::MemoryPointer.new(:pointer)

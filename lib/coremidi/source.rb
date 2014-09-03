@@ -169,12 +169,10 @@ module CoreMIDI
 
     # Initialize a coremidi port for this endpoint
     def initialize_port
-      port_name = API::CF.CFStringCreateWithCString(nil, "Port #{@resource_id}: #{name}", 0)
-      handle_ptr = FFI::MemoryPointer.new(:pointer)
       @callback = get_event_callback
-      error = API.MIDIInputPortCreate(@client, port_name, @callback, nil, handle_ptr)
-      @handle = handle_ptr.read_pointer
-      raise "MIDIInputPortCreate returned error code #{error}" unless error.zero?
+      port = API.create_midi_input_port(@client, @resource_id, @name, @callback)
+      @handle = port[:handle]
+      raise "MIDIInputPortCreate returned error code #{port[:error]}" unless port[:error].zero?
       true
     end
     
