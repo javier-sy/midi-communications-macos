@@ -33,7 +33,7 @@ module CoreMIDI
     # @return [Fixnum]
     def populate_endpoint_ids(starting_id)
       counter = 0
-      @endpoints.values.flatten.each do |endpoint|  
+      @endpoints.values.flatten.each do |endpoint|
         endpoint.id = counter + starting_id
         counter += 1
       end
