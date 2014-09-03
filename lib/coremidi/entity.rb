@@ -99,10 +99,7 @@ module CoreMIDI
     # @param [Symbol, String] name The property name
     # @return [Fixnum, nil]
     def get_int(name)
-      property = API::CF.CFStringCreateWithCString(nil, name.to_s, 0)
-      value = FFI::MemoryPointer.new(:pointer, 32)
-      API::MIDIObjectGetIntegerProperty(@resource, property, value)
-      value.read_int
+      API.get_int(@resource, name)
     end        
 
     # A CString or Integer property from the underlying entity

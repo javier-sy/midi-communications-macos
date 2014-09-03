@@ -105,6 +105,16 @@ module CoreMIDI
 
     # @param [FFI::Pointer] resource A pointer to an underlying struct
     # @param [String, Symbol] name The property name to get
+    # @return [Fixnum]
+    def self.get_int(resource, name)
+      property = API::CF.CFStringCreateWithCString(nil, name.to_s, 0)
+      value = FFI::MemoryPointer.new(:pointer, 32)
+      API::MIDIObjectGetIntegerProperty(resource, property, value)
+      value.read_int
+    end
+
+    # @param [FFI::Pointer] resource A pointer to an underlying struct
+    # @param [String, Symbol] name The property name to get
     # @return [String]
     def self.get_string(resource, name)
       property = CF.CFStringCreateWithCString(nil, name.to_s, 0)
