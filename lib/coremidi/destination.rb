@@ -110,7 +110,7 @@ module CoreMIDI
     def puts_small(bytes, size)
       packet_list = FFI::MemoryPointer.new(256)
       packet_ptr = API.MIDIPacketListInit(packet_list)
-      packet_ptr = if API::SnowLeopard
+      packet_ptr = if API::X86_64
         API.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, size, bytes)
       else
         # Pass in two 32-bit 0s for the 64 bit time
