@@ -10,7 +10,6 @@ module CoreMIDI
   class Entity
 
     attr_reader :endpoints, 
-                :is_online,
                 :manufacturer,
                 :model,
                 :name,
