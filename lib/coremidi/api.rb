@@ -6,7 +6,8 @@ module CoreMIDI
     extend FFI::Library
     ffi_lib '/System/Library/Frameworks/CoreMIDI.framework/Versions/Current/CoreMIDI'
 
-    SnowLeopard = `uname -r`.scan(/\d*\.\d*/).first.to_f >= 10.6
+    # if osx is 10.6 or higher, there are some differences with 32 vs 64 bit handling
+    X86_64 = `uname -r`.scan(/\d*\.\d*/).first.to_f >= 10.6
 
     typedef :pointer, :CFStringRef
     typedef :int32, :ItemCount
@@ -100,14 +101,15 @@ module CoreMIDI
 
     attach_function :MIDIGetDevice, [:ItemCount], :MIDIDeviceRef
     
-    # extern OSStatus MIDIInputPortCreate( MIDIClientRef client, CFStringRef portName, MIDIReadProc readProc, void * refCon, MIDIPortRef * outPort );
+    # extern OSStatus MIDIInputPortCreate( MIDIClientRef client, CFStringRef portName, 
+    #                                      MIDIReadProc readProc, void * refCon, MIDIPortRef * outPort );
     attach_function :MIDIInputPortCreate, [:MIDIClientRef, :CFStringRef, :MIDIReadProc, :pointer, :MIDIPortRef], :OSStatus
 
     # extern OSStatus MIDIObjectGetIntegerProperty( MIDIObjectRef obj, CFStringRef propertyID, SInt32 * outValue );
     attach_function :MIDIObjectGetIntegerProperty, [:MIDIObjectRef, :CFStringRef, :pointer], :OSStatus
     # OSStatus MIDIObjectGetStringProperty (MIDIObjectRef  obj, CFStringRef propertyID, CFStringRef *str);
     attach_function :MIDIObjectGetStringProperty, [:MIDIObjectRef, :CFStringRef, :pointer], :OSStatus
-                                                                                                                    \
+                                                                                                                    
     # extern OSStatus MIDIOutputPortCreate( MIDIClientRef client, CFStringRef portName, MIDIPortRef * outPort );
     attach_function :MIDIOutputPortCreate, [:MIDIClientRef, :CFStringRef, :pointer], :int
 
@@ -127,10 +129,12 @@ module CoreMIDI
 
     attach_function :MIDISendSysex, [:pointer], :int
 
-    if SnowLeopard
+    if X86_64
       attach_function :MIDIPacketListAdd, [:pointer, :int, :pointer, :int, :int, :pointer], :pointer
     else
-      # extern MIDIPacket * MIDIPacketListAdd( MIDIPacketList * pktlist, ByteCount listSize, MIDIPacket * curPacket, MIDITimeStamp time, ByteCount nData, const Byte * data)
+      # extern MIDIPacket * MIDIPacketListAdd( MIDIPacketList * pktlist, ByteCount listSize, 
+      #                                        MIDIPacket * curPacket, MIDITimeStamp time, 
+      #                                        ByteCount nData, const Byte * data)
       attach_function :MIDIPacketListAdd, [:pointer, :int, :pointer, :int, :int, :int, :pointer], :pointer
     end
 
