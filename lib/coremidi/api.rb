@@ -47,6 +47,29 @@ module CoreMIDI
 
     end
 
+    # Pack the given data into a coremidi MIDI packet (used by Destination)
+    def self.pack_midi_data(data)
+      format = "C" * data.size
+      packed_data = data.pack(format)
+      char_size = FFI.type_size(:char) * data.size
+      bytes = FFI::MemoryPointer.new(char_size)
+      bytes.write_string(packed_data)
+      bytes
+    end
+
+    # (used by Destination)
+    def self.get_midi_packet_list(bytes, size)
+      packet_list = FFI::MemoryPointer.new(256)
+      packet_ptr = API.MIDIPacketListInit(packet_list)
+      packet_ptr = if API::X86_64
+        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, size, bytes)
+      else
+        # Pass in two 32-bit 0s for the 64 bit time
+        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, 0, size, bytes)
+      end
+      packet_list
+    end
+
     # @param [FFI::Pointer] resource A pointer to an underlying struct
     # @param [String, Symbol] name The property name to get
     # @return [String]

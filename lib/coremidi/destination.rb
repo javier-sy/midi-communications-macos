@@ -38,7 +38,7 @@ module CoreMIDI
     # @return [Boolean]
     def puts_bytes(*data)
       type = sysex?(data) ? :sysex : :small
-      bytes = pack_data(data)
+      bytes = API.pack_midi_data(data)
       send("puts_#{type.to_s}", bytes, data.size)
       true
     end
@@ -108,15 +108,8 @@ module CoreMIDI
 
     # Output a short MIDI message
     def puts_small(bytes, size)
-      packet_list = FFI::MemoryPointer.new(256)
-      packet_ptr = API.MIDIPacketListInit(packet_list)
-      packet_ptr = if API::X86_64
-        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, size, bytes)
-      else
-        # Pass in two 32-bit 0s for the 64 bit time
-        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, 0, size, bytes)
-      end
-      API.MIDISend( @handle, @resource, packet_list )
+      packet_list = API.get_midi_packet_list(bytes, size)
+      API.MIDISend(@handle, @resource, packet_list)
       true
     end
 
@@ -145,16 +138,6 @@ module CoreMIDI
       error = API.MIDIOutputPortCreate(@client, port_name, outport_ptr)
       @handle = outport_ptr.read_pointer
       error
-    end
-
-    # Pack the given data into a coremidi MIDI packet
-    def pack_data(data)
-      format = "C" * data.size
-      packed_data = data.pack(format)
-      char_size = FFI.type_size(:char) * data.size
-      bytes = FFI::MemoryPointer.new(char_size)
-      bytes.write_string(packed_data)
-      bytes
     end
 
     # Is the given data a MIDI sysex message?
