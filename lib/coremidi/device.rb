@@ -98,7 +98,7 @@ module CoreMIDI
       include_if_offline = options[:include_offline] || false
       i = 0
       while !(entity_pointer = API.MIDIDeviceGetEntity(@resource, i)).null?
-        @entities << Entity.new(entity_pointer)
+        @entities << Entity.new(entity_pointer, :include_offline => include_if_offline)
         i += 1
       end
       i
