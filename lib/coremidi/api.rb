@@ -57,11 +57,21 @@ module CoreMIDI
       bytes
     end
 
+    def self.create_midi_output_port(client, resource_id, name)
+      port_name = CF.CFStringCreateWithCString(nil, "Port #{resource_id}: #{name}", 0)
+      port_pointer = FFI::MemoryPointer.new(:pointer)
+      error = API.MIDIOutputPortCreate(client, port_name, port_pointer)
+      {
+        :error => error,
+        :pointer => port_pointer
+      }
+    end
+
     # (used by Destination)
     def self.get_midi_packet_list(bytes, size)
       packet_list = FFI::MemoryPointer.new(256)
       packet_ptr = API.MIDIPacketListInit(packet_list)
-      packet_ptr = if API::X86_64
+      packet_ptr = if X86_64
         API.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, size, bytes)
       else
         # Pass in two 32-bit 0s for the 64 bit time

@@ -133,11 +133,9 @@ module CoreMIDI
       
     # Initialize a coremidi port for this endpoint
     def initialize_port
-      port_name = API::CF.CFStringCreateWithCString(nil, "Port #{@resource_id}: #{name}", 0)
-      outport_ptr = FFI::MemoryPointer.new(:pointer)
-      error = API.MIDIOutputPortCreate(@client, port_name, outport_ptr)
-      @handle = outport_ptr.read_pointer
-      error
+      port = API.create_midi_output_port(@client, @resource_id, @name)
+      @handle = port[:pointer].read_pointer
+      port[:error]
     end
 
     # Is the given data a MIDI sysex message?
