@@ -17,8 +17,7 @@ module CoreMIDI
                 :resource
                 
     # @param [FFI::Pointer] resource A pointer to the underlying entity
-    # @param [Hash] options
-    def initialize(resource, options = {}, &block)
+    def initialize(resource)
       @endpoints = { 
         :source => [], 
         :destination => [] 
