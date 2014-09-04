@@ -139,19 +139,26 @@ module CoreMIDI
       end
     end
 
+    # Called when the system has one or more incoming MIDI messages to deliver to your app.
+    # typedef void (*MIDIReadProc) (const MIDIPacketList *pktlist, void *readProcRefCon, void *srcConnRefCon);
     callback :MIDIReadProc, [MIDIPacketList.by_ref, :pointer, :pointer], :pointer
 
+    # OSStatus MIDIClientCreate(CFStringRef name, MIDINotifyProc notifyProc, void *notifyRefCon, MIDIClientRef *outClient);
     attach_function :MIDIClientCreate, [:pointer, :pointer, :pointer, :pointer], :int
 
+    # OSStatus MIDIClientDispose(MIDIClientRef client);
     attach_function :MIDIClientDispose, [:pointer], :int
 
-    # MIDIEntityRef MIDIDeviceGetEntity (MIDIDeviceRef  device, ItemCount entityIndex0);
+    # MIDIEntityRef MIDIDeviceGetEntity(MIDIDeviceRef  device, ItemCount entityIndex0);
     attach_function :MIDIDeviceGetEntity, [:MIDIDeviceRef, :ItemCount], :MIDIEntityRef
 
+    # MIDIEndpointRef MIDIGetDestination(ItemCount destIndex0);
     attach_function :MIDIGetNumberOfDestinations, [], :ItemCount
 
+    # ItemCount MIDIGetNumberOfDevices();
     attach_function :MIDIGetNumberOfDevices, [], :ItemCount
 
+    # MIDIEndpointRef MIDIEntityGetDestination(MIDIEntityRef entity, ItemCount destIndex0);
     attach_function :MIDIGetDestination, [:int], :pointer
     
     #extern OSStatus MIDIEndpointDispose( MIDIEndpointRef endpt );
@@ -169,6 +176,7 @@ module CoreMIDI
     # MIDIEndpointRef MIDIEntityGetSource (MIDIEntityRef  entity, ItemCount sourceIndex0);
     attach_function :MIDIEntityGetSource, [:MIDIEntityRef, :ItemCount], :MIDIEndpointRef
 
+    # MIDIDeviceRef MIDIGetDevice(ItemCount deviceIndex0);
     attach_function :MIDIGetDevice, [:ItemCount], :MIDIDeviceRef
     
     # extern OSStatus MIDIInputPortCreate( MIDIClientRef client, CFStringRef portName, 
@@ -177,12 +185,14 @@ module CoreMIDI
 
     # extern OSStatus MIDIObjectGetIntegerProperty( MIDIObjectRef obj, CFStringRef propertyID, SInt32 * outValue );
     attach_function :MIDIObjectGetIntegerProperty, [:MIDIObjectRef, :CFStringRef, :pointer], :OSStatus
+
     # OSStatus MIDIObjectGetStringProperty (MIDIObjectRef  obj, CFStringRef propertyID, CFStringRef *str);
     attach_function :MIDIObjectGetStringProperty, [:MIDIObjectRef, :CFStringRef, :pointer], :OSStatus
                                                                                                                     
     # extern OSStatus MIDIOutputPortCreate( MIDIClientRef client, CFStringRef portName, MIDIPortRef * outPort );
     attach_function :MIDIOutputPortCreate, [:MIDIClientRef, :CFStringRef, :pointer], :int
 
+    # (MIDIPacket*) MIDIPacketListInit(MIDIPacketList *pktlist);
     attach_function :MIDIPacketListInit, [:pointer], :pointer
 
     #extern OSStatus MIDIPortConnectSource( MIDIPortRef port, MIDIEndpointRef source, void * connRefCon )
@@ -197,14 +207,15 @@ module CoreMIDI
     #extern OSStatus MIDISend(MIDIPortRef port,MIDIEndpointRef dest,const MIDIPacketList *pktlist);
     attach_function :MIDISend, [:MIDIPortRef, :MIDIEndpointRef, :pointer], :int
 
+    #OSStatus MIDISendSysex(MIDISysexSendRequest *request);
     attach_function :MIDISendSysex, [:pointer], :int
 
+    # extern MIDIPacket * MIDIPacketListAdd( MIDIPacketList * pktlist, ByteCount listSize, 
+    #                                        MIDIPacket * curPacket, MIDITimeStamp time, 
+    #                                        ByteCount nData, const Byte * data)
     if X86_64
       attach_function :MIDIPacketListAdd, [:pointer, :int, :pointer, :int, :int, :pointer], :pointer
     else
-      # extern MIDIPacket * MIDIPacketListAdd( MIDIPacketList * pktlist, ByteCount listSize, 
-      #                                        MIDIPacket * curPacket, MIDITimeStamp time, 
-      #                                        ByteCount nData, const Byte * data)
       attach_function :MIDIPacketListAdd, [:pointer, :int, :pointer, :int, :int, :int, :pointer], :pointer
     end
 
@@ -222,12 +233,16 @@ module CoreMIDI
       # CString* CFStringGetCStringPtr(CFString*, encoding)
       attach_function :CFStringGetCStringPtr, [:pointer, :int], :pointer
 
+      # CFIndex CFStringGetLength(CFStringRef theString);
       attach_function :CFStringGetLength, [ :CFStringRef ], :CFIndex
 
+      # CFIndex CFStringGetMaximumSizeForEncoding(CFIndex length, CFStringEncoding encoding);
       attach_function :CFStringGetMaximumSizeForEncoding, [ :CFIndex, :CFStringEncoding ], :long
 
+      # Boolean CFStringGetCString(CFStringRef theString, char *buffer, CFIndex bufferSize, CFStringEncoding encoding);
       attach_function :CFStringGetCString, [ :CFStringRef, :pointer, :CFIndex, :CFStringEncoding ], :bool
 
+      # void CFRelease (CFTypeRef cf);
       attach_function :CFRelease, [ :pointer ], :void
 
     end
@@ -236,6 +251,7 @@ module CoreMIDI
       extend FFI::Library
       ffi_lib '/System/Library/Frameworks/CoreAudio.framework/Versions/Current/CoreAudio'
 
+      # UInt64 AudioConvertHostTimeToNanos(UInt64 IO)
       attach_function :AudioConvertHostTimeToNanos, [:uint64], :uint64
     end
 
