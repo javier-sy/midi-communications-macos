@@ -127,7 +127,7 @@ module CoreMIDI
     end
 
     SysexCompletionCallback =
-      FFI::Function.new(:void, [:pointer]) do |sysex_request_ptr|
+      API.get_callback([:pointer]) do |sysex_request_ptr|
         # this isn't working for some reason. as of now, it's not needed though
       end
       

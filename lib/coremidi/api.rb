@@ -47,6 +47,10 @@ module CoreMIDI
 
     end
 
+    def self.get_callback(*args, &block)
+      FFI::Function.new(:void, *args, &block)
+    end
+
     # Pack the given data into a coremidi MIDI packet (used by Destination)
     def self.get_midi_packet(data)
       format = "C" * data.size
