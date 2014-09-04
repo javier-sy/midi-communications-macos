@@ -49,12 +49,24 @@ module CoreMIDI
       all_by_type[type].last
     end
 
+    # All source endpoints
+    # @return [Array<Source>]
+    def self.sources
+      Device.all.map { |d| d.endpoints[:source] }.flatten
+    end
+
+    # All destination endpoints
+    # @return [Array<Destination>]
+    def self.destinations
+      Device.all.map { |d| d.endpoints[:destination] }.flatten
+    end
+
     # A Hash of :source and :destination endpoints
     # @return [Hash]
     def self.all_by_type
       {
-        :source => Device.all.map { |d| d.endpoints[:source] }.flatten,
-        :destination => Device.all.map { |d| d.endpoints[:destination] }.flatten
+        :source => sources,
+        :destination => destinations
       }
     end
 
@@ -78,7 +90,8 @@ module CoreMIDI
 
     # Constructs the endpoint type (eg source, destination) for easy consumption
     def get_type
-      self.class.name.split('::').last.downcase.to_sym
+      class_name = self.class.name.split('::').last
+      class_name.downcase.to_sym
     end
     
     # Enables the coremidi MIDI client that will go with this endpoint
