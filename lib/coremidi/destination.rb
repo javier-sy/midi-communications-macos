@@ -38,7 +38,7 @@ module CoreMIDI
     # @return [Boolean]
     def puts_bytes(*data)
       type = sysex?(data) ? :sysex : :small
-      bytes = API.pack_midi_data(data)
+      bytes = API.get_midi_packet(data)
       send("puts_#{type.to_s}", bytes, data.size)
       true
     end

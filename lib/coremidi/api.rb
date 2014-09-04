@@ -48,7 +48,7 @@ module CoreMIDI
     end
 
     # Pack the given data into a coremidi MIDI packet (used by Destination)
-    def self.pack_midi_data(data)
+    def self.get_midi_packet(data)
       format = "C" * data.size
       packed_data = data.pack(format)
       char_size = FFI.type_size(:char) * data.size
