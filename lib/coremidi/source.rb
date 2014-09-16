@@ -4,7 +4,7 @@ module CoreMIDI
   class Source
 
     include Endpoint
-    
+
     attr_reader :buffer
 
     #
@@ -102,9 +102,9 @@ module CoreMIDI
     def self.all
       Endpoint.all_by_type[:source]
     end
-    
+
     protected
-    
+
     # Base initialization for this endpoint -- done whether or not the endpoint is enabled to check whether 
     # it is truly available for use
     def connect   
@@ -122,6 +122,17 @@ module CoreMIDI
 
     private
 
+    def enqueue_message(bytes, time)
+      if bytes.first.eql?(0xF0) || !@sysex_buffer.empty?
+        @sysex_buffer += bytes
+        if bytes.last.eql?(0xF7)
+          bytes = @sysex_buffer.dup
+          @sysex_buffer.clear
+        end
+      end
+      @buffer << get_message_formatted(bytes, time) if @sysex_buffer.empty? 
+    end
+
     # New MIDI messages from the queue
     def queued_messages
       @buffer.slice(@pointer, @buffer.length - @pointer)
@@ -134,24 +145,33 @@ module CoreMIDI
 
     # The callback fired by coremidi when new MIDI messages are in the buffer
     def get_event_callback
-      Proc.new do | new_packets, refCon_ptr, connRefCon_ptr |
-        time = Time.now.to_f
-        packet = new_packets[:packet][0]
-        len = packet[:length]
-        #p "packets received: #{new_packets[:numPackets]}"
-        #p "first packet length: #{len} data: #{packet[:data].to_a.to_s}"
-        if len > 0
-          bytes = packet[:data].to_a[0, len]
-          if bytes.first.eql?(0xF0) || !@sysex_buffer.empty?
-            @sysex_buffer += bytes
-            if bytes.last.eql?(0xF7)
-              bytes = @sysex_buffer.dup
-              @sysex_buffer.clear
-            end
-          end
-          @buffer << get_message_formatted(bytes, time) if @sysex_buffer.empty?             
+      Proc.new do |new_packets, refCon_ptr, connRefCon_ptr|
+        begin
+          # p "packets received: #{new_packets[:numPackets]}"
+          timestamp = Time.now.to_f
+          messages = get_messages(new_packets)
+          messages.each { |message| enqueue_message(message, timestamp) }
+        rescue Exception => exception
+          Thread.main.raise(exception)
         end
       end
+    end
+
+    def get_messages(new_packets)
+      count = new_packets[:numPackets]
+      first = new_packets[:packet][0]
+      data = first[:data].to_a
+      messages = []
+      messages << data.slice!(0, first[:length])
+      (count - 1).times do |i|
+        length_index = 8
+        message_length = data[length_index]
+        message_start_index = length_index + 2
+        packet_end_index = message_start_index + message_length
+        packet = data.slice!(0..packet_end_index)
+        messages << packet.slice(message_start_index, message_length)
+      end
+      messages
     end
 
     # Timestamp for a received MIDI message
@@ -175,7 +195,7 @@ module CoreMIDI
       raise "MIDIInputPortCreate returned error code #{port[:error]}" unless port[:error].zero?
       true
     end
-    
+
     # Initialize the MIDI message buffer
     def initialize_buffer
       @pointer = 0
@@ -186,7 +206,7 @@ module CoreMIDI
       end
       true
     end
-    
+
   end
 
 end
