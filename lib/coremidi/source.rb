@@ -172,22 +172,26 @@ module CoreMIDI
       messages = []
       messages << data.slice!(0, first[:length])
       (count - 1).times do |i|
-        length_index = 8
-        message_length = data[length_index]
-        message_start_index = length_index + 2
-        packet_end_index = message_start_index + message_length
-        packet = data.slice!(0..packet_end_index)
-        messages << packet.slice(message_start_index, message_length)
+        message_length = data[8]
+        unless message_length.nil?
+          packet_end_index = 10 + message_length
+          if data.length >= packet_end_index + 1
+            packet = data.slice!(0..packet_end_index)
+            messages << packet.slice(10, message_length)
+          end
+        end
       end
       messages
     end
 
     # Timestamp for a received MIDI message
+    # @return [Fixnum]
     def timestamp(now)
       (now - @start_time) * 1000
     end
 
     # Give a message its timestamp and package it in a Hash
+    # @return [Hash]
     def get_message_formatted(raw, time)
       { 
         :data => raw, 
@@ -196,6 +200,7 @@ module CoreMIDI
     end
 
     # Initialize a coremidi port for this endpoint
+    # @return [Boolean]
     def initialize_port
       @callback = get_event_callback
       port = API.create_midi_input_port(@client, @resource_id, @name, @callback)
@@ -205,6 +210,7 @@ module CoreMIDI
     end
 
     # Initialize the MIDI message buffer
+    # @return [Boolean]
     def initialize_buffer
       @pointer = 0
       @buffer = []
