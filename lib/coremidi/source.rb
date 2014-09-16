@@ -122,7 +122,11 @@ module CoreMIDI
 
     private
 
-    def enqueue_message(bytes, time)
+    # Add a single message to the buffer
+    # @param [Array<Fixnum>] bytes Message data
+    # @param [Float] timestamp The system float timestamp
+    # @return [Array<Hash>] The resulting buffer
+    def enqueue_message(bytes, timestamp)
       if bytes.first.eql?(0xF0) || !@sysex_buffer.empty?
         @sysex_buffer += bytes
         if bytes.last.eql?(0xF7)
@@ -130,7 +134,8 @@ module CoreMIDI
           @sysex_buffer.clear
         end
       end
-      @buffer << get_message_formatted(bytes, time) if @sysex_buffer.empty? 
+      @buffer << get_message_formatted(bytes, timestamp) if @sysex_buffer.empty? 
+      @buffer
     end
 
     # New MIDI messages from the queue
@@ -157,9 +162,12 @@ module CoreMIDI
       end
     end
 
-    def get_messages(new_packets)
-      count = new_packets[:numPackets]
-      first = new_packets[:packet][0]
+    # Get MIDI messages from the given CoreMIDI packet list
+    # @param [API::MIDIPacketList] new_packets The packet list
+    # @return [Array<Array<Fixnum>>] A collection of MIDI messages
+    def get_messages(packet_list)
+      count = packet_list[:numPackets]
+      first = packet_list[:packet][0]
       data = first[:data].to_a
       messages = []
       messages << data.slice!(0, first[:length])
