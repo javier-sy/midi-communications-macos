@@ -172,16 +172,37 @@ module CoreMIDI
       messages = []
       messages << data.slice!(0, first[:length])
       (count - 1).times do |i|
-        message_length = data[8]
+        length_index = find_next_length_index(data)
+        message_length = data[length_index]
         unless message_length.nil?
-          packet_end_index = 10 + message_length
+          packet_start_index = length_index + 2
+          packet_end_index = packet_start_index + message_length
           if data.length >= packet_end_index + 1
             packet = data.slice!(0..packet_end_index)
-            messages << packet.slice(10, message_length)
+            message = packet.slice(packet_start_index, message_length)
+            messages << message
           end
         end
       end
       messages
+    end
+
+    # Get the next index for "length" from the blob of MIDI data
+    # @param [Array<Fixnum>] data
+    # @return [Fixnum]
+    def find_next_length_index(data)
+      last_is_zero = false
+      data.each_with_index do |num, i|
+        if num.zero?
+          if last_is_zero
+            return i + 1
+          else
+            last_is_zero = true
+          end
+        else
+          last_is_zero = false
+        end
+      end
     end
 
     # Timestamp for a received MIDI message
