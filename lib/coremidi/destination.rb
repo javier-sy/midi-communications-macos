@@ -23,9 +23,9 @@ module CoreMIDI
     # @return [Boolean]
     def puts_s(data)
       data = data.dup
-	    bytes = []
+      bytes = []
       until (str = data.slice!(0,2)).eql?("")
-      	bytes << str.hex
+        bytes << str.hex
       end
       puts_bytes(*bytes)
       true
@@ -47,10 +47,10 @@ module CoreMIDI
     # @param [*Array<Fixnum>, *Array<String>, *Fixnum, *String] args
     # @return [Boolean]
     def puts(*args)
-  	  case args.first
+      case args.first
       when Array then args.each { |arg| puts(*arg) }
-    	when Fixnum then puts_bytes(*args)
-    	when String then puts_bytestr(*args)
+      when Fixnum then puts_bytes(*args)
+      when String then puts_bytestr(*args)
       end
     end
     alias_method :write, :puts
@@ -58,14 +58,12 @@ module CoreMIDI
     # Enable this device
     # @return [Destination]
     def enable(options = {}, &block)
-      if !@enabled
-        @enabled = true
-        if block_given?
-      	  begin
-      		  yield(self)
-      	  ensure
-      		  close
-      	  end
+      @enabled = true unless @enabled
+      if block_given?
+        begin
+          yield(self)
+        ensure
+          close
         end
       end
       self
@@ -78,7 +76,7 @@ module CoreMIDI
     def self.first
       Endpoint.first(:destination)
     end
-    
+
     # Shortcut to the last output endpoint available
     # @return [Destination]
     def self.last
@@ -90,7 +88,7 @@ module CoreMIDI
     def self.all
       Endpoint.all_by_type[:destination]
     end
-    
+
     protected
 
     # Base initialization for this endpoint -- done whether or not the endpoint is enabled to
@@ -128,9 +126,9 @@ module CoreMIDI
 
     SysexCompletionCallback =
       API.get_callback([:pointer]) do |sysex_request_ptr|
-        # this isn't working for some reason. as of now, it's not needed though
+      # this isn't working for some reason. as of now, it's not needed though
       end
-      
+
     # Initialize a coremidi port for this endpoint
     def initialize_port
       port = API.create_midi_output_port(@client, @resource_id, @name)

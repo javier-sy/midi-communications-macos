@@ -51,14 +51,12 @@ module CoreMIDI
     # Enable this the input for use; can be passed a block
     # @return [Source]
     def enable(options = {}, &block)
-      if !@enabled
-        @enabled = true
-        if block_given?
-          begin
-            yield(self)
-          ensure
-            close
-          end
+      @enabled = true unless @enabled
+      if block_given?
+        begin
+          yield(self)
+        ensure
+          close
         end
       end
       self
