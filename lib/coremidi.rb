@@ -1,7 +1,7 @@
 # ffi-coremidi
 #
 # Realtime MIDI IO with Ruby for OSX
-# (c)2011-2014 Ari Russo
+# (c)2011-2015 Ari Russo
 
 # libs
 require "ffi"

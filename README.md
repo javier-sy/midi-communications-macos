@@ -12,7 +12,7 @@ Note that in the interest of allowing people on other platforms to utilize your 
 * Input and output on multiple devices concurrently
 * Generalized handling of different MIDI Message types (including SysEx)
 * Timestamped input events
-* Patch MIDI via software to other programs using IAC 
+* Patch MIDI via software to other programs using IAC
 
 ### Requirements
 
@@ -23,11 +23,11 @@ Note that in the interest of allowing people on other platforms to utilize your 
 If you're using Bundler, add this line to your application's Gemfile:
 
 `gem "ffi-coremidi"`
-  
+
 Otherwise
 
 `gem install ffi-coremidi`
-  
+
 ### Documentation
 
 [rdoc](http://rubydoc.info/github/arirusso/ffi-coremidi)
@@ -48,4 +48,4 @@ Also thank you to [Jeremy Voorhis](http://github.com/jvoorhis) for some useful d
 
 Apache 2.0, See the file LICENSE
 
-Copyright (c) 2011-2014 [Ari Russo](http://github.com/arirusso)
+Copyright (c) 2011-2015 [Ari Russo](http://github.com/arirusso)
