@@ -1,6 +1,6 @@
 require "helper"
 
-class CoreMIDI::IOTest < Test::Unit::TestCase
+class CoreMIDI::IOTest < Minitest::Test
 
   # ** these tests assume that TestOutput is connected to TestInput
   context "CoreMIDI" do

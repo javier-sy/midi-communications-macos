@@ -1,6 +1,6 @@
 require "helper"
 
-class InputBufferTest < Test::Unit::TestCase
+class InputBufferTest < Minitest::Test
 
   context "CoreMIDI" do
 
@@ -26,7 +26,7 @@ class InputBufferTest < Test::Unit::TestCase
         @messages.each do |message|
           puts "sending: #{message.inspect}"
           @output.puts(message)
-          bytes += message 
+          bytes += message
 
           sleep(0.5)
 
