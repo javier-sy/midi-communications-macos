@@ -1,6 +1,6 @@
 module CoreMIDI
 
-  # Output/Destination endpoint class
+  # Type of endpoint used for output
   class Destination
 
     include Endpoint

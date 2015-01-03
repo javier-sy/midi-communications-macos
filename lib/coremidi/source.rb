@@ -1,6 +1,6 @@
 module CoreMIDI
 
-  # Input/Source endpoint class
+  # Type of endpoint used for input
   class Source
 
     include Endpoint
@@ -30,7 +30,7 @@ module CoreMIDI
     end
     alias_method :read, :gets
 
-    # Same as Source#gets except that it returns message data as string of hex 
+    # Same as Source#gets except that it returns message data as string of hex
     # digits as such:
     #   [
     #     { :data => "904060", :timestamp => 904 },
@@ -41,7 +41,7 @@ module CoreMIDI
     # @return [Array<Hash>]
     def gets_s
       messages = gets
-      messages.each do |message| 
+      messages.each do |message|
         message[:data] = TypeConversion.numeric_bytes_to_hex_string(message[:data])
       end
       messages
@@ -103,9 +103,9 @@ module CoreMIDI
 
     protected
 
-    # Base initialization for this endpoint -- done whether or not the endpoint is enabled to check whether 
+    # Base initialization for this endpoint -- done whether or not the endpoint is enabled to check whether
     # it is truly available for use
-    def connect   
+    def connect
       enable_client
       initialize_port
       @resource = API.MIDIEntityGetSource(@entity.resource, @resource_id)
@@ -132,7 +132,7 @@ module CoreMIDI
           @sysex_buffer.clear
         end
       end
-      @buffer << get_message_formatted(bytes, timestamp) if @sysex_buffer.empty? 
+      @buffer << get_message_formatted(bytes, timestamp) if @sysex_buffer.empty?
       @buffer
     end
 
@@ -212,9 +212,9 @@ module CoreMIDI
     # Give a message its timestamp and package it in a Hash
     # @return [Hash]
     def get_message_formatted(raw, time)
-      { 
-        :data => raw, 
-        :timestamp => timestamp(time) 
+      {
+        :data => raw,
+        :timestamp => timestamp(time)
       }
     end
 
