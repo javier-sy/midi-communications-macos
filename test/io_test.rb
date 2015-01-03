@@ -21,8 +21,8 @@ class CoreMIDI::IOTest < Minitest::Test
         end
 
         should "do IO" do
-          $test_device[:output].open do |output|
-            $test_device[:input].open do |input|
+          TestHelper.device[:output].open do |output|
+            TestHelper.device[:input].open do |input|
 
               input.buffer.clear
 
@@ -57,8 +57,8 @@ class CoreMIDI::IOTest < Minitest::Test
         end
 
         should "do IO" do
-          $test_device[:output].open do |output|
-            $test_device[:input].open do |input|
+          TestHelper.device[:output].open do |output|
+            TestHelper.device[:input].open do |input|
 
               @messages.each do |msg|
 

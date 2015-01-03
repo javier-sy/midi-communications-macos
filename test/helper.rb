@@ -4,27 +4,35 @@ $LOAD_PATH.unshift dir + "/../lib"
 require "minitest/autorun"
 require "mocha/test_unit"
 require "shoulda-context"
+
 require "coremidi"
 
 module TestHelper
 
-  def self.select_devices
-    $test_device ||= {}
+  extend self
+
+  def device
+    @device ||= select_devices
+  end
+
+  def select_devices
+    @device ||= {}
     { :input => CoreMIDI::Source.all, :output => CoreMIDI::Destination.all }.each do |type, devs|
       puts ""
       puts "select an #{type.to_s}..."
-      while $test_device[type].nil?
+      while @device[type].nil?
         devs.each do |device|
           puts "#{device.id}: #{device.name}"
         end
         selection = $stdin.gets.chomp
         if selection != ""
           selection = selection.to_i
-          $test_device[type] = devs.find { |d| d.id == selection }
-          puts "selected #{selection} for #{type.to_s}" unless $test_device[type]
+          @device[type] = devs.find { |d| d.id == selection }
+          puts "selected #{selection} for #{type.to_s}" unless @device[type]
         end
       end
     end
+    @device
   end
 
   def bytestrs_to_ints(arr)

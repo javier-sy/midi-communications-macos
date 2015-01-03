@@ -16,8 +16,8 @@ class InputBufferTest < Minitest::Test
         @received_arr = []
         @pointer = 0
 
-        @output = $test_device[:output].open
-        @input = $test_device[:input].open
+        @output = TestHelper.device[:output].open
+        @input = TestHelper.device[:input].open
         @input.buffer.clear
       end
 
