@@ -98,11 +98,13 @@ module CoreMIDI
     def self.get_midi_packet_list(bytes, size)
       packet_list = FFI::MemoryPointer.new(256)
       packet_ptr = API.MIDIPacketListInit(packet_list)
+      time = HostTime.AudioGetCurrentHostTime()
       packet_ptr = if X86_64
-        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, size, bytes)
+        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, time, size, bytes)
       else
         # Pass in two 32-bit 0s for the 64 bit time
-        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, 0, 0, size, bytes)
+        time1 = 
+        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, time >> 32, time & 0xFFFFFFFF, size, bytes)
       end
       packet_list
     end
@@ -214,7 +216,7 @@ module CoreMIDI
     #                                        MIDIPacket * curPacket, MIDITimeStamp time, 
     #                                        ByteCount nData, const Byte * data)
     if X86_64
-      attach_function :MIDIPacketListAdd, [:pointer, :int, :pointer, :int, :int, :pointer], :pointer
+      attach_function :MIDIPacketListAdd, [:pointer, :int, :pointer, :uint64, :int, :pointer], :pointer
     else
       attach_function :MIDIPacketListAdd, [:pointer, :int, :pointer, :int, :int, :int, :pointer], :pointer
     end
@@ -253,6 +255,8 @@ module CoreMIDI
 
       # UInt64 AudioConvertHostTimeToNanos(UInt64 IO)
       attach_function :AudioConvertHostTimeToNanos, [:uint64], :uint64
+      # UInt64 AudioGetCurrentHostTime()
+      attach_function :AudioGetCurrentHostTime, [], :uint64
     end
 
   end
