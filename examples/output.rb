@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
-
-dir = File.dirname(File.expand_path(__FILE__))
-$LOAD_PATH.unshift dir + "/../lib"
+$:.unshift(File.join("..", "lib"))
 
 require "coremidi"
 
@@ -19,13 +17,13 @@ CoreMIDI::Destination.first.open do |output|
   (0..((octaves-1)*12)).step(12) do |oct|
 
     notes.each do |note|
-    	
+
       output.puts(0x90, note + oct, 100) # note on
       sleep(duration)				     # wait
       output.puts(0x80, note + oct, 100) # note off
-      
+
     end
-    
+
   end
 
 end
