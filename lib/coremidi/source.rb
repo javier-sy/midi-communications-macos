@@ -20,13 +20,7 @@ module CoreMIDI
     #
     # @return [Array<Hash>]
     def gets
-      until queued_messages?
-        # per https://github.com/arirusso/unimidi/issues/20#issuecomment-44761318
-        sleep(0.0001) # patch to prevent 100% CPU issue with some midi controllers
-      end
-      messages = queued_messages
-      @pointer = @buffer.length
-      messages
+      @queue.pop
     end
     alias_method :read, :gets
 
@@ -111,6 +105,7 @@ module CoreMIDI
       @resource = API.MIDIEntityGetSource(@entity.resource, @resource_id)
       error = API.MIDIPortConnectSource(@handle, @resource, nil )
       initialize_buffer
+      @queue = Queue.new
       @sysex_buffer = []
       @start_time = Time.now.to_f
 
@@ -132,8 +127,7 @@ module CoreMIDI
           @sysex_buffer.clear
         end
       end
-      @buffer << get_message_formatted(bytes, timestamp) if @sysex_buffer.empty?
-      @buffer
+      @sysex_buffer.empty? ? get_message_formatted(bytes, timestamp) : nil
     end
 
     # New MIDI messages from the queue
@@ -153,7 +147,9 @@ module CoreMIDI
           # p "packets received: #{new_packets[:numPackets]}"
           timestamp = Time.now.to_f
           messages = get_messages(new_packets)
-          messages.each { |message| enqueue_message(message, timestamp) }
+          @queue.push(messages.map do |message|
+            enqueue_message(message, timestamp)
+          end.compact)
         rescue Exception => exception
           Thread.main.raise(exception)
         end
