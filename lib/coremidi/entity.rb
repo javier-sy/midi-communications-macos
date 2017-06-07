@@ -1,35 +1,35 @@
 module CoreMIDI
 
-  # A MIDI entity can have any number of MIDI endpoints, each of which is a source or destination 
-  # of a 16-channel MIDI stream. By grouping a device's endpoints into entities, the system has 
-  # enough information for an application to make reasonable default assumptions about how to 
-  # communicate in a bi-directional manner with each entity, as is necessary in MIDI librarian 
+  # A MIDI entity can have any number of MIDI endpoints, each of which is a source or destination
+  # of a 16-channel MIDI stream. By grouping a device's endpoints into entities, the system has
+  # enough information for an application to make reasonable default assumptions about how to
+  # communicate in a bi-directional manner with each entity, as is necessary in MIDI librarian
   # applications.
   #
   # https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDIServices_Reference/Reference/reference.html
   class Entity
 
-    attr_reader :endpoints, 
+    attr_reader :endpoints,
                 :manufacturer,
                 :model,
                 :name,
                 :resource
-                
+
     # @param [FFI::Pointer] resource A pointer to the underlying entity
     # @param [Hash] options
     # @option options [Boolean] :include_offline Include offline endpoints in the list
     def initialize(resource, options = {})
-      @endpoints = { 
-        :source => [], 
-        :destination => [] 
+      @endpoints = {
+        :source => [],
+        :destination => []
       }
       @resource = resource
       populate(options)
     end
-    
+
     # Assign all of this Entity's endpoints an consecutive local id
-    # @param [Fixnum] starting_id
-    # @return [Fixnum]
+    # @param [Integer] starting_id
+    # @return [Integer]
     def populate_endpoint_ids(starting_id)
       counter = 0
       @endpoints.values.flatten.each do |endpoint|
@@ -38,7 +38,7 @@ module CoreMIDI
       end
       counter
     end
-    
+
     # Is the entity online?
     # @return [Boolean]
     def online?
@@ -52,12 +52,12 @@ module CoreMIDI
     def get_name
       "#{@manufacturer} #{@model}"
     end
-    
+
     # Populate endpoints of a specified type for this entity
     # @param [Symbol] type The endpoint type eg :source, :destination
     # @param [Hash] options
     # @option options [Boolean] :include_offline Include offline endpoints in the list
-    # @return [Fixnum]
+    # @return [Integer]
     def populate_endpoints_by_type(type, options = {})
       endpoint_class = Endpoint.get_class(type)
       num_endpoints = number_of_endpoints(type)
@@ -66,18 +66,18 @@ module CoreMIDI
         if endpoint.online? || options[:include_offline]
           @endpoints[type] << endpoint
         end
-      end  
-      @endpoints[type].size   
+      end
+      @endpoints[type].size
     end
 
     # Populate the endpoints for this entity
     # @param [Hash] options
     # @option options [Boolean] :include_offline Include offline endpoints in the list
-    # @return [Fixnum]
+    # @return [Integer]
     def populate_endpoints(options = {})
       @endpoints.keys.map { |type| populate_endpoints_by_type(type, options) }.reduce(&:+)
     end
-    
+
     # The number of endpoints for this entity
     # @param [Symbol] type The endpoint type eg :source, :destination
     def number_of_endpoints(type)
@@ -86,20 +86,20 @@ module CoreMIDI
         when :destination then API.MIDIEntityGetNumberOfDestinations(@resource)
       end
     end
-    
+
     # A CFString property from the underlying entity
     # @param [Symbol, String] name The property name
     # @return [String, nil]
     def get_string(name)
       API.get_string(@resource, name)
     end
-    
+
     # An Integer property from the underlying entity
     # @param [Symbol, String] name The property name
-    # @return [Fixnum, nil]
+    # @return [Integer, nil]
     def get_int(name)
       API.get_int(@resource, name)
-    end        
+    end
 
     # Populate the entity properties from the underlying resource
     # @param [Hash] options
