@@ -20,8 +20,8 @@ module CoreMIDI
     # @option options [Boolean] :include_offline Include offline endpoints in the list
     def initialize(resource, options = {})
       @endpoints = {
-        :source => [],
-        :destination => []
+        source: [],
+        destination: []
       }
       @resource = resource
       populate(options)

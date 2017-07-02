@@ -67,8 +67,8 @@ module CoreMIDI
     # @return [Hash]
     def self.all_by_type
       {
-        :source => sources,
-        :destination => destinations
+        source: sources,
+        destination: destinations
       }
     end
 
