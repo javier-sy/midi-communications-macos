@@ -34,7 +34,7 @@ module CoreMIDI
     alias_method :puts_hex, :puts_s
 
     # Send a MIDI message comprised of numeric bytes
-    # @param [*Fixnum] data Numeric bytes eg 0x90, 0x40, 0x40
+    # @param [*Integer] data Numeric bytes eg 0x90, 0x40, 0x40
     # @return [Boolean]
     def puts_bytes(*data)
       type = sysex?(data) ? :sysex : :small
@@ -44,12 +44,12 @@ module CoreMIDI
     end
 
     # Send a MIDI message of indeterminate type
-    # @param [*Array<Fixnum>, *Array<String>, *Fixnum, *String] args
+    # @param [*Array<Integer>, *Array<String>, *Integer, *String] args
     # @return [Boolean]
     def puts(*args)
       case args.first
       when Array then args.each { |arg| puts(*arg) }
-      when Fixnum then puts_bytes(*args)
+      when Integer then puts_bytes(*args)
       when String then puts_bytestr(*args)
       end
     end

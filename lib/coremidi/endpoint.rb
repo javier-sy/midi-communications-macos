@@ -17,7 +17,7 @@ module CoreMIDI
 
     alias_method :enabled?, :enabled
 
-    # @param [Fixnum] resource_id
+    # @param [Integer] resource_id
     # @param [Entity] entity
     def initialize(resource_id, entity)
       @entity = entity
@@ -33,8 +33,8 @@ module CoreMIDI
     end
 
     # Set the id for this endpoint (the id is immutable)
-    # @param [Fixnum] val
-    # @return [Fixnum]
+    # @param [Integer] val
+    # @return [Integer]
     def id=(id)
       @id ||= id
     end
@@ -67,8 +67,8 @@ module CoreMIDI
     # @return [Hash]
     def self.all_by_type
       {
-        :source => sources,
-        :destination => destinations
+        source: sources,
+        destination: destinations
       }
     end
 

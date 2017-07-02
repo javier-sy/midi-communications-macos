@@ -1,7 +1,7 @@
 module CoreMIDI
 
-  # A MIDI device may have multiple logically distinct sub-components. For example, one device may 
-  # encompass a MIDI synthesizer and a pair of MIDI ports, both addressable via a USB port. Each 
+  # A MIDI device may have multiple logically distinct sub-components. For example, one device may
+  # encompass a MIDI synthesizer and a pair of MIDI ports, both addressable via a USB port. Each
   # such element of a device is called a MIDI entity.
   #
   # https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDIServices_Reference/Reference/reference.html
@@ -11,7 +11,7 @@ module CoreMIDI
                 :id, # Unique Numeric id
                 :name # Device name from coremidi
 
-    # @param [Fixnum] id The ID for the device
+    # @param [Integer] id The ID for the device
     # @param [Object] device_pointer The underlying device pointer
     # @param [Hash] options
     # @option options [Boolean] :include_offline Whether to include offline entities (default: false)
@@ -21,7 +21,7 @@ module CoreMIDI
       @entities = []
       populate(options)
     end
-            
+
     # Endpoints for this device
     # @return [Array<Endpoint>]
     def endpoints
@@ -32,9 +32,9 @@ module CoreMIDI
       end
       endpoints
     end
-    
+
     # Assign all of this Device's endpoints an consecutive local id
-    # @param [Integer] last_id The highest already used endpoint ID 
+    # @param [Integer] last_id The highest already used endpoint ID
     # @return [Integer] The highest used endpoint ID after populating this device's endpoints
     def populate_endpoint_ids(last_id)
       id = 0
@@ -72,7 +72,7 @@ module CoreMIDI
 
     # Has the device list been populated?
     def self.populated?
-      !@devices.nil? && !@devices.empty? 
+      !@devices.nil? && !@devices.empty?
     end
 
     private
@@ -82,7 +82,7 @@ module CoreMIDI
       @name = API.get_string(@resource, "name")
       raise RuntimeError.new("Can't get device name") unless @name
     end
-    
+
     # All of the endpoints for all devices a consecutive local id
     def self.populate_endpoint_ids
       counter = 0
@@ -93,7 +93,7 @@ module CoreMIDI
     # Populates the entities for this device. These entities are in turn used to gather the endpoints.
     # @param [Hash] options
     # @option options [Boolean] :include_offline Whether to include offline entities (default: false)
-    # @return [Fixnum] The number of entities populated
+    # @return [Integer] The number of entities populated
     def populate_entities(options = {})
       include_if_offline = options[:include_offline] || false
       i = 0

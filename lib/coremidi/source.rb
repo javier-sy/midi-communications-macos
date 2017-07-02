@@ -116,7 +116,7 @@ module CoreMIDI
     private
 
     # Add a single message to the buffer
-    # @param [Array<Fixnum>] bytes Message data
+    # @param [Array<Integer>] bytes Message data
     # @param [Float] timestamp The system float timestamp
     # @return [Array<Hash>] The resulting buffer
     def enqueue_message(bytes, timestamp)
@@ -158,7 +158,7 @@ module CoreMIDI
 
     # Get MIDI messages from the given CoreMIDI packet list
     # @param [API::MIDIPacketList] new_packets The packet list
-    # @return [Array<Array<Fixnum>>] A collection of MIDI messages
+    # @return [Array<Array<Integer>>] A collection of MIDI messages
     def get_messages(packet_list)
       count = packet_list[:numPackets]
       first = packet_list[:packet][0]
@@ -182,8 +182,8 @@ module CoreMIDI
     end
 
     # Get the next index for "length" from the blob of MIDI data
-    # @param [Array<Fixnum>] data
-    # @return [Fixnum]
+    # @param [Array<Integer>] data
+    # @return [Integer]
     def find_next_length_index(data)
       last_is_zero = false
       data.each_with_index do |num, i|
@@ -199,18 +199,12 @@ module CoreMIDI
       end
     end
 
-    # Timestamp for a received MIDI message
-    # @return [Fixnum]
-    def timestamp(now)
-      (now - @start_time) * 1000
-    end
-
     # Give a message its timestamp and package it in a Hash
     # @return [Hash]
     def get_message_formatted(raw, time)
       {
-        :data => raw,
-        :timestamp => timestamp(time)
+        data: raw,
+        timestamp: time
       }
     end
 
