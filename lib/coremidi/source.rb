@@ -203,18 +203,12 @@ module CoreMIDI
       end
     end
 
-    # Timestamp for a received MIDI message
-    # @return [Integer]
-    def timestamp(now)
-      (now - @start_time) * 1000
-    end
-
     # Give a message its timestamp and package it in a Hash
     # @return [Hash]
     def get_message_formatted(raw, time)
       {
-        :data => raw,
-        :timestamp => timestamp(time)
+        data: raw,
+        timestamp: time
       }
     end
 
