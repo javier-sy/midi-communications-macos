@@ -143,6 +143,7 @@ module CoreMIDI
     # The callback fired by coremidi when new MIDI messages are in the buffer
     def get_event_callback
       Proc.new do |new_packets, refCon_ptr, connRefCon_ptr|
+        Thread.current.abort_on_exception = true
         begin
           # p "packets received: #{new_packets[:numPackets]}"
           timestamp = Time.now.to_f
