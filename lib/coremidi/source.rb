@@ -5,6 +5,8 @@ module CoreMIDI
 
     include Endpoint
 
+    # The buffer of received messages since instantiation
+    # @return [Array<Hash>]
     def buffer
       fill_buffer
       @buffer
@@ -100,6 +102,8 @@ module CoreMIDI
 
     protected
 
+    # Migrate new received messages from the callback queue to
+    # the buffer
     def fill_buffer
       messages = []
       until @queue.empty?
@@ -127,7 +131,7 @@ module CoreMIDI
 
     private
 
-    # Add a single message to the buffer
+    # Add a single message to the callback queue
     # @param [Array<Fixnum>] bytes Message data
     # @param [Float] timestamp The system float timestamp
     # @return [Array<Hash>] The resulting buffer
@@ -154,7 +158,7 @@ module CoreMIDI
       !@queue.empty?
     end
 
-    # The callback fired by coremidi when new MIDI messages are in the buffer
+    # The callback fired by coremidi when new MIDI messages are received
     def get_event_callback
       Thread.abort_on_exception = true
       Proc.new do |new_packets, refCon_ptr, connRefCon_ptr|
