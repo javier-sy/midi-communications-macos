@@ -5,7 +5,12 @@ module CoreMIDI
 
     include Endpoint
 
-    attr_reader :buffer
+    # The buffer of received messages since instantiation
+    # @return [Array<Hash>]
+    def buffer
+      fill_buffer
+      @buffer
+    end
 
     #
     # An array of MIDI event hashes as such:
@@ -20,13 +25,7 @@ module CoreMIDI
     #
     # @return [Array<Hash>]
     def gets
-      until queued_messages?
-        # per https://github.com/arirusso/unimidi/issues/20#issuecomment-44761318
-        sleep(0.0001) # patch to prevent 100% CPU issue with some midi controllers
-      end
-      messages = queued_messages
-      @pointer = @buffer.length
-      messages
+      fill_buffer
     end
     alias_method :read, :gets
 
@@ -103,6 +102,18 @@ module CoreMIDI
 
     protected
 
+    # Migrate new received messages from the callback queue to
+    # the buffer
+    def fill_buffer
+      messages = []
+      until @queue.empty?
+        messages << @queue.pop
+      end
+      @buffer += messages
+      @pointer = @buffer.length
+      messages
+    end
+
     # Base initialization for this endpoint -- done whether or not the endpoint is enabled to check whether
     # it is truly available for use
     def connect
@@ -111,8 +122,8 @@ module CoreMIDI
       @resource = API.MIDIEntityGetSource(@entity.resource, @resource_id)
       error = API.MIDIPortConnectSource(@handle, @resource, nil )
       initialize_buffer
+      @queue = Queue.new
       @sysex_buffer = []
-      @start_time = Time.now.to_f
 
       error.zero?
     end
@@ -120,8 +131,8 @@ module CoreMIDI
 
     private
 
-    # Add a single message to the buffer
-    # @param [Array<Integer>] bytes Message data
+    # Add a single message to the callback queue
+    # @param [Array<Fixnum>] bytes Message data
     # @param [Float] timestamp The system float timestamp
     # @return [Array<Hash>] The resulting buffer
     def enqueue_message(bytes, timestamp)
@@ -132,29 +143,32 @@ module CoreMIDI
           @sysex_buffer.clear
         end
       end
-      @buffer << get_message_formatted(bytes, timestamp) if @sysex_buffer.empty?
-      @buffer
+      message = get_message_formatted(bytes, timestamp)
+      @queue << message
+      message
     end
 
     # New MIDI messages from the queue
     def queued_messages
-      @buffer.slice(@pointer, @buffer.length - @pointer)
+      @queue.pop
     end
 
     # Are there new MIDI messages in the queue?
     def queued_messages?
-      @pointer < @buffer.length
+      !@queue.empty?
     end
 
-    # The callback fired by coremidi when new MIDI messages are in the buffer
+    # The callback fired by coremidi when new MIDI messages are received
     def get_event_callback
+      Thread.abort_on_exception = true
       Proc.new do |new_packets, refCon_ptr, connRefCon_ptr|
-        Thread.current.abort_on_exception = true
         begin
           # p "packets received: #{new_packets[:numPackets]}"
           timestamp = Time.now.to_f
           messages = get_messages(new_packets)
-          messages.each { |message| enqueue_message(message, timestamp) }
+          messages.each do |message|
+            enqueue_message(message, timestamp)
+          end
         rescue Exception => exception
           Thread.main.raise(exception)
         end
@@ -163,7 +177,7 @@ module CoreMIDI
 
     # Get MIDI messages from the given CoreMIDI packet list
     # @param [API::MIDIPacketList] new_packets The packet list
-    # @return [Array<Array<Integer>>] A collection of MIDI messages
+    # @return [Array<Array<Fixnum>>] A collection of MIDI messages
     def get_messages(packet_list)
       count = packet_list[:numPackets]
       first = packet_list[:packet][0]
@@ -187,8 +201,8 @@ module CoreMIDI
     end
 
     # Get the next index for "length" from the blob of MIDI data
-    # @param [Array<Integer>] data
-    # @return [Integer]
+    # @param [Array<Fixnum>] data
+    # @return [Fixnum]
     def find_next_length_index(data)
       last_is_zero = false
       data.each_with_index do |num, i|
