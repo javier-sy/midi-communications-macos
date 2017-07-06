@@ -222,8 +222,8 @@ module CoreMIDI
     # @return [Hash]
     def get_message_formatted(raw, time)
       {
-        :data => raw,
-        :timestamp => time
+        data: raw,
+        timestamp: time
       }
     end
 
