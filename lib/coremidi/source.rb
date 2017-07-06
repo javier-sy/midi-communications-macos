@@ -148,16 +148,6 @@ module CoreMIDI
       message
     end
 
-    # New MIDI messages from the queue
-    def queued_messages
-      @queue.pop
-    end
-
-    # Are there new MIDI messages in the queue?
-    def queued_messages?
-      !@queue.empty?
-    end
-
     # The callback fired by coremidi when new MIDI messages are received
     def get_event_callback
       Thread.abort_on_exception = true
