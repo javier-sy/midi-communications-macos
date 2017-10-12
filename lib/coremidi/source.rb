@@ -102,6 +102,10 @@ module CoreMIDI
 
     protected
 
+    def truncate_buffer
+      @buffer.slice!(-1024, 1024)
+    end
+
     # Migrate new received messages from the callback queue to
     # the buffer
     def fill_buffer
@@ -110,6 +114,7 @@ module CoreMIDI
         messages << @queue.pop
       end
       @buffer += messages
+      truncate_buffer
       @pointer = @buffer.length
       messages
     end
