@@ -25,7 +25,7 @@ module CoreMIDI
     #
     # @return [Array<Hash>]
     def gets
-      fill_buffer
+      fill_buffer(locking: true)
     end
     alias_method :read, :gets
 
@@ -109,10 +109,12 @@ module CoreMIDI
 
     # Migrate new received messages from the callback queue to
     # the buffer
-    def fill_buffer
+    def fill_buffer(locking: nil)
+      locking ||= false
+
       messages = []
 
-      if @queue.empty?
+      if locking && @queue.empty?
         @threads_sync_semaphore.synchronize do
           @threads_waiting << Thread.current
         end
