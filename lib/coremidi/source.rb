@@ -102,14 +102,28 @@ module CoreMIDI
 
     protected
 
+    def truncate_buffer
+      @buffer.slice!(-1024, 1024)
+    end
+
+
     # Migrate new received messages from the callback queue to
     # the buffer
     def fill_buffer
       messages = []
+
+      if @queue.empty?
+        @threads_sync_semaphore.synchronize do
+          @threads_waiting << Thread.current
+        end
+        sleep
+      end
+
       until @queue.empty?
         messages << @queue.pop
       end
       @buffer += messages
+      truncate_buffer
       @pointer = @buffer.length
       messages
     end
@@ -120,7 +134,7 @@ module CoreMIDI
       enable_client
       initialize_port
       @resource = API.MIDIEntityGetSource(@entity.resource, @resource_id)
-      error = API.MIDIPortConnectSource(@handle, @resource, nil )
+      error = API.MIDIPortConnectSource(@handle, @resource, nil)
       initialize_buffer
       @queue = Queue.new
       @sysex_buffer = []
@@ -145,6 +159,12 @@ module CoreMIDI
       end
       message = get_message_formatted(bytes, timestamp)
       @queue << message
+
+      @threads_sync_semaphore.synchronize do
+        @threads_waiting.each(&:wakeup)
+        @threads_waiting.clear
+      end
+
       message
     end
 

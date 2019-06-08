@@ -24,6 +24,9 @@ module CoreMIDI
       @resource_id = resource_id
       @type = get_type
       @enabled = false
+
+      @threads_sync_semaphore = Mutex.new
+      @threads_waiting = []
     end
 
     # Is this endpoint online?
