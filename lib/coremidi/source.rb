@@ -163,7 +163,7 @@ module CoreMIDI
       @queue << message
 
       @threads_sync_semaphore.synchronize do
-        @threads_waiting.each(&:wakeup)
+        @threads_waiting.each(&:run)
         @threads_waiting.clear
       end
 
