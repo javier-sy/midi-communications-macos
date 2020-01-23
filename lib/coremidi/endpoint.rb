@@ -25,6 +25,8 @@ module CoreMIDI
       @type = get_type
       @enabled = false
 
+      @name = nil
+
       @threads_sync_semaphore = Mutex.new
       @threads_waiting = []
     end

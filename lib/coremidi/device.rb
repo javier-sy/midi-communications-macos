@@ -72,7 +72,7 @@ module CoreMIDI
 
     # Has the device list been populated?
     def self.populated?
-      !@devices.nil? && !@devices.empty?
+      defined?(@devices) && !@devices.nil? && !@devices.empty?
     end
 
     private
