@@ -8,8 +8,8 @@ module CoreMIDI
     extend Forwardable
 
     attr_reader :enabled, # has the endpoint been initialized?
-                :entity, # unique local Numeric id of the endpoint
-                :id,
+                :entity,
+                :id, # unique local Numeric id of the endpoint
                 :resource_id, # :input or :output
                 :type
 

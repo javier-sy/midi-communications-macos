@@ -107,7 +107,8 @@ module CoreMIDI
     def populate(options = {})
       @manufacturer = get_string(:manufacturer)
       @model = get_string(:model)
-      @name = get_name
+      # @name = get_name
+      @name = get_string(:name)
       populate_endpoints(options)
     end
 
