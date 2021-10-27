@@ -1,0 +1,10 @@
+**/.DS_Store
+*.gem
+.bundle
+.rspec
+.idea
+Gemfile.lock
+bin
+*.mindnode
+
+
