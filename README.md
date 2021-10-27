@@ -36,6 +36,8 @@ Otherwise
 
 [Ari Russo](http://github.com/arirusso) <ari.russo at gmail.com>
 
+**Minor modifications by Javier Sánchez for personal use. Considering creating a new project based on Ari's work.**
+
 ### Credits
 
 This library began with some coremidi/ffi binding code for MIDI output by [Colin Harris](http://github.com/aberant) contained in [his fork of MIDIator](http://github.com/aberant/midiator) and a [blog post](http://aberant.tumblr.com/post/694878119/sending-midi-sysex-with-core-midi-and-ruby-ffi).
