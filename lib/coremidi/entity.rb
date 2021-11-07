@@ -50,7 +50,7 @@ module CoreMIDI
     # Construct a display name for the entity
     # @return [String]
     def get_name
-      "#{@manufacturer} #{@model}"
+      "#{@manufacturer} #{@model} (#{get_string(:name)})"
     end
 
     # Populate endpoints of a specified type for this entity
@@ -107,8 +107,7 @@ module CoreMIDI
     def populate(options = {})
       @manufacturer = get_string(:manufacturer)
       @model = get_string(:model)
-      # @name = get_name
-      @name = get_string(:name)
+      @name = get_name
       populate_endpoints(options)
     end
 
