@@ -1,6 +1,6 @@
 require "helper"
 
-class CoreMIDI::IOTest < Minitest::Test
+class MIDICommunicationsMacOS::IOTest < Minitest::Test
 
   # ** these tests assume that TestOutput is connected to TestInput
   context "CoreMIDI" do

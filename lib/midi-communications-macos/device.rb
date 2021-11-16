@@ -1,32 +1,29 @@
-module CoreMIDI
-
+module MIDICommunicationsMacOS
   # A MIDI device may have multiple logically distinct sub-components. For example, one device may
   # encompass a MIDI synthesizer and a pair of MIDI ports, both addressable via a USB port. Each
   # such element of a device is called a MIDI entity.
   #
   # https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDIServices_Reference/Reference/reference.html
   class Device
-
     attr_reader :entities,
                 :id, # Unique Numeric id
-                :name # Device name from coremidi
+                :name # Device name from midi-communications-macos
 
     # @param [Integer] id The ID for the device
     # @param [Object] device_pointer The underlying device pointer
-    # @param [Hash] options
-    # @option options [Boolean] :include_offline Whether to include offline entities (default: false)
-    def initialize(id, device_pointer, options = {})
+    # @param [Boolean] include_offline Whether to include offline entities (default: false)
+    def initialize(id, device_pointer, include_offline: false)
       @id = id
       @resource = device_pointer
       @entities = []
-      populate(options)
+      populate(include_offline: include_offline)
     end
 
     # Endpoints for this device
     # @return [Array<Endpoint>]
     def endpoints
-      endpoints = { :source => [], :destination => [] }
-      endpoints.keys.each do |key|
+      endpoints = { source: [], destination: [] }
+      endpoints.each_key do |key|
         endpoint_group = entities.map { |entity| entity.endpoints[key] }.flatten
         endpoints[key] += endpoint_group
       end
@@ -45,7 +42,7 @@ module CoreMIDI
     # All cached devices
     # @param [Hash] options The options to select devices with
     # @option options [Boolean] :cache If false, the device list will never be cached. This would be useful if one needs to alter the device list (e.g. plug in a USB MIDI interface) while their program is running.
-    # @option options [Boolean] :include_offline If true, devices marked offline by coremidi will be included in the list
+    # @option options [Boolean] :include_offline If true, devices marked offline by midi-communications-macos will be included in the list
     # @return [Array<Device>] All cached devices
     def self.all(options = {})
       use_cache = options[:cache] || true
@@ -54,7 +51,7 @@ module CoreMIDI
         @devices = []
         counter = 0
         while !(device_pointer = API.MIDIGetDevice(counter)).null?
-          device = new(counter, device_pointer, :include_offline => include_offline)
+          device = new(counter, device_pointer, include_offline: include_offline)
           @devices << device
           counter += 1
         end
@@ -79,8 +76,8 @@ module CoreMIDI
 
     # Populate the device name
     def populate_name
-      @name = API.get_string(@resource, "name")
-      raise RuntimeError.new("Can't get device name") unless @name
+      @name = API.get_string(@resource, 'name')
+      raise "Can't get device name" unless @name
     end
 
     # All of the endpoints for all devices a consecutive local id
@@ -98,18 +95,16 @@ module CoreMIDI
       include_if_offline = options[:include_offline] || false
       i = 0
       while !(entity_pointer = API.MIDIDeviceGetEntity(@resource, i)).null?
-        @entities << Entity.new(entity_pointer, :include_offline => include_if_offline)
+        @entities << Entity.new(entity_pointer, include_offline: include_if_offline)
         i += 1
       end
       i
     end
 
     # Populate the instance
-    def populate(options = {})
+    def populate(include_offline:)
       populate_name
-      populate_entities(:include_offline => options[:include_offline])
+      populate_entities(include_offline: include_offline)
     end
-
   end
-
 end

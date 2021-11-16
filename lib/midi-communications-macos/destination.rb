@@ -1,8 +1,6 @@
-module CoreMIDI
-
+module MIDICommunicationsMacOS
   # Type of endpoint used for output
   class Destination
-
     include Endpoint
 
     attr_reader :entity
@@ -24,14 +22,14 @@ module CoreMIDI
     def puts_s(data)
       data = data.dup
       bytes = []
-      until (str = data.slice!(0,2)).eql?("")
+      until (str = data.slice!(0,2)).eql?('')
         bytes << str.hex
       end
       puts_bytes(*bytes)
       true
     end
-    alias_method :puts_bytestr, :puts_s
-    alias_method :puts_hex, :puts_s
+    alias puts_bytestr puts_s
+    alias puts_hex puts_s
 
     # Send a MIDI message comprised of numeric bytes
     # @param [*Integer] data Numeric bytes eg 0x90, 0x40, 0x40
@@ -53,12 +51,12 @@ module CoreMIDI
       when String then puts_bytestr(*args)
       end
     end
-    alias_method :write, :puts
+    alias write puts
 
     # Enable this device
     # @return [Destination]
-    def enable(options = {}, &block)
-      @enabled = true unless @enabled
+    def enable(&block)
+      @enabled ||= true
       if block_given?
         begin
           yield(self)
@@ -68,8 +66,8 @@ module CoreMIDI
       end
       self
     end
-    alias_method :open, :enable
-    alias_method :start, :enable
+    alias open enable
+    alias start enable
 
     # Shortcut to the first output endpoint available
     # @return [Destination]
@@ -97,10 +95,10 @@ module CoreMIDI
     def connect
       client_error = enable_client
       port_error = initialize_port
-      @resource = API.MIDIEntityGetDestination( @entity.resource, @resource_id )
+      @resource = API.MIDIEntityGetDestination(@entity.resource, @resource_id)
       !@resource.address.zero? && client_error.zero? && port_error.zero?
     end
-    alias_method :connect?, :connect
+    alias connect? connect
 
     private
 
@@ -129,7 +127,7 @@ module CoreMIDI
       # this isn't working for some reason. as of now, it's not needed though
       end
 
-    # Initialize a coremidi port for this endpoint
+    # Initialize a midi-communications-macos port for this endpoint
     def initialize_port
       port = API.create_midi_output_port(@client, @resource_id, @name)
       @handle = port[:handle]
@@ -140,7 +138,5 @@ module CoreMIDI
     def sysex?(data)
       data.first.eql?(0xF0) && data.last.eql?(0xF7)
     end
-
   end
-
 end

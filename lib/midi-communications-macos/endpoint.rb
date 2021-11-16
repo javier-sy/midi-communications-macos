@@ -1,10 +1,8 @@
-module CoreMIDI
-
+module MIDICommunicationsMacOS
   # A source or destination of a 16-channel MIDI stream
   #
   # https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDIServices_Reference/Reference/reference.html
   module Endpoint
-
     extend Forwardable
 
     attr_reader :enabled, # has the endpoint been initialized?
@@ -15,7 +13,7 @@ module CoreMIDI
 
     def_delegators :entity, :manufacturer, :model, :name
 
-    alias_method :enabled?, :enabled
+    alias enabled? enabled
 
     # @param [Integer] resource_id
     # @param [Entity] entity
@@ -38,7 +36,7 @@ module CoreMIDI
     end
 
     # Set the id for this endpoint (the id is immutable)
-    # @param [Integer] val
+    # @param [Integer] id
     # @return [Integer]
     def id=(id)
       @id ||= id
@@ -101,13 +99,11 @@ module CoreMIDI
       class_name.downcase.to_sym
     end
 
-    # Enables the coremidi MIDI client that will go with this endpoint
+    # Enables the midi-communications-macos MIDI client that will go with this endpoint
     def enable_client
       client = API.create_midi_client(@resource_id, @name)
       @client = client[:resource]
       client[:error]
     end
-
   end
-
 end

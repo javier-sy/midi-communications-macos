@@ -1,8 +1,6 @@
-module CoreMIDI
-
+module MIDICommunicationsMacOS
   # Type of endpoint used for input
   class Source
-
     include Endpoint
 
     # The buffer of received messages since instantiation
@@ -15,9 +13,9 @@ module CoreMIDI
     #
     # An array of MIDI event hashes as such:
     #   [
-    #     { :data => [144, 60, 100], :timestamp => 1024 },
-    #     { :data => [128, 60, 100], :timestamp => 1100 },
-    #     { :data => [144, 40, 120], :timestamp => 1200 }
+    #     { data: [144, 60, 100], timestamp: 1024 },
+    #     { data: [128, 60, 100], timestamp: 1100 },
+    #     { data: [144, 40, 120], timestamp: 1200 }
     #   ]
     #
     # The data is an array of Numeric bytes
@@ -27,14 +25,14 @@ module CoreMIDI
     def gets
       fill_buffer(locking: true)
     end
-    alias_method :read, :gets
+    alias read gets
 
     # Same as Source#gets except that it returns message data as string of hex
     # digits as such:
     #   [
-    #     { :data => "904060", :timestamp => 904 },
-    #     { :data => "804060", :timestamp => 1150 },
-    #     { :data => "90447F", :timestamp => 1300 }
+    #     { data: "904060", timestamp: 904 },
+    #     { data: "804060", timestamp: 1150 },
+    #     { data: "90447F", timestamp: 1300 }
     #   ]
     #
     # @return [Array<Hash>]
@@ -45,12 +43,12 @@ module CoreMIDI
       end
       messages
     end
-    alias_method :gets_bytestr, :gets_s
+    alias gets_bytestr gets_s
 
     # Enable this the input for use; can be passed a block
     # @return [Source]
-    def enable(options = {}, &block)
-      @enabled = true unless @enabled
+    def enable
+      @enabled ||= true
       if block_given?
         begin
           yield(self)
@@ -60,8 +58,8 @@ module CoreMIDI
       end
       self
     end
-    alias_method :open, :enable
-    alias_method :start, :enable
+    alias open enable
+    alias start enable
 
     # Close this input
     # @return [Boolean]
@@ -105,8 +103,7 @@ module CoreMIDI
     def truncate_buffer
       @buffer.slice!(-1024, 1024)
     end
-
-
+    
     # Migrate new received messages from the callback queue to
     # the buffer
     def fill_buffer(locking: nil)
@@ -121,9 +118,8 @@ module CoreMIDI
         sleep
       end
 
-      until @queue.empty?
-        messages << @queue.pop
-      end
+      messages << @queue.pop until @queue.empty?
+      
       @buffer += messages
       truncate_buffer
       @pointer = @buffer.length
@@ -143,7 +139,7 @@ module CoreMIDI
 
       error.zero?
     end
-    alias_method :connect?, :connect
+    alias connect? connect
 
     private
 
@@ -170,10 +166,10 @@ module CoreMIDI
       message
     end
 
-    # The callback fired by coremidi when new MIDI messages are received
+    # The callback fired by midi-communications-macos when new MIDI messages are received
     def get_event_callback
       Thread.abort_on_exception = true
-      Proc.new do |new_packets, refCon_ptr, connRefCon_ptr|
+      proc do |new_packets, _refcon_ptr, _connrefcon_ptr|
         begin
           # p "packets received: #{new_packets[:numPackets]}"
           timestamp = Time.now.to_f
@@ -188,7 +184,7 @@ module CoreMIDI
     end
 
     # Get MIDI messages from the given CoreMIDI packet list
-    # @param [API::MIDIPacketList] new_packets The packet list
+    # @param [API::MIDIPacketList] packet_list The packet list
     # @return [Array<Array<Fixnum>>] A collection of MIDI messages
     def get_messages(packet_list)
       count = packet_list[:numPackets]
@@ -199,15 +195,17 @@ module CoreMIDI
       (count - 1).times do |i|
         length_index = find_next_length_index(data)
         message_length = data[length_index]
-        unless message_length.nil?
-          packet_start_index = length_index + 2
-          packet_end_index = packet_start_index + message_length
-          if data.length >= packet_end_index + 1
-            packet = data.slice!(0..packet_end_index)
-            message = packet.slice(packet_start_index, message_length)
-            messages << message
-          end
-        end
+
+        next if message_length.nil?
+
+        packet_start_index = length_index + 2
+        packet_end_index = packet_start_index + message_length
+
+        next unless data.length >= packet_end_index + 1
+
+        packet = data.slice!(0..packet_end_index)
+        message = packet.slice(packet_start_index, message_length)
+        messages << message
       end
       messages
     end
@@ -239,13 +237,14 @@ module CoreMIDI
       }
     end
 
-    # Initialize a coremidi port for this endpoint
+    # Initialize a midi-communications-macos port for this endpoint
     # @return [Boolean]
     def initialize_port
       @callback = get_event_callback
       port = API.create_midi_input_port(@client, @resource_id, @name, @callback)
       @handle = port[:handle]
       raise "MIDIInputPortCreate returned error code #{port[:error]}" unless port[:error].zero?
+
       true
     end
 
@@ -260,7 +259,5 @@ module CoreMIDI
       end
       true
     end
-
   end
-
 end

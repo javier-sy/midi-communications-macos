@@ -1,5 +1,4 @@
-module CoreMIDI
-
+module MIDICommunicationsMacOS
   # A MIDI entity can have any number of MIDI endpoints, each of which is a source or destination
   # of a 16-channel MIDI stream. By grouping a device's endpoints into entities, the system has
   # enough information for an application to make reasonable default assumptions about how to
@@ -8,7 +7,6 @@ module CoreMIDI
   #
   # https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDIServices_Reference/Reference/reference.html
   class Entity
-
     attr_reader :endpoints,
                 :manufacturer,
                 :model,
@@ -16,15 +14,14 @@ module CoreMIDI
                 :resource
 
     # @param [FFI::Pointer] resource A pointer to the underlying entity
-    # @param [Hash] options
-    # @option options [Boolean] :include_offline Include offline endpoints in the list
-    def initialize(resource, options = {})
+    # @param [Boolean] include_offline Include offline endpoints in the list
+    def initialize(resource, include_offline: false)
       @endpoints = {
         source: [],
         destination: []
       }
       @resource = resource
-      populate(options)
+      populate(include_offline: include_offline)
     end
 
     # Assign all of this Entity's endpoints an consecutive local id
@@ -42,48 +39,44 @@ module CoreMIDI
     # Is the entity online?
     # @return [Boolean]
     def online?
-      get_int(:offline) == 0
+      get_int(:offline).zero?
     end
 
     private
 
     # Construct a display name for the entity
     # @return [String]
-    def get_name
-      "#{@manufacturer} #{@model} (#{get_string(:name)})"
+    def display_name
+      "#{@manufacturer} #{@model} (#{@name})"
     end
 
     # Populate endpoints of a specified type for this entity
     # @param [Symbol] type The endpoint type eg :source, :destination
-    # @param [Hash] options
-    # @option options [Boolean] :include_offline Include offline endpoints in the list
+    # @param [Boolean] include_offline Include offline endpoints in the list
     # @return [Integer]
-    def populate_endpoints_by_type(type, options = {})
+    def populate_endpoints_by_type(type, include_offline:)
       endpoint_class = Endpoint.get_class(type)
       num_endpoints = number_of_endpoints(type)
       (0..num_endpoints).each do |i|
         endpoint = endpoint_class.new(i, self)
-        if endpoint.online? || options[:include_offline]
-          @endpoints[type] << endpoint
-        end
+        @endpoints[type] << endpoint if endpoint.online? || include_offline
       end
       @endpoints[type].size
     end
 
     # Populate the endpoints for this entity
-    # @param [Hash] options
-    # @option options [Boolean] :include_offline Include offline endpoints in the list
+    # @param [Boolean] include_offline Include offline endpoints in the list
     # @return [Integer]
-    def populate_endpoints(options = {})
-      @endpoints.keys.map { |type| populate_endpoints_by_type(type, options) }.reduce(&:+)
+    def populate_endpoints(include_offline:)
+      @endpoints.keys.map { |type| populate_endpoints_by_type(type, include_offline: include_offline) }.reduce(&:+)
     end
 
     # The number of endpoints for this entity
     # @param [Symbol] type The endpoint type eg :source, :destination
     def number_of_endpoints(type)
       case type
-        when :source then API.MIDIEntityGetNumberOfSources(@resource)
-        when :destination then API.MIDIEntityGetNumberOfDestinations(@resource)
+      when :source then API.MIDIEntityGetNumberOfSources(@resource)
+      when :destination then API.MIDIEntityGetNumberOfDestinations(@resource)
       end
     end
 
@@ -102,15 +95,12 @@ module CoreMIDI
     end
 
     # Populate the entity properties from the underlying resource
-    # @param [Hash] options
-    # @option options [Boolean] :include_offline Include offline endpoints in the list
-    def populate(options = {})
+    # @param [Boolean] include_offline Include offline endpoints in the list
+    def populate(include_offline:)
       @manufacturer = get_string(:manufacturer)
       @model = get_string(:model)
-      @name = get_name
-      populate_endpoints(options)
+      @name = get_string(:name)
+      populate_endpoints(include_offline: include_offline)
     end
-
   end
-
 end

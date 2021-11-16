@@ -1,14 +1,17 @@
-dir = File.dirname(File.expand_path(__FILE__))
-$LOAD_PATH.unshift dir + "/../lib"
+# frozen_string_literal: true
 
-require "minitest/autorun"
-require "mocha/test_unit"
-require "shoulda-context"
+$LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
 
-require "coremidi"
+require 'mocha'
+
+require 'minitest/autorun'
+require 'mocha/minitest'
+
+require 'shoulda-context'
+
+require 'midi-communications-macos'
 
 module TestHelper
-
   extend self
 
   def device
@@ -17,19 +20,22 @@ module TestHelper
 
   def select_devices
     @device ||= {}
-    { :input => CoreMIDI::Source.all, :output => CoreMIDI::Destination.all }.each do |type, devs|
-      puts ""
+    { input: MIDICommunicationsMacOS::Source.all,
+      output: MIDICommunicationsMacOS::Destination.all }.each do |type, devs|
+
+      puts ''
       puts "select an #{type.to_s}..."
       while @device[type].nil?
         devs.each do |device|
           puts "#{device.id}: #{device.name}"
         end
         selection = $stdin.gets.chomp
-        if selection != ""
-          selection = selection.to_i
-          @device[type] = devs.find { |d| d.id == selection }
-          puts "selected #{selection} for #{type.to_s}" unless @device[type]
-        end
+
+        next unless selection != ''
+
+        selection = selection.to_i
+        @device[type] = devs.find { |d| d.id == selection }
+        puts "selected #{selection} for #{type.to_s}" unless @device[type]
       end
     end
     @device
@@ -37,10 +43,10 @@ module TestHelper
 
   def bytestrs_to_ints(arr)
     data = arr.map { |m| m[:data] }.join
-      output = []
-      until (bytestr = data.slice!(0,2)).eql?("")
-        output << bytestr.hex
-      end
+    output = []
+    until (bytestr = data.slice!(0, 2)).eql?('')
+      output << bytestr.hex
+    end
     output
   end
 
@@ -52,14 +58,14 @@ module TestHelper
     [0x90, 76, 100], # note on
     [0x90, 60, 100], # note on
     [0x80, 100, 100] # note off
-  ]
+  ].freeze
 
   # some MIDI messages
   VariousMIDIByteStrMessages = [
-    "F04110421240007F0041F7", # SysEx
-    "906440", # note on
-    "804340" # note off
-  ]
+    'F04110421240007F0041F7', # SysEx
+    '906440', # note on
+    '804340' # note off
+  ].freeze
 
 end
 

@@ -1,8 +1,6 @@
-module CoreMIDI
-
+module MIDICommunicationsMacOS
   # Coremidi C binding
   module API
-
     extend FFI::Library
     ffi_lib '/System/Library/Frameworks/CoreMIDI.framework/Versions/Current/CoreMIDI'
 
@@ -51,7 +49,7 @@ module CoreMIDI
       FFI::Function.new(:void, *args, &block)
     end
 
-    # Pack the given data into a coremidi MIDI packet (used by Destination)
+    # Pack the given data into a midi-communications-macos MIDI packet (used by Destination)
     def self.get_midi_packet(data)
       format = "C" * data.size
       packed_data = data.pack(format)
@@ -67,8 +65,8 @@ module CoreMIDI
       error = API.MIDIClientCreate(client_name, nil, nil, client_pointer)
       client = client_pointer.read_pointer
       {
-        :error => error,
-        :resource => client
+        error: error,
+        resource: client
       }
     end
 
@@ -78,8 +76,8 @@ module CoreMIDI
       error = API.MIDIInputPortCreate(client, port_name, callback, nil, handle_ptr)
       handle = handle_ptr.read_pointer
       {
-        :error => error,
-        :handle => handle
+        error: error,
+        handle: handle
       }
     end
 
@@ -89,8 +87,8 @@ module CoreMIDI
       error = API.MIDIOutputPortCreate(client, port_name, port_pointer)
       handle = port_pointer.read_pointer
       {
-        :error => error,
-        :handle => handle
+        error: error,
+        handle: handle
       }
     end
 
@@ -257,7 +255,5 @@ module CoreMIDI
       # UInt64 AudioGetCurrentHostTime()
       attach_function :AudioGetCurrentHostTime, [], :uint64
     end
-
   end
-
 end
