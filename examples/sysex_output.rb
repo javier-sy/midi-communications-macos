@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-$:.unshift(File.join("..", "lib"))
+$:.unshift(File.join('..', 'lib'))
 
-require "midi-communications-macos"
+require 'midi-communications-macos'
 
 # This example outputs a raw sysex message to the first Output endpoint
 # there will not be any output to the console
