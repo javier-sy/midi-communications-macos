@@ -11,7 +11,7 @@ module MIDICommunicationsMacOS
                 :resource_id, # :input or :output
                 :type
 
-    def_delegators :entity, :manufacturer, :model, :name
+    def_delegators :entity, :manufacturer, :model, :name, :display_name
 
     alias enabled? enabled
 

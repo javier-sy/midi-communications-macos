@@ -22,7 +22,7 @@ module MIDICommunicationsMacOS
     def puts_s(data)
       data = data.dup
       bytes = []
-      until (str = data.slice!(0,2)).eql?('')
+      until (str = data.slice!(0, 2)).eql?('')
         bytes << str.hex
       end
       puts_bytes(*bytes)
@@ -55,7 +55,7 @@ module MIDICommunicationsMacOS
 
     # Enable this device
     # @return [Destination]
-    def enable(&block)
+    def enable
       @enabled ||= true
       if block_given?
         begin

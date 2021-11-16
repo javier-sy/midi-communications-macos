@@ -106,9 +106,7 @@ module MIDICommunicationsMacOS
     
     # Migrate new received messages from the callback queue to
     # the buffer
-    def fill_buffer(locking: nil)
-      locking ||= false
-
+    def fill_buffer(locking: false)
       messages = []
 
       if locking && @queue.empty?

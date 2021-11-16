@@ -1,27 +1,25 @@
-require "helper"
+require 'helper'
 
 class InputBufferTest < Minitest::Test
-
-  context "CoreMIDI" do
-
+  context 'CoreMIDI' do
     setup do
       sleep(1)
     end
 
-    context "Source#buffer" do
-
+    context 'Source#buffer' do
       setup do
         @messages = TestHelper::VariousMIDIMessages
-        @messages_arr = @messages.inject { |a,b| a+b }.flatten
+        @messages_arr = @messages.inject { |a, b| a + b }.flatten
         @received_arr = []
         @pointer = 0
 
         @output = TestHelper.device[:output].open
         @input = TestHelper.device[:input].open
+
         @input.buffer.clear
       end
 
-      should "have the correct messages in the buffer" do
+      should 'have the correct messages in the buffer' do
         bytes = []
         @messages.each do |message|
           puts "sending: #{message.inspect}"
@@ -37,6 +35,5 @@ class InputBufferTest < Minitest::Test
         assert_equal(bytes.length, @input.buffer.map { |m| m[:data] }.flatten.length)
       end
     end
-
   end
 end

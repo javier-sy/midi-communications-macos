@@ -42,13 +42,13 @@ module MIDICommunicationsMacOS
       get_int(:offline).zero?
     end
 
-    private
-
     # Construct a display name for the entity
     # @return [String]
     def display_name
       "#{@manufacturer} #{@model} (#{@name})"
     end
+
+    private
 
     # Populate endpoints of a specified type for this entity
     # @param [Symbol] type The endpoint type eg :source, :destination
