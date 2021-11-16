@@ -3,13 +3,6 @@ module MIDICommunicationsMacOS
   class Source
     include Endpoint
 
-    # The buffer of received messages since instantiation
-    # @return [Array<Hash>]
-    def buffer
-      fill_buffer
-      @buffer
-    end
-
     #
     # An array of MIDI event hashes as such:
     #   [
@@ -23,7 +16,7 @@ module MIDICommunicationsMacOS
     #
     # @return [Array<Hash>]
     def gets
-      fill_buffer(locking: true)
+      get_queue_new_messages
     end
     alias read gets
 
@@ -100,16 +93,11 @@ module MIDICommunicationsMacOS
 
     protected
 
-    def truncate_buffer
-      @buffer.slice!(-1024, 1024)
-    end
-    
-    # Migrate new received messages from the callback queue to
-    # the buffer
-    def fill_buffer(locking: false)
+    # Gets new received messages from the callback queue
+    def get_queue_new_messages
       messages = []
 
-      if locking && @queue.empty?
+      if @queue.empty?
         @threads_sync_semaphore.synchronize do
           @threads_waiting << Thread.current
         end
@@ -117,10 +105,7 @@ module MIDICommunicationsMacOS
       end
 
       messages << @queue.pop until @queue.empty?
-      
-      @buffer += messages
-      truncate_buffer
-      @pointer = @buffer.length
+
       messages
     end
 
@@ -131,7 +116,7 @@ module MIDICommunicationsMacOS
       initialize_port
       @resource = API.MIDIEntityGetSource(@entity.resource, @resource_id)
       error = API.MIDIPortConnectSource(@handle, @resource, nil)
-      initialize_buffer
+
       @queue = Queue.new
       @sysex_buffer = []
 
@@ -243,18 +228,6 @@ module MIDICommunicationsMacOS
       @handle = port[:handle]
       raise "MIDIInputPortCreate returned error code #{port[:error]}" unless port[:error].zero?
 
-      true
-    end
-
-    # Initialize the MIDI message buffer
-    # @return [Boolean]
-    def initialize_buffer
-      @pointer = 0
-      @buffer = []
-      def @buffer.clear
-        super
-        @pointer = 0
-      end
       true
     end
   end

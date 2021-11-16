@@ -20,10 +20,7 @@ class MIDICommunicationsMacOS::IOTest < Minitest::Test
           TestHelper.device[:output].open do |output|
             TestHelper.device[:input].open do |input|
 
-              input.buffer.clear
-
               @messages.each do |msg|
-
                 $>.puts "sending: #{msg.inspect}"
 
                 output.puts(msg)
@@ -55,7 +52,6 @@ class MIDICommunicationsMacOS::IOTest < Minitest::Test
             TestHelper.device[:input].open do |input|
 
               @messages.each do |msg|
-
                 $>.puts "sending: #{msg.inspect}"
 
                 output.puts(msg)
