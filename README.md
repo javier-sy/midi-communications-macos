@@ -1,6 +1,6 @@
 # MIDI Communications MacOS Layer
 
-**Realtime MIDI IO with Ruby for OSX**
+**Realtime MIDI IO with Ruby for OSX.**
 
 Access the [Apple Core MIDI framework API](https://developer.apple.com/library/mac/#documentation/MusicAudio/Reference/CACoreMIDIRef/MIDIServices/) with Ruby.
 
