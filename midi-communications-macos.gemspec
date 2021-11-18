@@ -7,12 +7,12 @@ Gem::Specification.new do |s|
   s.authors     = ['Javier Sánchez Yeste']
   s.email       = ['javier.sy@gmail.com']
   s.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  s.homepage    = 'http://rubygems.org/gems/midi-communications-macos'
+  s.homepage    = 'https://rubygems.org/gems/midi-communications-macos'
   s.license     = 'LGPL-3.0'
+  s.platform    = Gem::Platform.local # TODO confirm platform is really MacOS, not a specific MacOS Version
 
   s.required_ruby_version = '~> 2.7'
 
-  s.add_runtime_dependency 'ffi', '~> 1.15', '>= 1.15.4'
 
   # TODO
   #s.metadata    = {
@@ -21,4 +21,12 @@ Gem::Specification.new do |s|
   # "documentation_uri" => "",
   # "changelog_uri" => ""
   #}
+
+  s.add_runtime_dependency 'ffi', '~> 1.15', '>= 1.15.4'
+
+  s.add_development_dependency 'minitest', '~> 5.14', '>= 5.14.4'
+  s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
+  s.add_development_dependency 'shoulda-context', '~> 2.0', '>= 2.0.0'
 end
+
+

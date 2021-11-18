@@ -51,7 +51,7 @@ module MIDICommunicationsMacOS
 
     # Pack the given data into a midi-communications-macos MIDI packet (used by Destination)
     def self.get_midi_packet(data)
-      format = "C" * data.size
+      format = 'C' * data.size
       packed_data = data.pack(format)
       char_size = FFI.type_size(:char) * data.size
       bytes = FFI::MemoryPointer.new(char_size)
@@ -97,11 +97,11 @@ module MIDICommunicationsMacOS
       packet_list = FFI::MemoryPointer.new(256)
       packet_ptr = API.MIDIPacketListInit(packet_list)
       time = HostTime.AudioGetCurrentHostTime
-      packet_ptr = if X86_64
+      if X86_64
         API.MIDIPacketListAdd(packet_list, 256, packet_ptr, time, size, bytes)
       else
         # Pass in two 32-bit 0s for the 64 bit time
-        time1 = API.MIDIPacketListAdd(packet_list, 256, packet_ptr, time >> 32, time & 0xFFFFFFFF, size, bytes)
+        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, time >> 32, time & 0xFFFFFFFF, size, bytes)
       end
       packet_list
     end
@@ -130,7 +130,7 @@ module MIDICommunicationsMacOS
         bytes = FFI::MemoryPointer.new(length + 1)
 
         if CF.CFStringGetCString(string, bytes, length + 1, :kCFStringEncodingUTF8)
-          bytes.read_string.force_encoding("utf-8")
+          bytes.read_string.force_encoding('utf-8')
         end
       ensure
         CF.CFRelease(string) unless string.nil? || string.null?

@@ -1,3 +1,6 @@
+$LOAD_PATH.prepend __dir__
+$LOAD_PATH.prepend File.join(__dir__, 'lib')
+
 require 'rake'
 require 'rake/testtask'
 

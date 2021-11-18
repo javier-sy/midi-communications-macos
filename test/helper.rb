@@ -1,12 +1,6 @@
-# frozen_string_literal: true
-
-$LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
-
-require 'mocha'
+$LOAD_PATH.prepend(File.expand_path('../lib', __dir__))
 
 require 'minitest/autorun'
-require 'mocha/minitest'
-
 require 'shoulda-context'
 
 require 'midi-communications-macos'
