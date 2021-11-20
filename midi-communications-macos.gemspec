@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.homepage    = 'https://rubygems.org/gems/midi-communications-macos'
   s.license     = 'LGPL-3.0'
-  s.platform    = Gem::Platform.local # TODO confirm platform is really MacOS, not a specific MacOS Version
 
   s.required_ruby_version = '~> 2.7'
 
