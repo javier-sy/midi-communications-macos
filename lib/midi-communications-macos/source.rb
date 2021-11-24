@@ -175,11 +175,14 @@ module MIDICommunicationsMacOS
       data = first[:data].to_a
       messages = []
       messages << data.slice!(0, first[:length])
-      (count - 1).times do |i|
+      (count - 1).times do
         length_index = find_next_length_index(data)
+
+        next unless length_index
+
         message_length = data[length_index]
 
-        next if message_length.nil?
+        next unless message_length
 
         packet_start_index = length_index + 2
         packet_end_index = packet_start_index + message_length
@@ -209,6 +212,7 @@ module MIDICommunicationsMacOS
           last_is_zero = false
         end
       end
+      nil
     end
 
     # Give a message its timestamp and package it in a Hash
