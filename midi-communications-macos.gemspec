@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'midi-communications-macos'
-  s.version     = '0.5.3'
+  s.version     = '0.5.4'
   s.date        = '2023-10-28'
   s.summary     = 'Realtime MIDI IO with Ruby for OSX'
   s.description = 'Access the Apple Core MIDI framework API with Ruby.'

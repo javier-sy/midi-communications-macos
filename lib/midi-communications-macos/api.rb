@@ -98,10 +98,10 @@ module MIDICommunicationsMacOS
       packet_ptr = API.MIDIPacketListInit(packet_list)
       time = HostTime.AudioGetCurrentHostTime
       if X86_64
-        API.MIDIPacketListAdd(packet_list, 32, packet_ptr, time, size, bytes)
+        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, time, size, bytes)
       else
         # Pass in two 32-bit 0s for the 64 bit time
-        API.MIDIPacketListAdd(packet_list, 32, packet_ptr, time >> 32, time & 0xFFFFFFFF, size, bytes)
+        API.MIDIPacketListAdd(packet_list, 256, packet_ptr, time >> 32, time & 0xFFFFFFFF, size, bytes)
       end
       packet_list
     end
