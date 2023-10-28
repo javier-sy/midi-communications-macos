@@ -115,6 +115,6 @@ As explained by **Ari Russo** regarding his library **ffi-coremidi**:
 
 ### License
 
-[MIDI Communicatios MacOS Layer](https://github.com/javier-sy/midi-communications-macos) Copyright (c) 2021 [Javier Sánchez Yeste](https://yeste.studio), licensed under LGPL 3.0 License
+[MIDI Communicatios MacOS Layer](https://github.com/javier-sy/midi-communications-macos) Copyright (c) 2021-2023 [Javier Sánchez Yeste](https://yeste.studio), licensed under LGPL 3.0 License
 
 [ffi-coremidi](https://github.com/arirusso/ffi-coremidi) Copyright (c) 2011-2017 [Ari Russo](http://arirusso.com), licensed under Apache License 2.0 (see the file LICENSE.ffi-coremidi)
