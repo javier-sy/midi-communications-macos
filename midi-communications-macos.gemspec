@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'midi-communications-macos'
-  s.version     = '0.5.4'
-  s.date        = '2023-10-28'
+  s.version     = '0.6.0'
+  s.date        = '2025-08-23'
   s.summary     = 'Realtime MIDI IO with Ruby for OSX'
   s.description = 'Access the Apple Core MIDI framework API with Ruby.'
   s.authors     = ['Javier Sánchez Yeste']
@@ -10,8 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://rubygems.org/gems/midi-communications-macos'
   s.license     = 'LGPL-3.0'
 
-  s.required_ruby_version = '~> 2.7'
-
+  s.required_ruby_version = '>= 2.7'
 
   # TODO
   #s.metadata    = {
@@ -23,9 +22,9 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'ffi', '~> 1.15', '>= 1.15.4'
 
-  s.add_development_dependency 'minitest', '~> 5.14', '>= 5.14.4'
-  s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
-  s.add_development_dependency 'shoulda-context', '~> 2.0', '>= 2.0.0'
+  s.add_development_dependency 'minitest', '~>5', '>= 5.14.4'
+  s.add_development_dependency 'rake', '~>13', '>= 13.0.6'
+  s.add_development_dependency 'shoulda-context', '~>2', '>= 2.0.0'
 end
 
 
