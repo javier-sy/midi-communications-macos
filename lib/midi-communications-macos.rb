@@ -21,6 +21,7 @@ require 'midi-communications-macos/device'
 require 'midi-communications-macos/source'
 require 'midi-communications-macos/destination'
 
+require_relative 'midi-communications-macos/version'
+
 module MIDICommunicationsMacOS
-  VERSION = '0.5.4'.freeze
 end
