@@ -9,18 +9,16 @@ Gem::Specification.new do |s|
   s.authors     = ['Javier Sánchez Yeste']
   s.email       = ['javier.sy@gmail.com']
   s.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  s.homepage    = 'https://rubygems.org/gems/midi-communications-macos'
-  s.license     = 'LGPL-3.0'
+  s.homepage    = 'https://github.com/javier-sy/midi-communications-macos'
+  s.license     = 'LGPL-3.0-or-later'
 
   s.required_ruby_version = '>= 2.7'
 
-  # TODO
-  #s.metadata    = {
-  # "source_code_uri" => "https://",
-  # "homepage_uri" => "",
-  # "documentation_uri" => "",
-  # "changelog_uri" => ""
-  #}
+  s.metadata = {
+    'homepage_uri' => s.homepage,
+    'source_code_uri' => s.homepage,
+    'documentation_uri' => 'https://www.rubydoc.info/gems/midi-communications-macos'
+  }
 
   s.add_runtime_dependency 'ffi', '~> 1.15', '>= 1.15.4'
 
