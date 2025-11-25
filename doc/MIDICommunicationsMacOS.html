@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Module: MIDICommunicationsMacOS
+  
+    &mdash; MIDI Communications macOS API
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "MIDICommunicationsMacOS";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index (M)</a> &raquo;
+    
+    
+    <span class="title">MIDICommunicationsMacOS</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Module: MIDICommunicationsMacOS
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/midi-communications-macos.rb<span class="defines">,<br />
+  lib/midi-communications-macos/api.rb,<br /> lib/midi-communications-macos/device.rb,<br /> lib/midi-communications-macos/entity.rb,<br /> lib/midi-communications-macos/source.rb,<br /> lib/midi-communications-macos/version.rb,<br /> lib/midi-communications-macos/endpoint.rb,<br /> lib/midi-communications-macos/destination.rb,<br /> lib/midi-communications-macos/type_conversion.rb</span>
+</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>macOS-specific MIDI I/O using the Core MIDI framework.</p>
+
+<p>This library provides low-level access to MIDI devices on macOS through
+Apple&#39;s Core MIDI framework via FFI bindings. It is typically used through
+the higher-level <a href="https://github.com/javier-sy/midi-communications" target="_parent" title="midi-communications">midi-communications</a> gem.</p>
+
+<p>The main classes are:</p>
+
+<ul>
+<li><span class='object_link'><a href="MIDICommunicationsMacOS/Source.html" title="MIDICommunicationsMacOS::Source (class)">Source</a></span> - MIDI input endpoints for receiving messages</li>
+<li><span class='object_link'><a href="MIDICommunicationsMacOS/Destination.html" title="MIDICommunicationsMacOS::Destination (class)">Destination</a></span> - MIDI output endpoints for sending messages</li>
+<li><span class='object_link'><a href="MIDICommunicationsMacOS/Device.html" title="MIDICommunicationsMacOS::Device (class)">Device</a></span> - Physical or virtual MIDI devices</li>
+<li><span class='object_link'><a href="MIDICommunicationsMacOS/Entity.html" title="MIDICommunicationsMacOS::Entity (class)">Entity</a></span> - Logical groupings of endpoints within a device</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h4 class="tag_title">Examples:</h4>
+    
+      
+        <h5 class="example_title"><div class='inline'><p>List all MIDI sources (inputs)</p>
+</div></h5>
+      
+      <pre class="example code"><code><span class='const'>MIDICommunicationsMacOS</span><span class='op'>::</span><span class='const'><span class='object_link'><a href="MIDICommunicationsMacOS/Source.html" title="MIDICommunicationsMacOS::Source (class)">Source</a></span></span><span class='period'>.</span><span class='id identifier rubyid_all'><span class='object_link'><a href="MIDICommunicationsMacOS/Source.html#all-class_method" title="MIDICommunicationsMacOS::Source.all (method)">all</a></span></span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_source'>source</span><span class='op'>|</span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_source'>source</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'>: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_source'>source</span><span class='period'>.</span><span class='id identifier rubyid_display_name'>display_name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></code></pre>
+    
+      
+        <h5 class="example_title"><div class='inline'><p>List all MIDI destinations (outputs)</p>
+</div></h5>
+      
+      <pre class="example code"><code><span class='const'>MIDICommunicationsMacOS</span><span class='op'>::</span><span class='const'><span class='object_link'><a href="MIDICommunicationsMacOS/Destination.html" title="MIDICommunicationsMacOS::Destination (class)">Destination</a></span></span><span class='period'>.</span><span class='id identifier rubyid_all'><span class='object_link'><a href="MIDICommunicationsMacOS/Destination.html#all-class_method" title="MIDICommunicationsMacOS::Destination.all (method)">all</a></span></span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_dest'>dest</span><span class='op'>|</span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_dest'>dest</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'>: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_dest'>dest</span><span class='period'>.</span><span class='id identifier rubyid_display_name'>display_name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></code></pre>
+    
+      
+        <h5 class="example_title"><div class='inline'><p>Send a MIDI message</p>
+</div></h5>
+      
+      <pre class="example code"><code><span class='id identifier rubyid_output'>output</span> <span class='op'>=</span> <span class='const'>MIDICommunicationsMacOS</span><span class='op'>::</span><span class='const'><span class='object_link'><a href="MIDICommunicationsMacOS/Destination.html" title="MIDICommunicationsMacOS::Destination (class)">Destination</a></span></span><span class='period'>.</span><span class='id identifier rubyid_first'><span class='object_link'><a href="MIDICommunicationsMacOS/Destination.html#first-class_method" title="MIDICommunicationsMacOS::Destination.first (method)">first</a></span></span>
+<span class='id identifier rubyid_output'>output</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span>
+<span class='id identifier rubyid_output'>output</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span><span class='lparen'>(</span><span class='int'>0x90</span><span class='comma'>,</span> <span class='int'>60</span><span class='comma'>,</span> <span class='int'>100</span><span class='rparen'>)</span>  <span class='comment'># Note On
+</span><span class='id identifier rubyid_output'>output</span><span class='period'>.</span><span class='id identifier rubyid_puts'>puts</span><span class='lparen'>(</span><span class='int'>0x80</span><span class='comma'>,</span> <span class='int'>60</span><span class='comma'>,</span> <span class='int'>0</span><span class='rparen'>)</span>    <span class='comment'># Note Off</span></code></pre>
+    
+      
+        <h5 class="example_title"><div class='inline'><p>Receive MIDI messages</p>
+</div></h5>
+      
+      <pre class="example code"><code><span class='id identifier rubyid_input'>input</span> <span class='op'>=</span> <span class='const'>MIDICommunicationsMacOS</span><span class='op'>::</span><span class='const'><span class='object_link'><a href="MIDICommunicationsMacOS/Source.html" title="MIDICommunicationsMacOS::Source (class)">Source</a></span></span><span class='period'>.</span><span class='id identifier rubyid_first'><span class='object_link'><a href="MIDICommunicationsMacOS/Source.html#first-class_method" title="MIDICommunicationsMacOS::Source.first (method)">first</a></span></span>
+<span class='id identifier rubyid_input'>input</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span>
+<span class='id identifier rubyid_messages'>messages</span> <span class='op'>=</span> <span class='id identifier rubyid_input'>input</span><span class='period'>.</span><span class='id identifier rubyid_gets'>gets</span>
+<span class='comment'># =&gt; [{ data: [144, 60, 100], timestamp: 1234567890.123 }]</span></code></pre>
+    
+  </div>
+
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><a href="https://developer.apple.com/documentation/coremidi" target="_parent" title="Apple Core MIDI Documentation">Apple Core MIDI Documentation</a></li>
+    
+  </ul>
+
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="MIDICommunicationsMacOS/API.html" title="MIDICommunicationsMacOS::API (module)">API</a></span>, <span class='object_link'><a href="MIDICommunicationsMacOS/Endpoint.html" title="MIDICommunicationsMacOS::Endpoint (module)">Endpoint</a></span>, <span class='object_link'><a href="MIDICommunicationsMacOS/TypeConversion.html" title="MIDICommunicationsMacOS::TypeConversion (module)">TypeConversion</a></span>
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="MIDICommunicationsMacOS/Destination.html" title="MIDICommunicationsMacOS::Destination (class)">Destination</a></span>, <span class='object_link'><a href="MIDICommunicationsMacOS/Device.html" title="MIDICommunicationsMacOS::Device (class)">Device</a></span>, <span class='object_link'><a href="MIDICommunicationsMacOS/Entity.html" title="MIDICommunicationsMacOS::Entity (class)">Entity</a></span>, <span class='object_link'><a href="MIDICommunicationsMacOS/Source.html" title="MIDICommunicationsMacOS::Source (class)">Source</a></span>
+    
+  
+</p>
+
+  
+    <h2>
+      Constant Summary
+      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
+    </h2>
+
+    <dl class="constants">
+      
+        <dt id="VERSION-constant" class="">VERSION =
+          <div class="docstring">
+  <div class="discussion">
+    <p>Current version of the midi-communications-macos gem.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0.6.1</span><span class='tstring_end'>&#39;</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+
+
+
+
+
+</div>
+
+      <div id="footer">
+  Generated on Tue Nov 25 11:37:07 2025 by
+  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.37 (ruby-3.4.7).
+</div>
+
+    </div>
+  </body>
+</html>

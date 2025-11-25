@@ -1,0 +1,9 @@
+lib/midi-communications-macos.rb 0dd233dd2b1cf5c679d4b5316350a8d7d4f0e258
+lib/midi-communications-macos/api.rb e7fdbff63b0276d9ef646d88fe5ebb4edf8715a4
+lib/midi-communications-macos/device.rb d823560d724a292578a57ca16ce82dcce148f449
+lib/midi-communications-macos/entity.rb 604d32ee40fd1dd30dd8747fd26af034ebe3554d
+lib/midi-communications-macos/source.rb e280d652cb8d2710141eeda15a9dabf64ebb38bb
+lib/midi-communications-macos/version.rb d5308fa963fd7db90d2fa33c135bf0ee17e07c5e
+lib/midi-communications-macos/endpoint.rb fda768561c8dde90e97ffdd7f6dc8162919dd9ef
+lib/midi-communications-macos/destination.rb 380c740d36b1ff5b39f8b1dedb500d405ea78344
+lib/midi-communications-macos/type_conversion.rb 1438b365fbd2eb023f18301db0cbe866cef78425

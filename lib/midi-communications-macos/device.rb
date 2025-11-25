@@ -1,17 +1,38 @@
 module MIDICommunicationsMacOS
-  # A MIDI device may have multiple logically distinct sub-components. For example, one device may
-  # encompass a MIDI synthesizer and a pair of MIDI ports, both addressable via a USB port. Each
-  # such element of a device is called a MIDI entity.
+  # Represents a physical or virtual MIDI device.
   #
-  # https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDIServices_Reference/Reference/reference.html
+  # A MIDI device may have multiple logically distinct sub-components. For example,
+  # one device may encompass a MIDI synthesizer and a pair of MIDI ports, both
+  # addressable via a USB port. Each such element of a device is called an {Entity}.
+  #
+  # Devices contain {Entity entities}, which in turn contain {Endpoint endpoints}
+  # ({Source sources} and {Destination destinations}).
+  #
+  # @example List all devices
+  #   MIDICommunicationsMacOS::Device.all.each do |device|
+  #     puts device.name
+  #   end
+  #
+  # @see https://developer.apple.com/documentation/coremidi/midideviceref
+  #
+  # @api public
   class Device
+    # @!attribute [r] entities
+    #   @return [Array<Entity>] the device's entities
+    # @!attribute [r] id
+    #   @return [Integer] unique numeric ID
+    # @!attribute [r] name
+    #   @return [String] device name from Core MIDI
     attr_reader :entities,
-                :id, # Unique Numeric id
-                :name # Device name from midi-communications-macos
+                :id,
+                :name
 
-    # @param [Integer] id The ID for the device
-    # @param [Object] device_pointer The underlying device pointer
-    # @param [Boolean] include_offline Whether to include offline entities (default: false)
+    # Creates a new Device wrapper.
+    #
+    # @param id [Integer] the device ID
+    # @param device_pointer [FFI::Pointer] pointer to the Core MIDI device
+    # @param include_offline [Boolean] whether to include offline entities
+    # @api private
     def initialize(id, device_pointer, include_offline: false)
       @id = id
       @resource = device_pointer
@@ -19,8 +40,9 @@ module MIDICommunicationsMacOS
       populate(include_offline: include_offline)
     end
 
-    # Endpoints for this device
-    # @return [Array<Endpoint>]
+    # Returns all endpoints for this device, grouped by type.
+    #
+    # @return [Hash{Symbol => Array<Endpoint>}] hash with :source and :destination keys
     def endpoints
       endpoints = { source: [], destination: [] }
       endpoints.each_key do |key|
@@ -39,11 +61,19 @@ module MIDICommunicationsMacOS
       id
     end
 
-    # All cached devices
-    # @param [Hash] options The options to select devices with
-    # @option options [Boolean] :cache If false, the device list will never be cached. This would be useful if one needs to alter the device list (e.g. plug in a USB MIDI interface) while their program is running.
-    # @option options [Boolean] :include_offline If true, devices marked offline by midi-communications-macos will be included in the list
-    # @return [Array<Device>] All cached devices
+    # Returns all available MIDI devices.
+    #
+    # Devices are cached by default. Use `cache: false` to refresh, or call
+    # {.refresh} to clear the cache.
+    #
+    # @param options [Hash] options for device selection
+    # @option options [Boolean] :cache (true) whether to use cached devices
+    # @option options [Boolean] :include_offline (false) include offline devices
+    # @return [Array<Device>] all available devices
+    #
+    # @example
+    #   devices = MIDICommunicationsMacOS::Device.all
+    #   devices.each { |d| puts d.name }
     def self.all(options = {})
       use_cache = options[:cache] || true
       include_offline = options[:include_offline] || false
@@ -60,8 +90,12 @@ module MIDICommunicationsMacOS
       @devices
     end
 
-    # Refresh the Device cache. This is needed if, for example a USB MIDI device is plugged in while the program is running
-    # @return [Array<Device>] The Device cache
+    # Clears the device cache.
+    #
+    # Call this when MIDI devices are plugged in or unplugged while the
+    # program is running, then call {.all} to get the updated list.
+    #
+    # @return [Array<Device>] the cleared cache (empty array)
     def self.refresh
       @devices.clear
       @devices

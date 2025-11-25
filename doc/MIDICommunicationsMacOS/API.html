@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Module: MIDICommunicationsMacOS::API
+  
+    &mdash; MIDI Communications macOS API
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "MIDICommunicationsMacOS::API";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (A)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../MIDICommunicationsMacOS.html" title="MIDICommunicationsMacOS (module)">MIDICommunicationsMacOS</a></span></span>
+     &raquo; 
+    <span class="title">API</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Module: MIDICommunicationsMacOS::API
+  
+  
+  <span class="private note title">Private</span>
+</h1>
+<div class="box_info">
+  
+
+  
+  
+  <dl>
+      <dt>Extended by:</dt>
+      <dd>FFI::Library</dd>
+  </dl>
+  
+  
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/midi-communications-macos/api.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This module is part of a private API.</strong>
+  You should avoid using this module if possible, as it may be removed or be changed in the future.
+</p>
+<p>Low-level FFI bindings to Apple&#39;s Core MIDI framework.</p>
+
+<p>This module provides direct access to Core MIDI C functions via FFI.
+Most users should use the higher-level <span class='object_link'><a href="Source.html" title="MIDICommunicationsMacOS::Source (class)">Source</a></span>, <span class='object_link'><a href="Destination.html" title="MIDICommunicationsMacOS::Destination (class)">Destination</a></span>, and
+<span class='object_link'><a href="Device.html" title="MIDICommunicationsMacOS::Device (class)">Device</a></span> classes instead.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="API/CF.html" title="MIDICommunicationsMacOS::API::CF (module)">CF</a></span>, <span class='object_link'><a href="API/HostTime.html" title="MIDICommunicationsMacOS::API::HostTime (module)">HostTime</a></span>
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="API/MIDIPacket.html" title="MIDICommunicationsMacOS::API::MIDIPacket (class)">MIDIPacket</a></span>, <span class='object_link'><a href="API/MIDIPacketList.html" title="MIDICommunicationsMacOS::API::MIDIPacketList (class)">MIDIPacketList</a></span>, <span class='object_link'><a href="API/MIDISysexSendRequest.html" title="MIDICommunicationsMacOS::API::MIDISysexSendRequest (class)">MIDISysexSendRequest</a></span>
+    
+  
+</p>
+
+  
+    <h2>
+      Constant Summary
+      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
+    </h2>
+
+    <dl class="constants">
+      
+        <dt id="X86_64-constant" class="">X86_64 =
+          <div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This constant is part of a private API.</strong>
+  You should avoid using this constant if possible, as it may be removed or be changed in the future.
+</p>
+<p>if osx is 10.6 or higher, there are some differences with 32 vs 64 bit handling</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='backtick'>`</span><span class='tstring_content'>uname -r</span><span class='tstring_end'>`</span></span><span class='period'>.</span><span class='id identifier rubyid_scan'>scan</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\d*\.\d*</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span> <span class='op'>&gt;=</span> <span class='float'>10.6</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create_midi_client-class_method" title="create_midi_client (class method)">.<strong>create_midi_client</strong>(resource_id, name)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create_midi_input_port-class_method" title="create_midi_input_port (class method)">.<strong>create_midi_input_port</strong>(client, resource_id, name, callback)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create_midi_output_port-class_method" title="create_midi_output_port (class method)">.<strong>create_midi_output_port</strong>(client, resource_id, name)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_callback-class_method" title="get_callback (class method)">.<strong>get_callback</strong>(*args, &amp;block)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_int-class_method" title="get_int (class method)">.<strong>get_int</strong>(resource, name)  &#x21d2; Integer </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_midi_packet-class_method" title="get_midi_packet (class method)">.<strong>get_midi_packet</strong>(data)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'><p>Pack the given data into a midi-communications-macos MIDI packet (used by Destination).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_midi_packet_list-class_method" title="get_midi_packet_list (class method)">.<strong>get_midi_packet_list</strong>(bytes, size)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'><p>(used by Destination).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_string-class_method" title="get_string (class method)">.<strong>get_string</strong>(resource, name)  &#x21d2; String </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="create_midi_client-class_method">
+  
+    .<strong>create_midi_client</strong>(resource_id, name)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/midi-communications-macos/api.rb', line 68</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_create_midi_client'>create_midi_client</span><span class='lparen'>(</span><span class='id identifier rubyid_resource_id'>resource_id</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_client_name'>client_name</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="" title="MIDICommunicationsMacOS::API (module)">API</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="API/CF.html" title="MIDICommunicationsMacOS::API::CF (module)">CF</a></span></span><span class='period'>.</span><span class='const'>CFStringCreateWithCString</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Client </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_resource_id'>resource_id</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='int'>0</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_client_pointer'>client_pointer</span> <span class='op'>=</span> <span class='const'>FFI</span><span class='op'>::</span><span class='const'>MemoryPointer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:pointer</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_error'>error</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="" title="MIDICommunicationsMacOS::API (module)">API</a></span></span><span class='period'>.</span><span class='const'>MIDIClientCreate</span><span class='lparen'>(</span><span class='id identifier rubyid_client_name'>client_name</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_client_pointer'>client_pointer</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_client'>client</span> <span class='op'>=</span> <span class='id identifier rubyid_client_pointer'>client_pointer</span><span class='period'>.</span><span class='id identifier rubyid_read_pointer'>read_pointer</span>
+  <span class='lbrace'>{</span>
+    <span class='label'>error:</span> <span class='id identifier rubyid_error'>error</span><span class='comma'>,</span>
+    <span class='label'>resource:</span> <span class='id identifier rubyid_client'>client</span>
+  <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="create_midi_input_port-class_method">
+  
+    .<strong>create_midi_input_port</strong>(client, resource_id, name, callback)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/midi-communications-macos/api.rb', line 79</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_create_midi_input_port'>create_midi_input_port</span><span class='lparen'>(</span><span class='id identifier rubyid_client'>client</span><span class='comma'>,</span> <span class='id identifier rubyid_resource_id'>resource_id</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_callback'>callback</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_port_name'>port_name</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="" title="MIDICommunicationsMacOS::API (module)">API</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="API/CF.html" title="MIDICommunicationsMacOS::API::CF (module)">CF</a></span></span><span class='period'>.</span><span class='const'>CFStringCreateWithCString</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Port </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_resource_id'>resource_id</span><span class='embexpr_end'>}</span><span class='tstring_content'>: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='int'>0</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_handle_ptr'>handle_ptr</span> <span class='op'>=</span> <span class='const'>FFI</span><span class='op'>::</span><span class='const'>MemoryPointer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:pointer</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_error'>error</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="" title="MIDICommunicationsMacOS::API (module)">API</a></span></span><span class='period'>.</span><span class='const'>MIDIInputPortCreate</span><span class='lparen'>(</span><span class='id identifier rubyid_client'>client</span><span class='comma'>,</span> <span class='id identifier rubyid_port_name'>port_name</span><span class='comma'>,</span> <span class='id identifier rubyid_callback'>callback</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_handle_ptr'>handle_ptr</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_handle'>handle</span> <span class='op'>=</span> <span class='id identifier rubyid_handle_ptr'>handle_ptr</span><span class='period'>.</span><span class='id identifier rubyid_read_pointer'>read_pointer</span>
+  <span class='lbrace'>{</span>
+    <span class='label'>error:</span> <span class='id identifier rubyid_error'>error</span><span class='comma'>,</span>
+    <span class='label'>handle:</span> <span class='id identifier rubyid_handle'>handle</span>
+  <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="create_midi_output_port-class_method">
+  
+    .<strong>create_midi_output_port</strong>(client, resource_id, name)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/midi-communications-macos/api.rb', line 90</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_create_midi_output_port'>create_midi_output_port</span><span class='lparen'>(</span><span class='id identifier rubyid_client'>client</span><span class='comma'>,</span> <span class='id identifier rubyid_resource_id'>resource_id</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_port_name'>port_name</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="API/CF.html" title="MIDICommunicationsMacOS::API::CF (module)">CF</a></span></span><span class='period'>.</span><span class='const'>CFStringCreateWithCString</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Port </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_resource_id'>resource_id</span><span class='embexpr_end'>}</span><span class='tstring_content'>: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='int'>0</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_port_pointer'>port_pointer</span> <span class='op'>=</span> <span class='const'>FFI</span><span class='op'>::</span><span class='const'>MemoryPointer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:pointer</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_error'>error</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="" title="MIDICommunicationsMacOS::API (module)">API</a></span></span><span class='period'>.</span><span class='const'>MIDIOutputPortCreate</span><span class='lparen'>(</span><span class='id identifier rubyid_client'>client</span><span class='comma'>,</span> <span class='id identifier rubyid_port_name'>port_name</span><span class='comma'>,</span> <span class='id identifier rubyid_port_pointer'>port_pointer</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_handle'>handle</span> <span class='op'>=</span> <span class='id identifier rubyid_port_pointer'>port_pointer</span><span class='period'>.</span><span class='id identifier rubyid_read_pointer'>read_pointer</span>
+  <span class='lbrace'>{</span>
+    <span class='label'>error:</span> <span class='id identifier rubyid_error'>error</span><span class='comma'>,</span>
+    <span class='label'>handle:</span> <span class='id identifier rubyid_handle'>handle</span>
+  <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_callback-class_method">
+  
+    .<strong>get_callback</strong>(*args, &amp;block)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+54
+55
+56</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/midi-communications-macos/api.rb', line 54</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_callback'>get_callback</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='const'>FFI</span><span class='op'>::</span><span class='const'>Function</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:void</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_int-class_method">
+  
+    .<strong>get_int</strong>(resource, name)  &#x21d2; <tt>Integer</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>FFI::Pointer</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>A pointer to an underlying struct</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The property name to get</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+118
+119
+120
+121
+122
+123</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/midi-communications-macos/api.rb', line 118</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_int'>get_int</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_property'>property</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="" title="MIDICommunicationsMacOS::API (module)">API</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="API/CF.html" title="MIDICommunicationsMacOS::API::CF (module)">CF</a></span></span><span class='period'>.</span><span class='const'>CFStringCreateWithCString</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span> <span class='int'>0</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='const'>FFI</span><span class='op'>::</span><span class='const'>MemoryPointer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:pointer</span><span class='comma'>,</span> <span class='int'>32</span><span class='rparen'>)</span>
+  <span class='const'><span class='object_link'><a href="" title="MIDICommunicationsMacOS::API (module)">API</a></span></span><span class='op'>::</span><span class='const'>MIDIObjectGetIntegerProperty</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='comma'>,</span> <span class='id identifier rubyid_property'>property</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_read_int'>read_int</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_midi_packet-class_method">
+  
+    .<strong>get_midi_packet</strong>(data)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+<p>Pack the given data into a midi-communications-macos MIDI packet (used by Destination)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+59
+60
+61
+62
+63
+64
+65
+66</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/midi-communications-macos/api.rb', line 59</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_midi_packet'>get_midi_packet</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_format'>format</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>C</span><span class='tstring_end'>&#39;</span></span> <span class='op'>*</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>
+  <span class='id identifier rubyid_packed_data'>packed_data</span> <span class='op'>=</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_pack'>pack</span><span class='lparen'>(</span><span class='id identifier rubyid_format'>format</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_char_size'>char_size</span> <span class='op'>=</span> <span class='const'>FFI</span><span class='period'>.</span><span class='id identifier rubyid_type_size'>type_size</span><span class='lparen'>(</span><span class='symbol'>:char</span><span class='rparen'>)</span> <span class='op'>*</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span>
+  <span class='id identifier rubyid_bytes'>bytes</span> <span class='op'>=</span> <span class='const'>FFI</span><span class='op'>::</span><span class='const'>MemoryPointer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_char_size'>char_size</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_bytes'>bytes</span><span class='period'>.</span><span class='id identifier rubyid_write_string'>write_string</span><span class='lparen'>(</span><span class='id identifier rubyid_packed_data'>packed_data</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_bytes'>bytes</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_midi_packet_list-class_method">
+  
+    .<strong>get_midi_packet_list</strong>(bytes, size)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+<p>(used by Destination)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/midi-communications-macos/api.rb', line 102</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_midi_packet_list'>get_midi_packet_list</span><span class='lparen'>(</span><span class='id identifier rubyid_bytes'>bytes</span><span class='comma'>,</span> <span class='id identifier rubyid_size'>size</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_packet_list'>packet_list</span> <span class='op'>=</span> <span class='const'>FFI</span><span class='op'>::</span><span class='const'>MemoryPointer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='int'>256</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_packet_ptr'>packet_ptr</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="" title="MIDICommunicationsMacOS::API (module)">API</a></span></span><span class='period'>.</span><span class='const'>MIDIPacketListInit</span><span class='lparen'>(</span><span class='id identifier rubyid_packet_list'>packet_list</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_time'>time</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="API/HostTime.html" title="MIDICommunicationsMacOS::API::HostTime (module)">HostTime</a></span></span><span class='period'>.</span><span class='const'>AudioGetCurrentHostTime</span>
+  <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="#X86_64-constant" title="MIDICommunicationsMacOS::API::X86_64 (constant)">X86_64</a></span></span>
+    <span class='const'><span class='object_link'><a href="" title="MIDICommunicationsMacOS::API (module)">API</a></span></span><span class='period'>.</span><span class='const'>MIDIPacketListAdd</span><span class='lparen'>(</span><span class='id identifier rubyid_packet_list'>packet_list</span><span class='comma'>,</span> <span class='int'>256</span><span class='comma'>,</span> <span class='id identifier rubyid_packet_ptr'>packet_ptr</span><span class='comma'>,</span> <span class='id identifier rubyid_time'>time</span><span class='comma'>,</span> <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='id identifier rubyid_bytes'>bytes</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='comment'># Pass in two 32-bit 0s for the 64 bit time
+</span>    <span class='const'><span class='object_link'><a href="" title="MIDICommunicationsMacOS::API (module)">API</a></span></span><span class='period'>.</span><span class='const'>MIDIPacketListAdd</span><span class='lparen'>(</span><span class='id identifier rubyid_packet_list'>packet_list</span><span class='comma'>,</span> <span class='int'>256</span><span class='comma'>,</span> <span class='id identifier rubyid_packet_ptr'>packet_ptr</span><span class='comma'>,</span> <span class='id identifier rubyid_time'>time</span> <span class='op'>&gt;&gt;</span> <span class='int'>32</span><span class='comma'>,</span> <span class='id identifier rubyid_time'>time</span> <span class='op'>&amp;</span> <span class='int'>0xFFFFFFFF</span><span class='comma'>,</span> <span class='id identifier rubyid_size'>size</span><span class='comma'>,</span> <span class='id identifier rubyid_bytes'>bytes</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_packet_list'>packet_list</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="get_string-class_method">
+  
+    .<strong>get_string</strong>(resource, name)  &#x21d2; <tt>String</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>resource</span>
+      
+      
+        <span class='type'>(<tt>FFI::Pointer</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>A pointer to an underlying struct</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The property name to get</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/midi-communications-macos/api.rb', line 128</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_string'>get_string</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_property'>property</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="API/CF.html" title="MIDICommunicationsMacOS::API::CF (module)">CF</a></span></span><span class='period'>.</span><span class='const'>CFStringCreateWithCString</span><span class='lparen'>(</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span> <span class='int'>0</span><span class='rparen'>)</span>
+  <span class='kw'>begin</span>
+    <span class='id identifier rubyid_pointer'>pointer</span> <span class='op'>=</span> <span class='const'>FFI</span><span class='op'>::</span><span class='const'>MemoryPointer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:pointer</span><span class='rparen'>)</span>
+    <span class='const'>MIDIObjectGetStringProperty</span><span class='lparen'>(</span><span class='id identifier rubyid_resource'>resource</span><span class='comma'>,</span> <span class='id identifier rubyid_property'>property</span><span class='comma'>,</span> <span class='id identifier rubyid_pointer'>pointer</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_string'>string</span> <span class='op'>=</span> <span class='id identifier rubyid_pointer'>pointer</span><span class='period'>.</span><span class='id identifier rubyid_read_pointer'>read_pointer</span>
+    <span class='id identifier rubyid_length'>length</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="API/CF.html" title="MIDICommunicationsMacOS::API::CF (module)">CF</a></span></span><span class='period'>.</span><span class='const'>CFStringGetMaximumSizeForEncoding</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="API/CF.html" title="MIDICommunicationsMacOS::API::CF (module)">CF</a></span></span><span class='period'>.</span><span class='const'>CFStringGetLength</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='symbol'>:kCFStringEncodingUTF8</span><span class='rparen'>)</span>
+
+    <span class='id identifier rubyid_bytes'>bytes</span> <span class='op'>=</span> <span class='const'>FFI</span><span class='op'>::</span><span class='const'>MemoryPointer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_length'>length</span> <span class='op'>+</span> <span class='int'>1</span><span class='rparen'>)</span>
+
+    <span class='kw'>if</span> <span class='const'><span class='object_link'><a href="API/CF.html" title="MIDICommunicationsMacOS::API::CF (module)">CF</a></span></span><span class='period'>.</span><span class='const'>CFStringGetCString</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='comma'>,</span> <span class='id identifier rubyid_bytes'>bytes</span><span class='comma'>,</span> <span class='id identifier rubyid_length'>length</span> <span class='op'>+</span> <span class='int'>1</span><span class='comma'>,</span> <span class='symbol'>:kCFStringEncodingUTF8</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_bytes'>bytes</span><span class='period'>.</span><span class='id identifier rubyid_read_string'>read_string</span><span class='period'>.</span><span class='id identifier rubyid_force_encoding'>force_encoding</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>utf-8</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>ensure</span>
+    <span class='const'><span class='object_link'><a href="API/CF.html" title="MIDICommunicationsMacOS::API::CF (module)">CF</a></span></span><span class='period'>.</span><span class='const'>CFRelease</span><span class='lparen'>(</span><span class='id identifier rubyid_string'>string</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_string'>string</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_string'>string</span><span class='period'>.</span><span class='id identifier rubyid_null?'>null?</span>
+    <span class='const'><span class='object_link'><a href="API/CF.html" title="MIDICommunicationsMacOS::API::CF (module)">CF</a></span></span><span class='period'>.</span><span class='const'>CFRelease</span><span class='lparen'>(</span><span class='id identifier rubyid_property'>property</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_property'>property</span><span class='period'>.</span><span class='id identifier rubyid_null?'>null?</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Tue Nov 25 11:37:07 2025 by
+  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.37 (ruby-3.4.7).
+</div>
+
+    </div>
+  </body>
+</html>

@@ -1,12 +1,33 @@
 module MIDICommunicationsMacOS
-  # Type of endpoint used for output
+  # MIDI output endpoint for sending MIDI messages.
+  #
+  # A Destination represents a MIDI output that can send messages to
+  # external MIDI devices or software. Messages can be sent as numeric
+  # bytes, hex strings, or arrays.
+  #
+  # @example Send a Note On/Off sequence
+  #   output = MIDICommunicationsMacOS::Destination.first
+  #   output.open
+  #   output.puts(0x90, 60, 100)  # Note On, middle C, velocity 100
+  #   sleep(0.5)
+  #   output.puts(0x80, 60, 0)    # Note Off
+  #
+  # @example Send as hex string
+  #   output.puts_s("903C64")     # Note On
+  #   output.puts_s("803C00")     # Note Off
+  #
+  # @see Source For receiving MIDI messages
+  # @see Endpoint For shared endpoint functionality
+  #
+  # @api public
   class Destination
     include Endpoint
 
     attr_reader :entity
 
-    # Close this output
-    # @return [Boolean]
+    # Closes this output.
+    #
+    # @return [Boolean] true if closed, false if already closed
     def close
       if @enabled
         @enabled = false
@@ -16,9 +37,14 @@ module MIDICommunicationsMacOS
       end
     end
 
-    # Send a MIDI message comprised of a String of hex digits
-    # @param [String] data A string of hex digits eg "904040"
-    # @return [Boolean]
+    # Sends a MIDI message as a hex string.
+    #
+    # @param data [String] hex string (e.g., "904040" for Note On)
+    # @return [Boolean] true on success
+    #
+    # @example
+    #   output.puts_s("904060")  # Note On
+    #   output.puts_s("804060")  # Note Off
     def puts_s(data)
       data = data.dup
       bytes = []
@@ -31,9 +57,13 @@ module MIDICommunicationsMacOS
     alias puts_bytestr puts_s
     alias puts_hex puts_s
 
-    # Send a MIDI message comprised of numeric bytes
-    # @param [*Integer] data Numeric bytes eg 0x90, 0x40, 0x40
-    # @return [Boolean]
+    # Sends a MIDI message as numeric bytes.
+    #
+    # @param data [Integer] numeric bytes (e.g., 0x90, 0x40, 0x40)
+    # @return [Boolean] true on success
+    #
+    # @example
+    #   output.puts_bytes(0x90, 0x40, 0x40)  # Note On
     def puts_bytes(*data)
       type = sysex?(data) ? :sysex : :small
       bytes = API.get_midi_packet(data)
@@ -41,9 +71,24 @@ module MIDICommunicationsMacOS
       true
     end
 
-    # Send a MIDI message of indeterminate type
-    # @param [*Array<Integer>, *Array<String>, *Integer, *String] args
-    # @return [Boolean]
+    # Sends a MIDI message in any supported format.
+    #
+    # Accepts multiple formats:
+    # - Numeric bytes: `puts(0x90, 0x40, 0x40)`
+    # - Array of bytes: `puts([0x90, 0x40, 0x40])`
+    # - Hex string: `puts("904040")`
+    #
+    # @param args [Array<Integer>, Array<String>, Integer, String] MIDI data
+    # @return [Boolean] true on success
+    #
+    # @example Send as bytes
+    #   output.puts(0x90, 60, 100)
+    #
+    # @example Send as array
+    #   output.puts([0x90, 60, 100])
+    #
+    # @example Send as hex string
+    #   output.puts("903C64")
     def puts(*args)
       case args.first
       when Array then args.each { |arg| puts(*arg) }
@@ -53,8 +98,19 @@ module MIDICommunicationsMacOS
     end
     alias write puts
 
-    # Enable this device
-    # @return [Destination]
+    # Opens this output for use.
+    #
+    # When a block is given, the output is automatically closed when
+    # the block exits.
+    #
+    # @yield [destination] optional block to execute with the open output
+    # @yieldparam destination [Destination] self
+    # @return [Destination] self
+    #
+    # @example Open with automatic close
+    #   output.open do |o|
+    #     o.puts(0x90, 60, 100)
+    #   end
     def enable
       @enabled ||= true
       if block_given?
@@ -69,20 +125,30 @@ module MIDICommunicationsMacOS
     alias open enable
     alias start enable
 
-    # Shortcut to the first output endpoint available
-    # @return [Destination]
+    # Returns the first available output endpoint.
+    #
+    # @return [Destination] the first destination
+    #
+    # @example
+    #   output = MIDICommunicationsMacOS::Destination.first
     def self.first
       Endpoint.first(:destination)
     end
 
-    # Shortcut to the last output endpoint available
-    # @return [Destination]
+    # Returns the last available output endpoint.
+    #
+    # @return [Destination] the last destination
     def self.last
       Endpoint.last(:destination)
     end
 
-    # All output endpoints
-    # @return [Array<Destination>]
+    # Returns all available output endpoints.
+    #
+    # @return [Array<Destination>] all destinations
+    #
+    # @example
+    #   outputs = MIDICommunicationsMacOS::Destination.all
+    #   outputs.each { |o| puts o.display_name }
     def self.all
       Endpoint.all_by_type[:destination]
     end

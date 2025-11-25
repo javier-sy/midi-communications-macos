@@ -1,8 +1,40 @@
 module MIDICommunicationsMacOS
-  # Type of endpoint used for input
+  # MIDI input endpoint for receiving MIDI messages.
+  #
+  # A Source represents a MIDI input that can receive messages from
+  # external MIDI devices or software. Messages are queued and can
+  # be retrieved using {#gets} or {#gets_s}.
+  #
+  # @example Open and read from the first input
+  #   input = MIDICommunicationsMacOS::Source.first
+  #   input.open
+  #   messages = input.gets
+  #   # => [{ data: [144, 60, 100], timestamp: 1234567890.123 }]
+  #
+  # @example Read messages as hex strings
+  #   messages = input.gets_s
+  #   # => [{ data: "903C64", timestamp: 1234567890.123 }]
+  #
+  # @see Destination For sending MIDI messages
+  # @see Endpoint For shared endpoint functionality
+  #
+  # @api public
   class Source
     include Endpoint
 
+    # Reads MIDI messages from the input buffer.
+    #
+    # Returns an array of MIDI event hashes. Each hash contains:
+    # - `:data` - Array of numeric bytes (e.g., [144, 60, 100])
+    # - `:timestamp` - Float timestamp when the message was received
+    #
+    # This method blocks until at least one message is available.
+    #
+    # @return [Array<Hash>] array of MIDI event hashes
+    #
+    # @example
+    #   messages = input.gets
+    #   # => [{ data: [144, 60, 100], timestamp: 1024.5 }]
     #
     # An array of MIDI event hashes as such:
     #   [
@@ -20,15 +52,17 @@ module MIDICommunicationsMacOS
     end
     alias read gets
 
-    # Same as Source#gets except that it returns message data as string of hex
-    # digits as such:
-    #   [
-    #     { data: "904060", timestamp: 904 },
-    #     { data: "804060", timestamp: 1150 },
-    #     { data: "90447F", timestamp: 1300 }
-    #   ]
+    # Reads MIDI messages as hex strings.
     #
-    # @return [Array<Hash>]
+    # Same as {#gets} but returns message data as hex strings instead
+    # of byte arrays.
+    #
+    # @return [Array<Hash>] array of MIDI event hashes with hex string data
+    #
+    # @example
+    #   messages = input.gets_s
+    #   # => [{ data: "904060", timestamp: 904 },
+    #   #     { data: "804060", timestamp: 1150 }]
     def gets_s
       messages = gets
       messages.each do |message|
@@ -38,8 +72,23 @@ module MIDICommunicationsMacOS
     end
     alias gets_bytestr gets_s
 
-    # Enable this the input for use; can be passed a block
-    # @return [Source]
+    # Opens this input for use.
+    #
+    # When a block is given, the input is automatically closed when
+    # the block exits.
+    #
+    # @yield [source] optional block to execute with the open input
+    # @yieldparam source [Source] self
+    # @return [Source] self
+    #
+    # @example Open with automatic close
+    #   input.open do |i|
+    #     messages = i.gets
+    #   end
+    #
+    # @example Open manually
+    #   input.open
+    #   messages = input.gets
     def enable
       @enabled ||= true
       if block_given?
@@ -54,8 +103,9 @@ module MIDICommunicationsMacOS
     alias open enable
     alias start enable
 
-    # Close this input
-    # @return [Boolean]
+    # Closes this input.
+    #
+    # @return [Boolean] true if closed, false if already closed
     def close
       #error = API.MIDIPortDisconnectSource( @handle, @resource )
       #raise "MIDIPortDisconnectSource returned error code #{error}" unless error.zero?
@@ -73,20 +123,30 @@ module MIDICommunicationsMacOS
       end
     end
 
-    # Shortcut to the first available input endpoint
-    # @return [Source]
+    # Returns the first available input endpoint.
+    #
+    # @return [Source] the first source
+    #
+    # @example
+    #   input = MIDICommunicationsMacOS::Source.first
     def self.first
       Endpoint.first(:source)
     end
 
-    # Shortcut to the last available input endpoint
-    # @return [Source]
+    # Returns the last available input endpoint.
+    #
+    # @return [Source] the last source
     def self.last
       Endpoint.last(:source)
     end
 
-    # All input endpoints
-    # @return [Array<Source>]
+    # Returns all available input endpoints.
+    #
+    # @return [Array<Source>] all sources
+    #
+    # @example
+    #   inputs = MIDICommunicationsMacOS::Source.all
+    #   inputs.each { |i| puts i.display_name }
     def self.all
       Endpoint.all_by_type[:source]
     end

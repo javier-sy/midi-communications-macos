@@ -1,5 +1,11 @@
 module MIDICommunicationsMacOS
-  # Coremidi C binding
+  # Low-level FFI bindings to Apple's Core MIDI framework.
+  #
+  # This module provides direct access to Core MIDI C functions via FFI.
+  # Most users should use the higher-level {Source}, {Destination}, and
+  # {Device} classes instead.
+  #
+  # @api private
   module API
     extend FFI::Library
     ffi_lib '/System/Library/Frameworks/CoreMIDI.framework/Versions/Current/CoreMIDI'

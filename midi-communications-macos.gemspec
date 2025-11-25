@@ -27,6 +27,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'minitest', '~>5', '>= 5.14.4'
   s.add_development_dependency 'rake', '~>13', '>= 13.0.6'
   s.add_development_dependency 'shoulda-context', '~>2', '>= 2.0.0'
+
+  s.add_development_dependency 'yard', '~> 0.9'
+  s.add_development_dependency 'redcarpet', '~> 3.6'
+  s.add_development_dependency 'webrick', '~> 1.8'
 end
 
 

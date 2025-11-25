@@ -1,0 +1,6 @@
+--markup markdown
+--title "MIDI Communications macOS API"
+--readme README.md
+--no-private
+--embed-mixins
+lib/**/*.rb

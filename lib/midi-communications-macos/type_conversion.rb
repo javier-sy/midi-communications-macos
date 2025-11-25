@@ -1,11 +1,18 @@
 module MIDICommunicationsMacOS
-  # Helper for convertig MIDI data
+  # Utility methods for converting between MIDI data formats.
+  #
+  # @api public
   module TypeConversion
     extend self
 
-    # Convert an array of numeric byes to a hex string (e.g. [0x90, 0x40, 0x40] becomes "904040")
-    # @param [Array<Integer>] bytes
-    # @return [String]
+    # Converts an array of numeric bytes to a hex string.
+    #
+    # @param bytes [Array<Integer>] array of numeric bytes (e.g., [0x90, 0x40, 0x40])
+    # @return [String] uppercase hex string (e.g., "904040")
+    #
+    # @example
+    #   TypeConversion.numeric_bytes_to_hex_string([0x90, 0x40, 0x40])
+    #   # => "904040"
     def numeric_bytes_to_hex_string(bytes)
       string_bytes = bytes.map do |byte|
         str = byte.to_s(16).upcase

@@ -1,12 +1,26 @@
 module MIDICommunicationsMacOS
-  # A MIDI entity can have any number of MIDI endpoints, each of which is a source or destination
-  # of a 16-channel MIDI stream. By grouping a device's endpoints into entities, the system has
-  # enough information for an application to make reasonable default assumptions about how to
-  # communicate in a bi-directional manner with each entity, as is necessary in MIDI librarian
-  # applications.
+  # A logical grouping of MIDI endpoints within a device.
   #
-  # https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDIServices_Reference/Reference/reference.html
+  # A MIDI entity can have any number of MIDI endpoints, each of which is a
+  # {Source source} or {Destination destination} of a 16-channel MIDI stream.
+  # By grouping a device's endpoints into entities, the system has enough
+  # information for applications to make reasonable default assumptions about
+  # bidirectional communication.
+  #
+  # @see https://developer.apple.com/documentation/coremidi/midientityref
+  #
+  # @api public
   class Entity
+    # @!attribute [r] endpoints
+    #   @return [Hash{Symbol => Array<Endpoint>}] endpoints grouped by :source and :destination
+    # @!attribute [r] manufacturer
+    #   @return [String] device manufacturer name
+    # @!attribute [r] model
+    #   @return [String] device model name
+    # @!attribute [r] name
+    #   @return [String] entity name
+    # @!attribute [r] resource
+    #   @return [FFI::Pointer] pointer to the Core MIDI entity
     attr_reader :endpoints,
                 :manufacturer,
                 :model,

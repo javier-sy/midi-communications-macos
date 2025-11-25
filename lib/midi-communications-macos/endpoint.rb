@@ -1,18 +1,44 @@
 module MIDICommunicationsMacOS
-  # A source or destination of a 16-channel MIDI stream
+  # A source or destination of a 16-channel MIDI stream.
   #
-  # https://developer.apple.com/library/ios/documentation/CoreMidi/Reference/MIDIServices_Reference/Reference/reference.html
+  # This module provides shared functionality for both {Source} (input) and
+  # {Destination} (output) endpoints. Each endpoint represents a single
+  # point of MIDI communication within an {Entity}.
+  #
+  # @see https://developer.apple.com/documentation/coremidi/midiendpointref
+  #
+  # @api public
   module Endpoint
     extend Forwardable
 
-    attr_reader :enabled, # has the endpoint been initialized?
+    # @!attribute [r] enabled
+    #   @return [Boolean] whether the endpoint has been initialized
+    # @!attribute [r] entity
+    #   @return [Entity] the parent entity
+    # @!attribute [r] id
+    #   @return [Integer] unique local numeric ID of the endpoint
+    # @!attribute [r] resource_id
+    #   @return [Integer] Core MIDI resource identifier
+    # @!attribute [r] type
+    #   @return [Symbol] endpoint type (:source or :destination)
+    attr_reader :enabled,
                 :entity,
-                :id, # unique local Numeric id of the endpoint
-                :resource_id, # :input or :output
+                :id,
+                :resource_id,
                 :type
 
+    # @!method manufacturer
+    #   @return [String] device manufacturer name (delegated to entity)
+    # @!method model
+    #   @return [String] device model name (delegated to entity)
+    # @!method name
+    #   @return [String] endpoint name (delegated to entity)
+    # @!method display_name
+    #   @return [String] formatted display name (delegated to entity)
     def_delegators :entity, :manufacturer, :model, :name, :display_name
 
+    # @!method enabled?
+    #   @return [Boolean] alias for {#enabled}
     alias enabled? enabled
 
     # @param [Integer] resource_id
