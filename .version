@@ -1,0 +1,6 @@
+# Configuración de versión para midi-communications-macos
+GEM_NAME="midi-communications-macos"
+MODULE_NAME="MIDICommunicationsMacOS"
+VERSION_FILE="lib/midi-communications-macos/version.rb"
+GEMSPEC_FILE="midi-communications-macos.gemspec"
+TEST_COMMAND="bundle exec rake test"
