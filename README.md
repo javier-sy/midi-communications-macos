@@ -17,7 +17,7 @@ This library is part of a suite of Ruby libraries for MIDI:
 | Low level MIDI interface to MacOS | [MIDI Communications MacOS Layer](https://github.com/javier-sy/midi-communications-macos) |
 | Low level MIDI interface to Linux | **TO DO** (by now [MIDI Communications](https://github.com/javier-sy/midi-communications) uses [alsa-rawmidi](http://github.com/arirusso/alsa-rawmidi)) | 
 | Low level MIDI interface to JRuby | **TO DO** (by now [MIDI Communications](https://github.com/javier-sy/midi-communications) uses [midi-jruby](http://github.com/arirusso/midi-jruby))| 
-| Low level MIDI interface to Windows | **TO DO** (by now [MIDI Communications](https://github.com/javier-sy/midi-communications) uses [midi-winm](http://github.com/arirusso/midi-winmm)) | 
+| Low level MIDI interface to Windows | [MIDI Communications Windows Layer](https://github.com/javier-sy/midi-communications-windows) |
 
 This library is based on [Ari Russo's](http://github.com/arirusso) library [ffi-coremidi](https://github.com/arirusso/ffi-coremidi).
 
