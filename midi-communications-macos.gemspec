@@ -3,7 +3,7 @@ require_relative 'lib/midi-communications-macos/version'
 Gem::Specification.new do |s|
   s.name        = 'midi-communications-macos'
   s.version     = MIDICommunicationsMacOS::VERSION
-  s.date        = '2025-08-23'
+  s.date        = '2026-09-07'
   s.summary     = 'Realtime MIDI IO with Ruby for OSX'
   s.description = 'Access the Apple Core MIDI framework API with Ruby.'
   s.authors     = ['Javier Sánchez Yeste']
