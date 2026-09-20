@@ -1,7 +1,7 @@
 # MIDI Communications MacOS Layer
 
 [![Ruby Version](https://img.shields.io/badge/ruby-2.7+-red.svg)](https://www.ruby-lang.org/)
-[![License](https://img.shields.io/badge/license-LGPL--3.0--or--later-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0.html)
+[![License](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 
 **Realtime MIDI IO with Ruby for OSX.**
 
@@ -95,7 +95,7 @@ All in all I have decided to publish a suite of libraries optimized for MusaDSL 
 
 ## Author
 
-* [Javier Sánchez Yeste](https://github.com/javier-sy)
+* [yeste.studio](https://yeste.studio)
 
 ## Acknowledgements
 
@@ -108,6 +108,14 @@ As explained by **Ari Russo** regarding his library **ffi-coremidi**:
 
 ## License
 
-[MIDI Communications MacOS Layer](https://github.com/javier-sy/midi-communications-macos) Copyright (c) 2021-2026 [Javier Sánchez Yeste](https://yeste.studio), licensed under LGPL 3.0 License
+MIDI Communications MacOS Layer is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. See [LICENSE](LICENSE).
 
-[ffi-coremidi](https://github.com/arirusso/ffi-coremidi) Copyright (c) 2011-2017 [Ari Russo](http://arirusso.com), licensed under Apache License 2.0 (see the file LICENSE.ffi-coremidi)
+**What this means for you.** Composing, performing and publishing music made with MIDI Communications MacOS Layer carries no obligation: the music is yours. The GPL applies to *software*: if you distribute a program that includes or is built on MIDI Communications MacOS Layer, that program must be released under the GPL too, with its source.
+
+**Commercial license.** If you need MIDI Communications MacOS Layer under terms its license does not cover — for instance, inside a closed product — yeste.studio offers a commercial license. Write to javier@yeste.studio.
+
+**Versions.** From 1.0.0, MIDI Communications MacOS Layer follows [Semantic Versioning](https://semver.org): breaking changes only come with a new major version.
+
+[MIDI Communications MacOS Layer](https://github.com/javier-sy/midi-communications-macos) Copyright (c) 2021-2026 [yeste.studio](https://yeste.studio)
+
+This library is based on [Ari Russo](http://arirusso.com)'s [ffi-coremidi](https://github.com/arirusso/ffi-coremidi), Copyright (c) 2011-2017 Ari Russo, distributed under the Apache License 2.0; see [LICENSE.ffi-coremidi](LICENSE.ffi-coremidi). Files modified by yeste.studio.

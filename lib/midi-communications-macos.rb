@@ -2,7 +2,7 @@
 # midi-communications-macos
 # Realtime MIDI IO with Ruby for OSX
 #
-# (c)2021 Javier Sánchez Yeste for the modifications, licensed under LGPL 3.0 License
+# (c)2021-2026 yeste.studio for the modifications, licensed under GPL-3.0-or-later
 # (c)2011-2017 Ari Russo
 #
 

@@ -3,14 +3,14 @@ require_relative 'lib/midi-communications-macos/version'
 Gem::Specification.new do |s|
   s.name        = 'midi-communications-macos'
   s.version     = MIDICommunicationsMacOS::VERSION
-  s.date        = '2026-09-07'
+  s.date        = '2026-09-20'
   s.summary     = 'Realtime MIDI IO with Ruby for OSX'
   s.description = 'Access the Apple Core MIDI framework API with Ruby.'
-  s.authors     = ['Javier Sánchez Yeste']
-  s.email       = ['javier.sy@gmail.com']
+  s.authors     = ['yeste.studio']
+  s.email       = ['javier@yeste.studio']
   s.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.homepage    = 'https://github.com/javier-sy/midi-communications-macos'
-  s.license     = 'LGPL-3.0-or-later'
+  s.license     = 'GPL-3.0-or-later'
 
   s.required_ruby_version = '>= 2.7'
 

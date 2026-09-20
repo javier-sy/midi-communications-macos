@@ -60,7 +60,7 @@
       <div id="content"><div id='filecontents'><h1 id="midi-communications-macos-layer">MIDI Communications MacOS Layer</h1>
 
 <p><a href="https://www.ruby-lang.org/"><img src="https://img.shields.io/badge/ruby-2.7+-red.svg" alt="Ruby Version"></a>
-<a href="https://www.gnu.org/licenses/lgpl-3.0.html"><img src="https://img.shields.io/badge/license-LGPL--3.0--or--later-blue.svg" alt="License"></a></p>
+<a href="https://www.gnu.org/licenses/gpl-3.0.html"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg" alt="License"></a></p>
 
 <p><strong>Realtime MIDI IO with Ruby for OSX.</strong></p>
 
@@ -91,16 +91,16 @@
 <td><a href="https://github.com/javier-sy/midi-communications-macos">MIDI Communications MacOS Layer</a></td>
 </tr>
 <tr>
+<td>Low level MIDI interface to Windows</td>
+<td><a href="https://github.com/javier-sy/midi-communications-windows">MIDI Communications Windows Layer</a></td>
+</tr>
+<tr>
 <td>Low level MIDI interface to Linux</td>
 <td><strong>TO DO</strong> (by now <a href="https://github.com/javier-sy/midi-communications">MIDI Communications</a> uses <a href="http://github.com/arirusso/alsa-rawmidi">alsa-rawmidi</a>)</td>
 </tr>
 <tr>
 <td>Low level MIDI interface to JRuby</td>
 <td><strong>TO DO</strong> (by now <a href="https://github.com/javier-sy/midi-communications">MIDI Communications</a> uses <a href="http://github.com/arirusso/midi-jruby">midi-jruby</a>)</td>
-</tr>
-<tr>
-<td>Low level MIDI interface to Windows</td>
-<td><strong>TO DO</strong> (by now <a href="https://github.com/javier-sy/midi-communications">MIDI Communications</a> uses <a href="http://github.com/arirusso/midi-winmm">midi-winm</a>)</td>
 </tr>
 </tbody></table>
 
@@ -135,7 +135,7 @@
 
 <h2 id="documentation">Documentation</h2>
 
-<p>(<strong>TO DO</strong>) <a href="http://rubydoc.info/github/javier-sy/midi-communications-macos">rdoc</a></p>
+<p><a href="http://rubydoc.info/github/javier-sy/midi-communications-macos">rdoc</a></p>
 
 <h2 id="differences-between-midi-communications-macos-layer-library-and-ffi-coremidi-library">Differences between <a href="https://github.com/javier-sy/midi-communications-macos">MIDI Communications MacOS Layer</a> library and <a href="https://github.com/arirusso/ffi-coremidi">ffi-coremidi</a> library</h2>
 
@@ -187,62 +187,10 @@ forces to modify and rename unimidi library.</li>
 
 <p>All in all I have decided to publish a suite of libraries optimized for MusaDSL use case that also can be used by other people in their projects.</p>
 
-<table><thead>
-<tr>
-<th>Function</th>
-<th>Library</th>
-<th>Based on Ari Russo&#39;s</th>
-<th>Difference</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>MIDI Events representation</td>
-<td><a href="https://github.com/javier-sy/midi-events">MIDI Events</a></td>
-<td><a href="https://github.com/arirusso/midi-message">MIDI Message</a></td>
-<td>removed parsing, small improvements</td>
-</tr>
-<tr>
-<td>MIDI Data parsing</td>
-<td><a href="https://github.com/javier-sy/midi-parser">MIDI Parser</a></td>
-<td><a href="https://github.com/arirusso/nibbler">Nibbler</a></td>
-<td>removed process history information, minor optimizations</td>
-</tr>
-<tr>
-<td>MIDI communication with Instruments and Control Surfaces</td>
-<td><a href="https://github.com/javier-sy/midi-communications">MIDI Communications</a></td>
-<td><a href="https://github.com/arirusso/unimidi">unimidi</a></td>
-<td>use of <a href="https://github.com/javier-sy/midi-communications-macos,%20removed%20process%20history%20information,%20removed%20buffering,%20removed%20command%20line%20script">MIDI Communications MacOS Layer</a></td>
-</tr>
-<tr>
-<td>Low level MIDI interface to MacOS</td>
-<td><a href="https://github.com/javier-sy/midi-communications-macos">MIDI Communications MacOS Layer</a></td>
-<td><a href="https://github.com/arirusso/ffi-coremidi">ffi-coremidi</a></td>
-<td>removed buffering and process history information, locking behaviour when waiting midi events, improved midi devices name detection, minor optimizations</td>
-</tr>
-<tr>
-<td>Low level MIDI interface to Linux</td>
-<td><strong>TO DO</strong></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Low level MIDI interface to JRuby</td>
-<td><strong>TO DO</strong></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Low level MIDI interface to Windows</td>
-<td><strong>TO DO</strong></td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-
 <h2 id="author">Author</h2>
 
 <ul>
-<li><a href="https://github.com/javier-sy">Javier Sánchez Yeste</a></li>
+<li><a href="https://yeste.studio">yeste.studio</a></li>
 </ul>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
@@ -257,15 +205,23 @@ forces to modify and rename unimidi library.</li>
 <li>Also thank you to <a href="http://github.com/jvoorhis">Jeremy Voorhis</a> for some useful debugging.</li>
 </ul>
 
-<h3 id="license">License</h3>
+<h2 id="license">License</h2>
 
-<p><a href="https://github.com/javier-sy/midi-communications-macos">MIDI Communications MacOS Layer</a> Copyright (c) 2021-2025 <a href="https://yeste.studio">Javier Sánchez Yeste</a>, licensed under LGPL 3.0 License</p>
+<p>MIDI Communications MacOS Layer is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. See <a href="LICENSE">LICENSE</a>.</p>
 
-<p><a href="https://github.com/arirusso/ffi-coremidi">ffi-coremidi</a> Copyright (c) 2011-2017 <a href="http://arirusso.com">Ari Russo</a>, licensed under Apache License 2.0 (see the file LICENSE.ffi-coremidi)</p>
+<p><strong>What this means for you.</strong> Composing, performing and publishing music made with MIDI Communications MacOS Layer carries no obligation: the music is yours. The GPL applies to <em>software</em>: if you distribute a program that includes or is built on MIDI Communications MacOS Layer, that program must be released under the GPL too, with its source.</p>
+
+<p><strong>Commercial license.</strong> If you need MIDI Communications MacOS Layer under terms its license does not cover — for instance, inside a closed product — yeste.studio offers a commercial license. Write to <a href="mailto:javier@yeste.studio">javier@yeste.studio</a>.</p>
+
+<p><strong>Versions.</strong> From 1.0.0, MIDI Communications MacOS Layer follows <a href="https://semver.org">Semantic Versioning</a>: breaking changes only come with a new major version.</p>
+
+<p><a href="https://github.com/javier-sy/midi-communications-macos">MIDI Communications MacOS Layer</a> Copyright (c) 2021-2026 <a href="https://yeste.studio">yeste.studio</a></p>
+
+<p>This library is based on <a href="http://arirusso.com">Ari Russo</a>&#39;s <a href="https://github.com/arirusso/ffi-coremidi">ffi-coremidi</a>, Copyright (c) 2011-2017 Ari Russo, distributed under the Apache License 2.0; see <a href="LICENSE.ffi-coremidi">LICENSE.ffi-coremidi</a>. Files modified by yeste.studio.</p>
 </div></div>
 
       <div id="footer">
-  Generated on Tue Nov 25 11:37:07 2025 by
+  Generated on Sun Sep 20 21:22:22 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.37 (ruby-3.4.7).
 </div>
